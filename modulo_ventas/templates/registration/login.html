@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login BLB</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% if form.errors %}
+    <p>Su nombre de usuario y contraseña no coinciden. Inténtalo de nuevo.</p>
+    {% endif %}
+
+    {% if next %}
+    {% if user.is_authenticated %}
+    <p>Su cuenta no tiene acceso a esta página. Para continuar,
+        inicie sesión con una cuenta que tenga acceso.</p>
+    {% else %}
+    <p>Por favor inicie sesión para ver esta página.</p>
+    {% endif %}
+    {% endif %}
+
+
+    <link rel="stylesheet" href="{% static 'css/style-login.css' %}"> 
+    
+    <div class="image-background" style="background-image: url('{% static 'images/login.png' %}')"></div>
+
+    <div class="login-container">
+        <div class="image-background"></div>
+        <div class="login-box">
+            <h2>LOGIN</h2>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>{{ form.username.label_tag }}</td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password.label_tag }}</td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                </table>
+                <input type="submit" value="login">
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+
+            <p><a href="{% url 'index' %}">VOLVER AL INICIO</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

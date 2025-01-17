@@ -1,0 +1,59 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Detalle del Pedido</h1>
+
+<h2>Información del Pedido</h2>
+<p><strong>Cliente:</strong> {{ pedido.nombre_cliente }}</p>
+<p><strong>Contacto:</strong> {{ pedido.nombre_contacto }}</p>
+<p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+<p><strong>Dirección:</strong> {{ pedido.calle }} #{{ pedido.numero }}, {{ pedido.colonia }}, {{ pedido.municipio }}, {{ pedido.estado }} - CP {{ pedido.codigo_postal }}</p>
+<p><strong>Estatus:</strong> {{ pedido.estatus }}</p>
+<p><strong>Fecha de Creación:</strong> {{ pedido.fecha_creacion }}</p>
+<p><strong>Tipo pedido: </strong>
+    {% if pedido.lista_items == 1 %}
+        Oro
+    {% elif pedido.lista_items == 2 %}
+        Diamante
+    {% elif pedido.lista_items == 3 %}
+        Mayoreo
+    {% else %}
+        Desconocido
+    {% endif %}
+</p>
+
+<h2>Productos del Pedido</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Seleccionado</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detalle in detalles %}
+        <tr>
+            <td>{{ detalle.producto.nombre_producto }}</td>
+            <td>{{ detalle.cantidad }}</td>
+            <td>
+                {% if detalle.pedido.lista_items == 1 %}
+                    ${{ detalle.producto.precio_1 }}
+                {% elif detalle.pedido.lista_items == 2 %}
+                    ${{ detalle.producto.precio_2 }}
+                {% elif detalle.pedido.lista_items == 3 %}
+                    ${{ detalle.producto.precio_3 }}
+                {% endif %}
+            </td>
+            <td>${{ detalle.calcular_subtotal|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <h3>Total del Pedido: ${{ total|floatformat:2 }}</h3>
+
+<a href="{% url 'ver_estatus_pedido' %}">Regresar</a>
+{% endblock %}

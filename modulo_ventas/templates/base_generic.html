@@ -1,0 +1,64 @@
+<!-- templates/mi_app/dashboard.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil BLB</title>
+
+    <!-- Enlazamos el archivo CSS desde la carpeta estática de Django -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
+
+</head>
+
+<body>
+
+    <!-- Barra lateral -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Modulo de Venta</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="{% url 'profile' %}">Inicio</a></li>
+                <li><a href="#">Configuración</a></li>
+                <li>
+                    <form action="{% url 'logout' %}" method="post" class="logout-form">
+                        {% csrf_token %}
+                        <a href="#" class="logout-link" onclick="this.closest('form').submit();">Cerrar sesión</a>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Área principal -->
+    <div class="main-content">
+
+        <!-- Barra superior -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle">☰</button>
+            </div>
+            <div class="topbar-right">
+                <span class="user-name">Hola, {{ user.username }}</span> <!-- Nombre de usuario -->
+                <img src="{% static 'images/Logo_-.jpg' %}" alt="Logo"> <!-- Avatar del usuario -->
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <section class="content">
+            
+            {% block content %}
+            
+            {% endblock %}
+        </section>
+
+    </div>
+
+</body>
+
+</html>

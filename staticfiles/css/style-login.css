@@ -1,0 +1,104 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Estilo general del contenedor */
+.login-container {
+    display: flex; /* Usa flexbox para colocar los elementos lado a lado */
+    align-items: center; /* Centra verticalmente los elementos */
+    justify-content: center; /* Centra horizontalmente los elementos */
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    position: relative; /* Necesario para posicionar la imagen de fondo */
+    overflow: hidden; /* Evita barras de desplazamiento */
+     /* Color de fondo secundario */
+}
+
+/* Imagen de fondo */
+.image-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%; /* Ocupa la mitad de la pantalla */
+    height: 100%;
+ /* Asegúrate de que la imagen estática sea accesible */
+    background-size: cover; /* Ajusta la imagen para cubrir el área */
+    background-position: center;
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%); /* Recorte diagonal */
+    z-index: -1; /* Envía el fondo detrás del contenido */
+}
+
+/* Caja de login */
+.login-box {
+    position: relative; /* Para asegurar que no se mezcle con el fondo */
+    z-index: 1;
+    width: 400px; /* Ancho fijo */
+    padding: 20px;
+    background: rgb(255, 255, 255); /* Fondo blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+    text-align: center; /* Centra el texto */
+}
+
+/* Estilo para el encabezado */
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+/* Tabla de formulario */
+.login-box table {
+    margin: 0 auto; /* Centra la tabla */
+    width: 100%; /* Ocupa todo el ancho */
+}
+
+/* Celdas de la tabla */
+.login-box td {
+    padding: 8px;
+    text-align: left;
+}
+
+/* Botón de login */
+.login-box input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: #14438b; /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-box input[type="submit"]:hover {
+    background-color: #10356d; /* Oscurece el color al pasar el mouse */
+}
+
+/* Enlace para volver */
+.login-box p a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+.login-box p a:hover {
+    text-decoration: underline;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .image-background {
+        width: 100%; /* Imagen de fondo ocupa todo el ancho */
+        height: 50%; /* Ajusta el alto */
+        clip-path: none; /* Desactiva el recorte diagonal */
+    }
+
+    .login-box {
+        width: 90%; /* Caja de login ocupa el 90% del ancho */
+        margin-top: 1px; /* Espaciado superior */
+    }
+
+    .login-container {
+        flex-direction: column; /* Cambia a diseño vertical */
+    }
+}

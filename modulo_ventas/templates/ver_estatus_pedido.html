@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Estatus del Pedido</h1>
+<p>Aqui veras el estatus de tu pedido</p>
+<!-- Lista de pedidos -->
+{% if pedidos %}
+    <h2>Mis Pedidos</h2>
+    <ul>
+        {% for pedido in pedidos %}
+            <li>
+                <strong>Pedido de {{ pedido.nombre_cliente }}</strong><br>
+                Numero de cliente: {{ pedido.numero_cliente }} <br>
+                Vendedor: {{ pedido.vendedor.get_full_name }}<br>  <!-- Nombre del vendedor -->
+                Fecha: {{ pedido.fecha_creacion }} <br>
+                Dirección: {{ pedido.calle }} {{ pedido.numero }}, {{ pedido.colonia }}, {{ pedido.municipio }}, {{ pedido.estado }}<br>
+                Teléfono: {{ pedido.telefono }}<br>
+                Estatus: {{ pedido.get_estatus_display }} <br>  <!-- Muestra la opción legible del estatus -->
+                <a href="{% url 'detalle_pedido' pedido.id %}">Ver Detalle</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tienes pedidos realizados.</p>
+{% endif %}
+{% endblock %}

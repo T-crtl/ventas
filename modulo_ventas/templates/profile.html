@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Bienvenido al Dashboard</h1>
+<h3>Nombre: {{ user.get_full_name }}</h3>
+<div class="profile-actions">
+
+    <div class="cards">
+        <div class="card">
+            <h3>Opciones</h3>
+            <ul class="options-list">
+                {% if es_vendedor %}
+                <li><a href="{% url 'realizar_pedido' %}" class="action-link">Realizar pedido</a></li>
+                <li><a href="{% url 'ver_estatus_pedido' %}" class="action-link">Ver estatus de pedido</a></li>
+                {% else %}
+                <p>No tienes acceso a las opciones para vendedores.</p>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Email</h3>
+            <p>{{ user.email }}</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
