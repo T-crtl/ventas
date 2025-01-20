@@ -1,8 +1,13 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm
 from .models import Pedido, DetallePedido, Producto
 from django.shortcuts import render, get_object_or_404
+from datetime import datetime, timedelta
+from django.utils import timezone
+
+
 
 # Create your views here.
 def index(request):
@@ -58,6 +63,30 @@ def realizar_pedido(request):
 def ver_estatus_pedido(request):
     # Lógica para ver estatus de pedido
     pedidos = Pedido.objects.filter(vendedor=request.user)  # Solo pedidos del vendedor actual
+    
+    numero_cliente = request.GET.get('numero_cliente', '')
+    fecha_creacion = request.GET.get('fecha_creacion', '')
+    estatus = request.GET.get('estatus', '')
+
+    # Aplicar filtros si los parámetros están presentes
+    if numero_cliente:
+        pedidos = pedidos.filter(numero_cliente__icontains=numero_cliente)
+    if fecha_creacion:
+        try:
+            # Convertir la fecha de la cadena a un objeto date
+            fecha = datetime.strptime(fecha_creacion, '%Y-%m-%d').date()
+            # Convertir la fecha naive a una fecha consciente de la zona horaria
+            fecha = timezone.make_aware(datetime.combine(fecha, datetime.min.time()))
+            
+            # Filtrar pedidos que se crearon en esa fecha sin importar la hora
+            pedidos = pedidos.filter(fecha_creacion__gte=fecha, fecha_creacion__lt=fecha + timedelta(days=1))
+            print(f"Fecha recibida: {fecha}")
+        except ValueError:
+            print("Formato de fecha no válido")
+    
+    if estatus:
+        pedidos = pedidos.filter(estatus__icontains=estatus)
+
     return render(request, 'ver_estatus_pedido.html', {'pedidos': pedidos})
 
 @login_required

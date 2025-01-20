@@ -8,9 +8,7 @@ body {
     padding: 0;
 }
 
-h1, h3 {
-    color: #333;
-}
+
 
 /* Estilos para la barra lateral */
 .sidebar {
@@ -87,9 +85,8 @@ h1, h3 {
 }
 
 .topbar-right img {
-    width: 300px;
-    height: 70px;
-    border-radius: 50%;
+    width: 101px;
+    height: 101px;
 }
 
 /* Estilos para el contenido */
@@ -185,15 +182,15 @@ h1, h3 {
 }
 /* Hacer que la imagen del logo sea responsiva */
 .sidebar-header .logo {
-    width: 100%; /* La imagen se ajusta al ancho del contenedor */
-    max-width: 150px; /* Limita el tamaño máximo de la imagen */
+    width: 25%; /* La imagen se ajusta al ancho del contenedor */
+    max-width: 50px; /* Limita el tamaño máximo de la imagen */
     height: auto; /* Mantiene la proporción original de la imagen */
 }
 
 /* Ajustes específicos para dispositivos móviles */
 @media (max-width: 768px) {
     .sidebar-header .logo {
-        max-width: 120px; /* Ajusta el tamaño máximo en pantallas pequeñas */
+        max-width: 40px; /* Ajusta el tamaño máximo en pantallas pequeñas */
     }
 }
 

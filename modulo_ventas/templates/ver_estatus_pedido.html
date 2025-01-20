@@ -2,26 +2,53 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/styles-detail.css' %}">
 <h1>Estatus del Pedido</h1>
-<p>Aqui veras el estatus de tu pedido</p>
+<p>Aquí verás el estatus de tu pedido</p>
+
+<!-- Formulario de búsqueda -->
+<form method="GET" class="filter-form">
+    <div class="form-group">
+        <label for="numero_cliente">Número de Cliente:</label>
+        <input type="text" id="numero_cliente" name="numero_cliente" value="{{ request.GET.numero_cliente }}"
+            placeholder="Buscar por número de cliente">
+    </div>
+    <div class="form-group">
+        <label for="fecha_creacion">Fecha de Creación (YYYY-MM-DD)</label>
+        <input type="date" id="fecha_creacion" name="fecha_creacion" value="{{ request.GET.fecha_creacion }}">
+    </div>
+    <div class="form-group">
+        <label for="estatus">Estatus</label>
+        <select id="estatus" name="estatus">
+            <option value="">Seleccionar estatus</option>
+            <option value="Pendiente" {% if request.GET.estatus == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+            <option value="en_proceso" {% if request.GET.estatus == 'en_proceso' %}selected{% endif %}>En Proceso</option>
+            <option value="Completado" {% if request.GET.estatus == 'Completado' %}selected{% endif %}>Completado</option>
+            <option value="Cancelado" {% if request.GET.estatus == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+        </select>
+    </div>
+    <button type="submit" class="filter-btn">Buscar</button>
+</form>
+
 <!-- Lista de pedidos -->
 {% if pedidos %}
-    <h2>Mis Pedidos</h2>
-    <ul>
-        {% for pedido in pedidos %}
-            <li>
-                <strong>Pedido de {{ pedido.nombre_cliente }}</strong><br>
-                Numero de cliente: {{ pedido.numero_cliente }} <br>
-                Vendedor: {{ pedido.vendedor.get_full_name }}<br>  <!-- Nombre del vendedor -->
-                Fecha: {{ pedido.fecha_creacion }} <br>
-                Dirección: {{ pedido.calle }} {{ pedido.numero }}, {{ pedido.colonia }}, {{ pedido.municipio }}, {{ pedido.estado }}<br>
-                Teléfono: {{ pedido.telefono }}<br>
-                Estatus: {{ pedido.get_estatus_display }} <br>  <!-- Muestra la opción legible del estatus -->
-                <a href="{% url 'detalle_pedido' pedido.id %}">Ver Detalle</a>
-            </li>
-        {% endfor %}
-    </ul>
+<h2 class="pedidos-titulo">Mis Pedidos</h2>
+<div class="pedidos-lista">
+    {% for pedido in pedidos %}
+    <div class="pedido-item">
+        <h3>Pedido de {{ pedido.nombre_cliente }}</h3>
+        <p><strong>Número de Cliente:</strong> {{ pedido.numero_cliente }}</p>
+        <p><strong>Vendedor:</strong> {{ pedido.vendedor.get_full_name }}</p>
+        <p><strong>Fecha:</strong> {{ pedido.fecha_creacion }}</p>
+        <p><strong>Dirección:</strong> {{ pedido.calle }} {{ pedido.numero }}, {{ pedido.colonia }}, {{ pedido.municipio}}, {{ pedido.estado }}</p>
+        <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+        <p><strong>Estatus:</strong> {{ pedido.get_estatus_display }}</p>
+        <a class="btn-detalle" href="{% url 'detalle_pedido' pedido.id %}">Ver Detalle</a>
+    </div>
+    {% endfor %}
+</div>
 {% else %}
-    <p>No tienes pedidos realizados.</p>
+<p class="no-pedidos">No tienes pedidos realizados.</p>
 {% endif %}
+
 {% endblock %}

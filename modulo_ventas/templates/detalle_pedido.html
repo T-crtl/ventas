@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/styles-detail.css' %}">
+
 <h1>Detalle del Pedido</h1>
 
 <h2>Información del Pedido</h2>
@@ -24,12 +26,12 @@
 </p>
 
 <h2>Productos del Pedido</h2>
-<table border="1">
+<table border="1" class="productos-tabla">
     <thead>
         <tr>
             <th>Producto</th>
             <th>Cantidad</th>
-            <th>Precio Seleccionado</th>
+            <th>Precio</th>
             <th>Subtotal</th>
         </tr>
     </thead>
@@ -55,5 +57,5 @@
 
     <h3>Total del Pedido: ${{ total|floatformat:2 }}</h3>
 
-<a href="{% url 'ver_estatus_pedido' %}">Regresar</a>
+<a href="{% url 'ver_estatus_pedido' %}" class="btn-regresar">Regresar</a>
 {% endblock %}

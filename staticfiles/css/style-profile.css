@@ -87,8 +87,8 @@ h1, h3 {
 }
 
 .topbar-right img {
-    width: 300px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
 }
 
@@ -186,7 +186,7 @@ h1, h3 {
 /* Hacer que la imagen del logo sea responsiva */
 .sidebar-header .logo {
     width: 100%; /* La imagen se ajusta al ancho del contenedor */
-    max-width: 150px; /* Limita el tamaño máximo de la imagen */
+    max-width: 100px; /* Limita el tamaño máximo de la imagen */
     height: auto; /* Mantiene la proporción original de la imagen */
 }
 
