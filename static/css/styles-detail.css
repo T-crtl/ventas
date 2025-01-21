@@ -207,6 +207,6 @@ table.productos-tabla tr:nth-child(even) {
     background-color: #1b5bbb;
 }
 
-h2, h1 {
+.pedidos-titulo2 h2, h1 {
     color: #14438b;
 }

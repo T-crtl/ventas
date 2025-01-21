@@ -3,13 +3,13 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles-detail.css' %}">
-<h1>Estatus del Pedido</h1>
+<h1 class="pedidos-titulo2">Estatus del Pedido</h1>
 <p>Aquí verás el estatus de tu pedido</p>
 
 <!-- Formulario de búsqueda -->
 <form method="GET" class="filter-form">
     <div class="form-group">
-        <h2 class="title-filtro">Busca tu pedido</h2>
+        <h2 class="pedidos-titulo2">Busca tu pedido</h2>
         <label for="numero_cliente">Número de Cliente:</label>
         <input type="text" id="numero_cliente" name="numero_cliente" value="{{ request.GET.numero_cliente }}"
             placeholder="Buscar por número de cliente">
