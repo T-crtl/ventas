@@ -21,12 +21,26 @@ class DetallePedidoForm(forms.Form):
             self.fields[f'cantidad_{producto.id}'] = forms.IntegerField(
                 required=False,
                 min_value=0,  # La cantidad puede ser 0, pero no se procesará
-                label=mark_safe(f"<div style='display: flex; align-items: center;'>"
-                                f"<img src='{producto.imagen}' alt='{producto.nombre_producto}' "
-                                f"style='width:80px; height:100px; margin-right:20px;' />"
-                                f"{producto.nombre_producto}</div>"
-                                f"<div>Diamante ${producto.precio_1} - Oro ${producto.precio_2}</div>"
-                                f"La caja contiene {producto.qty_caja} productos (Cajas): "),
+                label = mark_safe(
+    f"""
+    <div style='display: flex; flex-direction: column;'>
+        <div style='display: flex; align-items: center; margin-bottom: 10px;'>
+            <img src='{producto.imagen}' alt='{producto.nombre_producto}' 
+                 style='width:100px; height:120px; margin-right:20px; border-radius: 5px;' />
+            <div>
+                <strong style='font-size: 1.2em; color: #14438b;'>{producto.nombre_producto}</strong>
+            </div>
+        </div>
+        <div style='font-size: 0.9em; margin-bottom: 5px;'>
+            <span>Diamante: <strong>${producto.precio_1}</strong></span> - 
+            <span>Oro: <strong>${producto.precio_2}</strong></span>
+        </div>
+        <div style='font-size: 0.9em; color: #555;'>
+            La caja contiene <strong>{producto.qty_caja}</strong> productos (Cajas)
+        </div>
+    </div>
+    """
+),
                 initial=0  # Inicializamos la cantidad en 0
             )
 

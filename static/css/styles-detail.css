@@ -100,7 +100,7 @@ table.productos-tabla tr:nth-child(even) {
 .pedidos-titulo {
     text-align: center;
     font-size: 1.8em;
-    color: #333;
+    color: #14438b;
     margin-bottom: 20px;
 }
 
@@ -205,4 +205,8 @@ table.productos-tabla tr:nth-child(even) {
 
 .filter-form button:hover {
     background-color: #1b5bbb;
+}
+
+h2, h1 {
+    color: #14438b;
 }
