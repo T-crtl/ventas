@@ -10,8 +10,8 @@
 <p><strong>Cliente:</strong> {{ pedido.nombre_cliente }}</p>
 <p><strong>Contacto:</strong> {{ pedido.nombre_contacto }}</p>
 <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
-<p><strong>Dirección:</strong> {{ pedido.calle }} #{{ pedido.numero }}, {{ pedido.colonia }}, {{ pedido.municipio }}, {{ pedido.estado }} - CP {{ pedido.codigo_postal }}</p>
-<p><strong>Estatus:</strong> {{ pedido.estatus }}</p>
+<p><strong>Dirección:</strong> {{ pedido.calle }} , {{ pedido.colonia }}, {{ pedido.municipio }}, {{ pedido.estado }} - CP {{ pedido.codigo_postal }}</p>
+<p><strong>Estatus:</strong> {{ pedido.get_estatus_display }}</p>
 <p><strong>Fecha de Creación:</strong> {{ pedido.fecha_creacion }}</p>
 <p><strong>Tipo pedido: </strong>
     {% if pedido.lista_items == 1 %}
@@ -55,7 +55,7 @@
     </tbody>
 </table>
 
-    <h3>Total del Pedido: ${{ total|floatformat:2 }}</h3>
+    <h2>Total del Pedido: ${{ total|floatformat:2 }}</h3>
 
 <a href="{% url 'ver_estatus_pedido' %}" class="btn-regresar">Regresar</a>
 {% endblock %}

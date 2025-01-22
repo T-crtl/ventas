@@ -20,7 +20,7 @@ body {
     left: 0;
     width: 100%; /* Ocupa la mitad de la pantalla */
     height: 100%;
-    background-image: url('/static/images/horizontal.png');/* Asegúrate de que la imagen estática sea accesible */
+    background-image: url('/static/images/horizontal.webp');/* Asegúrate de que la imagen estática sea accesible */
      /* background-size: cover; /* Ajusta la imagen para cubrir el área */
     /*  background-position: center;
      /* clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%); Recorte diagonal */
@@ -90,7 +90,7 @@ body {
     .image-background {
         width: 100%; /* Imagen de fondo ocupa todo el ancho */
         height: 100%; /* Ajusta el alto */
-        background-image: url('/static/images/vertical.png');
+        background-image: url('/static/images/vertical.webp');
         /*clip-path: none; /* Desactiva el recorte diagonal */
     }
 

@@ -41,7 +41,7 @@
         <p><strong>Número de Cliente:</strong> {{ pedido.numero_cliente }}</p>
         <p><strong>Vendedor:</strong> {{ pedido.vendedor.get_full_name }}</p>
         <p><strong>Fecha:</strong> {{ pedido.fecha_creacion }}</p>
-        <p><strong>Dirección:</strong> {{ pedido.calle }} {{ pedido.numero }}, {{ pedido.colonia }}, {{ pedido.municipio}}, {{ pedido.estado }}</p>
+        <p><strong>Dirección:</strong> {{ pedido.calle }}, {{ pedido.colonia }}, {{ pedido.municipio}}, {{ pedido.estado }}</p>
         <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
         <p><strong>Estatus:</strong> {{ pedido.get_estatus_display }}</p>
         <a class="btn-detalle" href="{% url 'detalle_pedido' pedido.id %}">Ver Detalle</a>

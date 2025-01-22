@@ -5,7 +5,7 @@
     margin: 0 auto;
     padding: 20px;
     background: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 1px solid #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -25,7 +25,7 @@ table.productos-tabla {
 table.productos-tabla th, table.productos-tabla td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #ffffff;
     word-wrap: break-word; /* Asegura que el texto largo se divida */
 }
 

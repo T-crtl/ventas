@@ -14,7 +14,6 @@ class Pedido(models.Model):
     nombre_contacto = models.CharField(max_length=255, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     calle = models.CharField(max_length=255)
-    numero = models.CharField(max_length=50)
     colonia = models.CharField(max_length=255)
     municipio = models.CharField(max_length=255)
     estado = models.CharField(max_length=255)

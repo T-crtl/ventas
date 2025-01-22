@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['nombre_cliente', 'numero_cliente', 'nombre_contacto', 'calle', 'numero', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items']
+        fields = ['nombre_cliente', 'numero_cliente', 'nombre_contacto', 'calle', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items']
 
 class DetallePedidoForm(forms.Form):
     # Creamos dinámicamente los campos de cantidades
@@ -32,8 +32,8 @@ class DetallePedidoForm(forms.Form):
             </div>
         </div>
         <div style='font-size: 0.9em; margin-bottom: 5px;'>
-            <span>Diamante: <strong>${producto.precio_1}</strong></span> - 
-            <span>Oro: <strong>${producto.precio_2}</strong></span>
+            <span>Diamante: <strong>${producto.precio_2}</strong></span> - 
+            <span>Oro: <strong>${producto.precio_1}</strong></span>
         </div>
         <div style='font-size: 0.9em; color: #555;'>
             La caja contiene <strong>{producto.qty_caja}</strong> productos (Cajas)

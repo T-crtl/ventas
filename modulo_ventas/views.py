@@ -1,4 +1,3 @@
-import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm
@@ -6,8 +5,6 @@ from .models import Pedido, DetallePedido, Producto
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
-
-
 
 # Create your views here.
 def index(request):
@@ -87,7 +84,9 @@ def ver_estatus_pedido(request):
     if estatus:
         pedidos = pedidos.filter(estatus__icontains=estatus)
 
-    return render(request, 'ver_estatus_pedido.html', {'pedidos': pedidos})
+    return render(request, 'ver_estatus_pedido.html', {
+        'pedidos': pedidos
+        })
 
 @login_required
 def detalle_pedido(request, pedido_id):
