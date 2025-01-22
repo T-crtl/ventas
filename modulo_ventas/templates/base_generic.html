@@ -24,7 +24,7 @@
         <nav class="sidebar-nav">
             <ul>
                 <li><a href="{% url 'profile' %}">Inicio</a></li>
-                <li><a href="#">Configuración</a></li>
+                <li><a href="{% url 'perfil_empleado' %}">Perfil</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post" class="logout-form">
                         {% csrf_token %}

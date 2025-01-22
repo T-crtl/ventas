@@ -7,4 +7,5 @@ urlpatterns = [
     path('realizar_pedido/', views.realizar_pedido, name='realizar_pedido'),
     path('ver_estatus_pedido/', views.ver_estatus_pedido, name='ver_estatus_pedido'),
     path('pedido/<int:pedido_id>/', views.detalle_pedido, name='detalle_pedido'),
+    path('accounts/profile/ajustes/', views.perfil_empleado, name='perfil_empleado'),
 ]

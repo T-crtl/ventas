@@ -117,3 +117,8 @@ def detalle_pedido(request, pedido_id):
         'detalles': detalles,
         'total': total,
     })
+    
+@login_required
+def perfil_empleado(request):
+    user = request.user
+    return render(request, 'perfil_empleado.html', {'user': user})
