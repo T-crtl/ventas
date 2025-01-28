@@ -5,6 +5,7 @@ from .models import Pedido, DetallePedido, Producto
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
@@ -59,7 +60,7 @@ def realizar_pedido(request):
 @login_required
 def ver_estatus_pedido(request):
     # Lógica para ver estatus de pedido
-    pedidos = Pedido.objects.filter(vendedor=request.user)  # Solo pedidos del vendedor actual
+    pedidos = Pedido.objects.filter(vendedor=request.user).order_by('-fecha_creacion')  # Solo pedidos del vendedor actual
     
     numero_cliente = request.GET.get('numero_cliente', '')
     fecha_creacion = request.GET.get('fecha_creacion', '')
@@ -83,9 +84,22 @@ def ver_estatus_pedido(request):
     
     if estatus:
         pedidos = pedidos.filter(estatus__icontains=estatus)
+        
+    # Configura el paginador
+    paginator = Paginator(pedidos, 10)  # 10 resultados por página
 
+    # Obtén el número de página de la URL (?page=1)
+    page_number = request.GET.get('page')
+    
+    # Obtén los resultados de la página actual
+    page_obj = paginator.get_page(page_number)
+    
+    #Contador de cuantos resultados arrojo la busqueda en total
+    contador = pedidos.count()
+    
     return render(request, 'ver_estatus_pedido.html', {
-        'pedidos': pedidos
+        'pedidos': page_obj,
+        'contador': contador,
         })
 
 @login_required

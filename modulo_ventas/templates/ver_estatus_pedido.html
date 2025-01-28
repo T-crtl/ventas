@@ -34,6 +34,23 @@
 <!-- Lista de pedidos -->
 {% if pedidos %}
 <h2 class="pedidos-titulo">Mis Pedidos</h2>
+<p class="count_results">Resultados encontrados {{ contador }}</p>
+<div class="pagination">
+    <span class="step-links">
+        {% if pedidos.has_previous %}
+            <a class="btn-detalle" href="?page=1">Primera</a>
+            <a class="btn-detalle" href="?page={{ pedidos.previous_page_number }}">Anterior</a>
+        {% endif %}
+        
+        <span>Página {{ pedidos.number }} de {{ pedidos.paginator.num_pages }}</span>
+        
+        {% if pedidos.has_next %}
+            <a class="btn-detalle" href="?page={{ pedidos.next_page_number }}">Siguiente</a>
+            <a class="btn-detalle" href="?page={{ pedidos.paginator.num_pages }}">Última</a>
+        {% endif %}
+    </span>
+</div>
+
 <div class="pedidos-lista">
     {% for pedido in pedidos %}
     <div class="pedido-item">
@@ -51,5 +68,21 @@
 {% else %}
 <p class="no-pedidos">No tienes pedidos realizados.</p>
 {% endif %}
+<!-- Controles de paginación -->
+<div class="pagination">
+    <span class="step-links">
+        {% if pedidos.has_previous %}
+            <a class="btn-detalle" href="?page=1">Primera</a>
+            <a class="btn-detalle" href="?page={{ pedidos.previous_page_number }}">Anterior</a>
+        {% endif %}
+        
+        <span>Página {{ pedidos.number }} de {{ pedidos.paginator.num_pages }}</span>
+        
+        {% if pedidos.has_next %}
+            <a class="btn-detalle" href="?page={{ pedidos.next_page_number }}">Siguiente</a>
+            <a class="btn-detalle" href="?page={{ pedidos.paginator.num_pages }}">Última</a>
+        {% endif %}
+    </span>
+</div>
 
 {% endblock %}

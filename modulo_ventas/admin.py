@@ -15,6 +15,6 @@ class ProductoAdmin(admin.ModelAdmin):
     search_fields = ('nombre_producto','linea')
     list_filter = ('linea', 'nombre_producto')
     
-@admin.register(DetallePedido)
+@admin.register(DetallePedido) 
 class DetallePedidoAdmin(admin.ModelAdmin):
     list_display = ('pedido', 'cantidad')

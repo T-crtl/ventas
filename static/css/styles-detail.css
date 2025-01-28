@@ -55,6 +55,10 @@ table.productos-tabla tr:nth-child(even) {
     background-color: #0e3064;
 }
 
+.count_results, .pagination {
+    text-align: center;
+}
+
 /* Diseño responsivo */
 @media (max-width: 768px) {
     .pedido-detalle {
