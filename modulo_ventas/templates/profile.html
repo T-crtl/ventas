@@ -10,6 +10,7 @@
         <div class="card">
             <h3>Opciones</h3>
             <ul class="options-list">
+                <!-- Opciones para vendedor -->
                 {% if es_vendedor %}
                 <li><a href="{% url 'realizar_pedido' %}" class="action-link">Realizar pedido</a></li>
                 <li><a href="{% url 'ver_estatus_pedido' %}" class="action-link">Ver estatus de pedido</a></li>
@@ -19,6 +20,7 @@
             </ul>
         </div>
         <div class="card">
+            <!-- Email de usuario -->
             <h3>Email</h3>
             <p>{{ user.email }}</p>
         </div>

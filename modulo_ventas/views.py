@@ -46,7 +46,7 @@ def realizar_pedido(request):
                 DetallePedido.objects.create(
                     pedido=pedido,
                     producto=producto,
-                    cantidad=cantidad
+                    cantidad=cantidad,
                 )
             
             return redirect('ver_estatus_pedido')  # Redirigir a la página de estatus

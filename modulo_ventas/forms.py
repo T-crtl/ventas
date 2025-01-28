@@ -15,7 +15,7 @@ class DetallePedidoForm(forms.Form):
         
         # Obtener todos los productos disponibles
         productos = Producto.objects.all()
-        
+
         # Por cada producto, crear un campo de cantidad
         for producto in productos:
             self.fields[f'cantidad_{producto.id}'] = forms.IntegerField(
