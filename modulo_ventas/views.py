@@ -24,22 +24,24 @@ def profile(request):
 
 @login_required
 def realizar_pedido(request):
-    # Lógica para realizar pedido
+    # Obtener la línea de producto seleccionada del GET
+    linea_producto = request.GET.get('linea_producto', '')
+    
     if request.method == 'POST':
+        # Formulario para el pedido
         form_pedido = PedidoForm(request.POST)
-        form_detalle = DetallePedidoForm(request.POST)
-        
+        form_detalle = DetallePedidoForm(request.POST, linea=linea_producto)
+
         if form_pedido.is_valid() and form_detalle.is_valid():
             # Guardar el pedido
             pedido = form_pedido.save(commit=False)
-            pedido.vendedor = request.user  # Establecer el vendedor como el usuario actual
+            pedido.vendedor = request.user  # Asigna el usuario actual
             pedido.save()
 
-            # Obtener los productos y sus cantidades
+            # Guardar los detalles del pedido
             productos_seleccionados = form_detalle.cleaned_data['productos']
             cantidades = form_detalle.cleaned_data['cantidades']
 
-            # Guardar los detalles del pedido (productos y cantidades)
             for producto_id in productos_seleccionados:
                 producto = Producto.objects.get(id=producto_id)
                 cantidad = cantidades[producto_id]
@@ -48,14 +50,20 @@ def realizar_pedido(request):
                     producto=producto,
                     cantidad=cantidad,
                 )
-            
-            return redirect('ver_estatus_pedido')  # Redirigir a la página de estatus
+
+            return redirect('ver_estatus_pedido')  # Redirige al estatus del pedido
 
     else:
+        # Carga los formularios vacíos o con datos previos
         form_pedido = PedidoForm()
-        form_detalle = DetallePedidoForm()
+        form_detalle = DetallePedidoForm(linea=linea_producto)
 
-    return render(request, 'realizar_pedido.html', {'form_pedido': form_pedido, 'form_detalle': form_detalle})
+    # Pasamos `linea_producto` al contexto para mantener el valor en el filtro
+    return render(request, 'realizar_pedido.html', {
+        'form_pedido': form_pedido,
+        'form_detalle': form_detalle,
+        'linea_producto': linea_producto,
+    })
 
 @login_required
 def ver_estatus_pedido(request):

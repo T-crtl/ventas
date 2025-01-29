@@ -11,10 +11,16 @@ class PedidoForm(forms.ModelForm):
 class DetallePedidoForm(forms.Form):
     # Creamos dinámicamente los campos de cantidades
     def __init__(self, *args, **kwargs):
+        #Se obtiene linea del producto desde los argumentos
+        linea_producto = kwargs.pop('linea', None)
+        
         super().__init__(*args, **kwargs)
         
-        # Obtener todos los productos disponibles
-        productos = Producto.objects.all()
+        # Valida si hay filtro aplicado de cierta linea en especifico
+        if linea_producto:
+            productos = Producto.objects.filter(linea= linea_producto)
+        else:
+            productos = Producto.objects.all()
 
         # Por cada producto, crear un campo de cantidad
         for producto in productos:
