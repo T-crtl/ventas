@@ -6,17 +6,18 @@
 <h1 class="page-title">Realizar un Pedido</h1>
 <p class="intro-text">Aquí podrás realizar tu pedido de manera fácil y rápida.</p>
 
-<!-- Formulario de filtrado (GET) -->
-<form method="GET" action=".">
+<!-- Formulario de filtrado -->
+<form class="filter-select" id="filtroForm">
     <label for="linea_producto">Línea de producto:</label>
     <select name="linea_producto" id="linea_producto">
-        <option value="" {% if not linea_producto %}selected{% endif %}>Todas</option>
-        <option value="Inbelleza" {% if linea_producto == "Inbelleza" %}selected{% endif %}>Inbelleza</option>
-        <option value="Barber" {% if linea_producto == "Barber" %}selected{% endif %}>Barber</option>
-        <!-- Agrega más opciones según tus líneas -->
+        <option value="">Todas</option>
+        <option value="Inbelleza">Inbelleza</option>
+        <option value="Barber">Barber</option>
     </select>
-    <button type="submit">Filtrar</button>
 </form>
+
+<!-- Pasar los IDs de los productos al JavaScript -->
+<div id="idsProductos" style="display: none;">{{ ids_productos|json_script:"idsProductos" }}</div>
 
 <!-- Formulario para el pedido (POST) -->
 <div class="form-container">
@@ -34,16 +35,71 @@
 
         <!-- Productos -->
         <h2 class="section-title">Seleccionar Productos</h2>
-        <div class="productos-selection">
-            {% for field in form_detalle %}
-            <div class="producto-item">
-                <label for="{{ field.id_for_label }}" class="field-label">{{ field.label }}</label>
-                {{ field }}
-            </div>
-            {% endfor %}
+        <div class="productos-selection" id="productosContainer">
+            {% include 'partials/productos.html' with productos=productos %}
         </div>
 
         <button type="submit" class="submit-btn">Realizar Pedido</button>
     </form>
 </div>
+
+<!-- JavaScript para manejar el filtrado con AJAX -->
+<script>
+// Función para guardar las cantidades de todos los productos
+function guardarCantidades(idsProductos) {
+    const cantidades = {};
+    idsProductos.forEach(productoId => {
+        const input = document.querySelector(`input[name="cantidad_${productoId}"]`);
+        if (input) {
+            cantidades[productoId] = input.value; // Guardar la cantidad
+            console.log(`Guardando cantidad para producto ${productoId}: ${input.value}`); // Depuración
+        }
+    });
+    return cantidades;
+}
+
+// Función para restaurar las cantidades guardadas
+function restaurarCantidades(cantidades) {
+    Object.keys(cantidades).forEach(productoId => {
+        const input = document.querySelector(`input[name="cantidad_${productoId}"]`);
+        if (input) {
+            input.value = cantidades[productoId]; // Restaurar la cantidad
+            console.log(`Restaurando cantidad para producto ${productoId}: ${cantidades[productoId]}`); // Depuración
+        }
+    });
+}
+
+// Manejar el cambio en el filtro
+document.getElementById('linea_producto').addEventListener('change', function () {
+    const lineaProducto = this.value;
+    console.log(`Línea de producto seleccionada: ${lineaProducto}`); // Depuración
+
+    // Obtener los IDs de todos los productos
+    const idsProductos = JSON.parse(document.getElementById('idsProductos').textContent);
+
+    // Guardar las cantidades de todos los productos antes de cambiar el filtro
+    const cantidades = guardarCantidades(idsProductos);
+    console.log('Cantidades guardadas:', cantidades); // Depuración
+
+    // Enviar la solicitud de filtrado con Fetch
+    fetch(`?linea_producto=${lineaProducto}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'  // Para identificar solicitudes AJAX en Django
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Respuesta recibida:', data); // Depuración
+
+        // Actualizar solo la sección de productos
+        document.getElementById('productosContainer').innerHTML = data.html;
+
+        // Restaurar las cantidades después de cambiar el filtro
+        restaurarCantidades(cantidades);
+    })
+    .catch(error => {
+        console.error('Error en la solicitud Fetch:', error); // Depuración
+    });
+});
+</script>
 {% endblock %}

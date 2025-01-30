@@ -1,0 +1,11 @@
+{% for producto in productos %}
+    <div class="producto-item">
+        <label for="cantidad_{{ producto.id }}">
+            <img src="{{ producto.imagen }}" alt="{{ producto.nombre_producto }}" style="width: 100px; height: 120px;">
+            <strong>{{ producto.nombre_producto }}</strong>
+            <p>Diamante: ${{ producto.precio_2 }} - Oro: ${{ producto.precio_1 }}</p>
+            <p>La caja contiene {{ producto.qty_caja }} productos</p>
+        </label>
+        <input type="number" name="cantidad_{{ producto.id }}" id="cantidad_{{ producto.id }}" min="0" value="0">
+    </div>
+{% endfor %}

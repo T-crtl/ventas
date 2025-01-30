@@ -5,7 +5,7 @@
     margin: 0 auto;
     padding: 20px;
     background: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 1px solid #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -25,7 +25,7 @@ table.productos-tabla {
 table.productos-tabla th, table.productos-tabla td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #ffffff;
     word-wrap: break-word; /* Asegura que el texto largo se divida */
 }
 
@@ -53,6 +53,10 @@ table.productos-tabla tr:nth-child(even) {
 
 .btn-regresar:hover {
     background-color: #0e3064;
+}
+
+.count_results, .pagination {
+    text-align: center;
 }
 
 /* Diseño responsivo */
@@ -100,7 +104,7 @@ table.productos-tabla tr:nth-child(even) {
 .pedidos-titulo {
     text-align: center;
     font-size: 1.8em;
-    color: #333;
+    color: #14438b;
     margin-bottom: 20px;
 }
 
@@ -205,4 +209,8 @@ table.productos-tabla tr:nth-child(even) {
 
 .filter-form button:hover {
     background-color: #1b5bbb;
+}
+
+.pedidos-titulo2 h2, h1 {
+    color: #14438b;
 }

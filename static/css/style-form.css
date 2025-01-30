@@ -182,10 +182,48 @@ textarea {
     transition: background-color 0.3s ease; /* Animación para hover */
     width: center; /* Permite que el ancho se ajuste al contenido */
     max-width: 200px; /* Opcional: establece un ancho máximo */
+    transform: translateX(-10%);
 }
 
 .submit-btn:hover {
     background-color: #1479e6;
+}
+
+/* Estilos para el formulario de filtrado */
+.filter-select {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #14438b;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    z-index: 1000;
+}
+
+.filter-select label {
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.filter-select select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.filter-select select:hover {
+    border-color: #007bff;
 }
 
 /* Responsividad */
@@ -204,5 +242,21 @@ textarea {
     .submit-btn {
         font-size: 0.9rem;
         padding: 10px;
+    }
+     /* Ajustes para el formulario de filtrado en móviles */
+     .filter-select {
+        flex-direction: column;
+        width: 90%;
+        top: 10px;
+        padding: 10px;
+    }
+
+    .filter-select label {
+        font-size: 14px;
+    }
+
+    .filter-select select,
+    #filtrarBtn {
+        width: 100%;
     }
 }

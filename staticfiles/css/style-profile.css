@@ -60,6 +60,10 @@ body {
     padding: 20px;
 }
 
+.title-section {
+    color: #14438b;
+}
+
 .topbar {
     background-color: #fff;
     display: flex;

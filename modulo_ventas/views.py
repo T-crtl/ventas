@@ -6,6 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 # Create your views here.
 def index(request):
@@ -24,9 +26,26 @@ def profile(request):
 
 @login_required
 def realizar_pedido(request):
+     # Obtener la línea de producto seleccionada del GET
     # Obtener la línea de producto seleccionada del GET
     linea_producto = request.GET.get('linea_producto', '')
-    
+
+    # Cargar todos los productos o los productos de la línea seleccionada
+    if linea_producto:
+        productos = Producto.objects.filter(linea=linea_producto)
+    else:
+        productos = Producto.objects.all()  # Cargar todos los productos al inicio
+
+    # Obtener los IDs de todos los productos
+    todos_los_productos = Producto.objects.all()
+    ids_productos = [producto.id for producto in todos_los_productos]
+
+    # Verificar si es una solicitud AJAX
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Renderizar solo el HTML de los productos
+        html = render_to_string('partials/productos.html', {'productos': productos}, request=request)
+        return JsonResponse({'html': html, 'ids_productos': ids_productos})
+
     if request.method == 'POST':
         # Formulario para el pedido
         form_pedido = PedidoForm(request.POST)
@@ -58,11 +77,12 @@ def realizar_pedido(request):
         form_pedido = PedidoForm()
         form_detalle = DetallePedidoForm(linea=linea_producto)
 
-    # Pasamos `linea_producto` al contexto para mantener el valor en el filtro
+    # Pasamos `linea_producto` y `productos` al contexto
     return render(request, 'realizar_pedido.html', {
         'form_pedido': form_pedido,
-        'form_detalle': form_detalle,
         'linea_producto': linea_producto,
+        'ids_productos': ids_productos,
+        'productos': productos,  # Pasamos los productos al contexto
     })
 
 @login_required
