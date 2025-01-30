@@ -27,7 +27,6 @@ def profile(request):
 @login_required
 def realizar_pedido(request):
      # Obtener la línea de producto seleccionada del GET
-    # Obtener la línea de producto seleccionada del GET
     linea_producto = request.GET.get('linea_producto', '')
 
     # Cargar todos los productos o los productos de la línea seleccionada
@@ -36,15 +35,25 @@ def realizar_pedido(request):
     else:
         productos = Producto.objects.all()  # Cargar todos los productos al inicio
 
-    # Obtener los IDs de todos los productos
-    todos_los_productos = Producto.objects.all()
-    ids_productos = [producto.id for producto in todos_los_productos]
+    # Obtener los IDs de los productos filtrados
+    ids_productos = [producto.id for producto in productos]
 
     # Verificar si es una solicitud AJAX
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Obtener las cantidades ingresadas por el usuario
+        cantidades = {}
+        for producto_id in ids_productos:
+            cantidad = request.GET.get(f'cantidad_{producto_id}', '')
+            if cantidad:
+                cantidades[producto_id] = cantidad
+
         # Renderizar solo el HTML de los productos
         html = render_to_string('partials/productos.html', {'productos': productos}, request=request)
-        return JsonResponse({'html': html, 'ids_productos': ids_productos})
+        return JsonResponse({
+            'html': html,
+            'ids_productos': ids_productos,
+            'cantidades': cantidades,  # Devolver las cantidades ingresadas
+        })
 
     if request.method == 'POST':
         # Formulario para el pedido
@@ -84,7 +93,6 @@ def realizar_pedido(request):
         'ids_productos': ids_productos,
         'productos': productos,  # Pasamos los productos al contexto
     })
-
 @login_required
 def ver_estatus_pedido(request):
     # Lógica para ver estatus de pedido

@@ -16,6 +16,8 @@
     </select>
 </form>
 
+
+
 <!-- Pasar los IDs de los productos al JavaScript -->
 <div id="idsProductos" style="display: none;">{{ ids_productos|json_script:"idsProductos" }}</div>
 
@@ -42,64 +44,67 @@
         <button type="submit" class="submit-btn">Realizar Pedido</button>
     </form>
 </div>
-
+<!-- Contenedor para los productos -->
+<div class="ocultar" id="productosContainer" >
+    {% include 'partials/productos.html' with productos=productos %}
+</div>
 <!-- JavaScript para manejar el filtrado con AJAX -->
 <script>
-// Función para guardar las cantidades de todos los productos
-function guardarCantidades(idsProductos) {
-    const cantidades = {};
-    idsProductos.forEach(productoId => {
-        const input = document.querySelector(`input[name="cantidad_${productoId}"]`);
-        if (input) {
-            cantidades[productoId] = input.value; // Guardar la cantidad
-            console.log(`Guardando cantidad para producto ${productoId}: ${input.value}`); // Depuración
-        }
+    // Función para guardar las cantidades de todos los productos
+    function guardarCantidades(idsProductos) {
+        const cantidades = {};
+        idsProductos.forEach(productoId => {
+            const input = document.querySelector(`input[name="cantidad_${productoId}"]`);
+            if (input) {
+                cantidades[productoId] = input.value; // Guardar la cantidad
+                console.log(`Guardando cantidad para producto ${productoId}: ${input.value}`); // Depuración
+            }
+        });
+        return cantidades;
+    }
+
+    // Función para restaurar las cantidades guardadas
+    function restaurarCantidades(cantidades) {
+        Object.keys(cantidades).forEach(productoId => {
+            const input = document.querySelector(`input[name="cantidad_${productoId}"]`);
+            if (input) {
+                input.value = cantidades[productoId]; // Restaurar la cantidad
+                console.log(`Restaurando cantidad para producto ${productoId}: ${cantidades[productoId]}`); // Depuración
+            }
+        });
+    }
+
+    // Manejar el cambio en el filtro
+    document.getElementById('linea_producto').addEventListener('change', function () {
+        const lineaProducto = this.value;
+        console.log(`Línea de producto seleccionada: ${lineaProducto}`); // Depuración
+
+        // Obtener los IDs de todos los productos
+        const idsProductos = JSON.parse(document.getElementById('idsProductos').textContent);
+
+        // Guardar las cantidades de todos los productos antes de cambiar el filtro
+        const cantidades = guardarCantidades(idsProductos);
+        console.log('Cantidades guardadas:', cantidades); // Depuración
+
+        // Enviar la solicitud de filtrado con Fetch
+        fetch(`?linea_producto=${lineaProducto}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'  // Para identificar solicitudes AJAX en Django
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Respuesta recibida:', data); // Depuración
+
+            // Actualizar solo la sección de productos
+            document.getElementById('productosContainer').innerHTML = data.html;
+
+            // Restaurar las cantidades después de cambiar el filtro
+            restaurarCantidades(cantidades);
+        })
+        .catch(error => {
+            console.error('Error en la solicitud Fetch:', error); // Depuración
+        });
     });
-    return cantidades;
-}
-
-// Función para restaurar las cantidades guardadas
-function restaurarCantidades(cantidades) {
-    Object.keys(cantidades).forEach(productoId => {
-        const input = document.querySelector(`input[name="cantidad_${productoId}"]`);
-        if (input) {
-            input.value = cantidades[productoId]; // Restaurar la cantidad
-            console.log(`Restaurando cantidad para producto ${productoId}: ${cantidades[productoId]}`); // Depuración
-        }
-    });
-}
-
-// Manejar el cambio en el filtro
-document.getElementById('linea_producto').addEventListener('change', function () {
-    const lineaProducto = this.value;
-    console.log(`Línea de producto seleccionada: ${lineaProducto}`); // Depuración
-
-    // Obtener los IDs de todos los productos
-    const idsProductos = JSON.parse(document.getElementById('idsProductos').textContent);
-
-    // Guardar las cantidades de todos los productos antes de cambiar el filtro
-    const cantidades = guardarCantidades(idsProductos);
-    console.log('Cantidades guardadas:', cantidades); // Depuración
-
-    // Enviar la solicitud de filtrado con Fetch
-    fetch(`?linea_producto=${lineaProducto}`, {
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'  // Para identificar solicitudes AJAX en Django
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Respuesta recibida:', data); // Depuración
-
-        // Actualizar solo la sección de productos
-        document.getElementById('productosContainer').innerHTML = data.html;
-
-        // Restaurar las cantidades después de cambiar el filtro
-        restaurarCantidades(cantidades);
-    })
-    .catch(error => {
-        console.error('Error en la solicitud Fetch:', error); // Depuración
-    });
-});
 </script>
 {% endblock %}

@@ -226,6 +226,10 @@ textarea {
     border-color: #007bff;
 }
 
+.ocultar {
+    display: none;
+}
+
 /* Responsividad */
 @media (max-width: 768px) {
     .form-title {
