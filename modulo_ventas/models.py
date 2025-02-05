@@ -73,20 +73,20 @@ class DetallePedido(models.Model):
     def __str__(self):
         return f"{self.producto.nombre_producto} x {self.cantidad}" 
     
-class Clientes(models.Model):
+class Client(models.Model):
     
     CLASIF_CHOICES = [
         ('FORANEO', 'FORANEO'),
         ('LOCAL', 'LOCAL'),
     ]
     
-    clave_cliente = models.CharField(max_length=255, unique=True)
+    clave_cliente = models.BigIntegerField(unique=True)
     nombre_cliente = models.CharField(verbose_name='Nombre de cliente' ,max_length=255, null=True, blank=True)
-    rfc = models.CharField(verbose_name='rfc de cliente',max_length=13, null=True, blank=True)
-    calle = models.CharField(verbose_name='calle',max_length=255)
-    numint = models.CharField(verbose_name='numero interior', max_length=10)
-    numext = models.CharField(verbose_name='numero exterior' ,max_length=10)
-    colonia = models.CharField(verbose_name='Nombre de colonia',max_length=255)
+    rfc = models.CharField(verbose_name='rfc de cliente',max_length=255, null=True, blank=True)
+    calle = models.CharField(verbose_name='calle',max_length=255, null=True, blank=True)
+    numint = models.CharField(verbose_name='numero interior', max_length=255, null=True, blank=True)
+    numext = models.CharField(verbose_name='numero exterior' ,max_length=255, null=True, blank=True)
+    colonia = models.CharField(verbose_name='Nombre de colonia',max_length=255, null=True, blank=True)
     codigo = models.CharField(verbose_name='codigo postal' ,null=True, blank=True, max_length=5)
     municipio = models.CharField(verbose_name='nombre de municipio', max_length=255, null=True, blank=True)
     estado = models.CharField(verbose_name='nombre de estado', max_length=255, null=True, blank=True)
@@ -95,6 +95,8 @@ class Clientes(models.Model):
     clasificacion = models.CharField(
         max_length=20,
         choices=CLASIF_CHOICES,
+        null=True,
+        blank=True,
     ) 
     curp = models.CharField(verbose_name='curp de cliente' ,max_length=18, null=True, blank= True)
     email = models.EmailField(verbose_name='email cliente' ,max_length=255, null=True, blank=True)   

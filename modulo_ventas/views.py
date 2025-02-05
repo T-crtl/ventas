@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm
-from .models import Pedido, DetallePedido, Producto
+from .models import Pedido, DetallePedido, Producto, Client
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -93,6 +93,7 @@ def realizar_pedido(request):
         'ids_productos': ids_productos,
         'productos': productos,  # Pasamos los productos al contexto
     })
+    
 @login_required
 def ver_estatus_pedido(request):
     # Lógica para ver estatus de pedido

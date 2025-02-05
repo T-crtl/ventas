@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pedido, Producto, DetallePedido
+from .models import Pedido, Producto, DetallePedido, Client
 
 # Register your models here.
 @admin.register(Pedido)
@@ -18,3 +18,7 @@ class ProductoAdmin(admin.ModelAdmin):
 @admin.register(DetallePedido) 
 class DetallePedidoAdmin(admin.ModelAdmin):
     list_display = ('pedido', 'cantidad')
+    
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('clave_cliente', 'nombre_cliente', 'municipio')
