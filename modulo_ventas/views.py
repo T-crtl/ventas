@@ -27,45 +27,54 @@ def profile(request):
 @login_required
 def realizar_pedido(request):
      # Obtener la línea de producto seleccionada del GET
-    linea_producto = request.GET.get('linea_producto', '')
+    linea_producto = request.GET.get('linea_producto', None)
 
     # Cargar todos los productos o los productos de la línea seleccionada
-    if linea_producto:
-        productos = Producto.objects.filter(linea=linea_producto)
-    else:
-        productos = Producto.objects.all()  # Cargar todos los productos al inicio
-
+    productos = Producto.objects.filter(linea=linea_producto) if linea_producto else Producto.objects.all()
     # Obtener los IDs de los productos filtrados
     ids_productos = [producto.id for producto in productos]
 
     # Verificar si es una solicitud AJAX
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        # Obtener las cantidades ingresadas por el usuario
-        cantidades = {}
-        for producto_id in ids_productos:
-            cantidad = request.GET.get(f'cantidad_{producto_id}', '')
-            if cantidad:
-                cantidades[producto_id] = cantidad
-
-        # Renderizar solo el HTML de los productos
-        html = render_to_string('partials/productos.html', {'productos': productos}, request=request)
-        return JsonResponse({
-            'html': html,
-            'ids_productos': ids_productos,
-            'cantidades': cantidades,  # Devolver las cantidades ingresadas
-        })
+        try:
+            cantidades = {
+                producto_id: request.GET.get(f'cantidad_{producto_id}', '')
+                for producto_id in ids_productos
+                if request.GET.get(f'cantidad_{producto_id}', '')
+            }
+            html = render_to_string('partials/productos.html', {'productos': productos}, request=request)
+            return JsonResponse({
+                'html': html,
+                'ids_productos': ids_productos,
+                'cantidades': cantidades,
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
     if request.method == 'POST':
-        # Formulario para el pedido
+        # Formularios de pedido y detalle
         form_pedido = PedidoForm(request.POST)
         form_detalle = DetallePedidoForm(request.POST, linea=linea_producto)
-
+        print(request.POST) 
         if form_pedido.is_valid() and form_detalle.is_valid():
             # Guardar el pedido
-            pedido = form_pedido.save(commit=False)
-            pedido.vendedor = request.user  # Asigna el usuario actual
-            # Guardar el cliente
-            pedido.cliente = form_pedido.cleaned_data['cliente']  # Asocia el cliente al pedido
+            pedido = form_pedido.save(commit=False)  # Guardamos el pedido sin confirmar aún
+            pedido.vendedor = request.user  # Asigna el vendedor (el usuario actual)
+            
+            # Obtener y asociar el cliente
+            cliente = form_pedido.cleaned_data['cliente']
+            pedido.cliente = cliente  # Asocia el cliente al pedido
+
+            # Si se necesita actualizar la información del cliente, se hace aquí:
+            cliente.calle = form_pedido.cleaned_data['calle']
+            cliente.colonia = form_pedido.cleaned_data['colonia']
+            cliente.municipio = form_pedido.cleaned_data['municipio']
+            cliente.estado = form_pedido.cleaned_data['estado']
+            cliente.codigo_postal = form_pedido.cleaned_data['codigo_postal']
+            cliente.telefono = form_pedido.cleaned_data['telefono']
+            cliente.save()  # Guarda los cambios en el cliente
+
+            # Guarda el pedido
             pedido.save()
 
             # Guardar los detalles del pedido
@@ -73,7 +82,7 @@ def realizar_pedido(request):
             cantidades = form_detalle.cleaned_data['cantidades']
 
             for producto_id in productos_seleccionados:
-                producto = Producto.objects.get(id=producto_id)
+                producto = get_object_or_404(Producto, id=producto_id)
                 cantidad = cantidades[producto_id]
                 DetallePedido.objects.create(
                     pedido=pedido,
@@ -82,7 +91,9 @@ def realizar_pedido(request):
                 )
 
             return redirect('ver_estatus_pedido')  # Redirige al estatus del pedido
-
+        else:
+            print(f"{form_pedido.is_valid()}, {form_detalle.is_valid()}")
+            print(f"Errores del formulario de pedido: {form_pedido.errors}")
     else:
         # Carga los formularios vacíos o con datos previos
         form_pedido = PedidoForm()
@@ -184,13 +195,15 @@ def obtener_datos_cliente(request):
     # Si se proporciona un cliente_id
     if cliente_id:
         try:
-            cliente = Client.objects.get(clave_cliente=cliente_id)  # Obtenemos el cliente desde la base de datos
+            cliente = Client.objects.get(id=cliente_id)  # Obtenemos el cliente desde la base de datos
             # Devolvemos los datos del cliente como JSON
             if not cliente.numint:
                 codigo = f"{cliente.numext}"
             else:
                 codigo = f"{cliente.numext} {cliente.numint}"
+            print(cliente.id)
             data = {
+                'cliente': cliente.id,
                 'numero_cliente': cliente.clave_cliente,
                 'calle': cliente.calle,
                 'colonia': cliente.colonia,
@@ -198,7 +211,7 @@ def obtener_datos_cliente(request):
                 'estado': cliente.estado,
                 'codigo': codigo,
                 'email': cliente.email,
-                'telefono': cliente.telefono,
+                'telefono_cliente': cliente.telefono,
             }
             return JsonResponse(data)
         except Client.DoesNotExist:

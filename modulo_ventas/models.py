@@ -47,15 +47,15 @@ class Pedido(models.Model):
     ]
 
     nombre_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
-    numero_cliente = models.IntegerField(default=0)
+    numero_cliente = models.IntegerField(default=0, null=True, blank=True)
     nombre_contacto = models.CharField(max_length=255, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    calle = models.CharField(max_length=255)
-    colonia = models.CharField(max_length=255)
-    municipio = models.CharField(max_length=255)
-    estado = models.CharField(max_length=255)
-    codigo_postal = models.CharField(max_length=10)
-    telefono = models.CharField(max_length=20)
+    calle = models.CharField(max_length=255, null=True, blank=True)
+    colonia = models.CharField(max_length=255, null=True, blank=True)
+    municipio = models.CharField(max_length=255, null=True, blank=True)
+    estado = models.CharField(max_length=255, null=True, blank=True)
+    codigo_postal = models.CharField(max_length=10, null=True, blank=True)
+    telefono = models.CharField(max_length=20, null=True, blank=True)
     lista_items = models.IntegerField(choices=[(i, str(i)) for i in range(1, 4)], default=1)
     estatus = models.CharField(
         max_length=20,

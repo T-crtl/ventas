@@ -31,32 +31,61 @@
             <div class="form-fields">
                 <!-- Campo para seleccionar el cliente -->
                 <div class="form-group">
-                    <label for="id_cliente">Cliente</label>
+                    <label for="id_cliente">Cliente:</label>
                     {{ form_pedido.cliente }} <!-- Aquí se mostrará el campo cliente del formulario -->
                 </div>
+                <div class="form-group">
+                    <label for="lista_items">Lista de Ítems:</label>
+                    <select id="lista_items" name="lista_items">
+                        <option value="1">Opción 1 - ORO</option>
+                        <option value="2">Opción 2 - DIAMANTE</option>
+                        <option value="3">Opción 3 - MAYOREO</option>
+                    </select>
+                </div>
+                <p class="product-list-info">Opciones: 1.- Oro 2.- Diamante 3.- Mayoreo</p>
 
                 <!-- Campos de los datos del cliente (autocompletados) -->
                 <div class="form-group">
-                    <label for="numero_cliente">Clav cliente</label>
-                    <input type="text" id="numero_cliente" name="direccion_cliente" readonly>
+                    <label for="cliente"></label>
+                    <input type="text" id="cliente" style="display: none;" name="nombre_cliente" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="calle_cliente">Calle</label>
-                    <input type="text" id="calle" name="direccion_cliente" readonly>
+                    <label for="numero_cliente">Clave Cliente:</label>
+                    <input type="text" id="numero_cliente" name="numero_cliente" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="telefono_cliente">Telefono</label>
-                    <input type="text" id="telefono" name="telefono_cliente" readonly>
+                    <label for="calle_cliente">Calle Cliente:</label>
+                    <input type="text" id="calle" name="calle" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="email_cliente">Email</label>
+                    <label for="colonia_cliente">Colonia:</label>
+                    <input type="text" id="colonia" name="colonia" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="municipio_cliente">Municipio:</label>
+                    <input type="text" id="municipio" name="municipio" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="Estado_cliente">Estado:</label>
+                    <input type="text" id="estado" name="estado" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="codigo_cliente">Codigo Postal:</label>
+                    <input type="text" id="codigo" name="codigo_postal" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="telefono_cliente">Telefono:</label>
+                    <input type="text" id="telefono_cliente" name="telefono" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="email_cliente">Email:</label>
                     <input type="email" id="email" name="email_cliente" readonly>
                 </div>
+                
             </div>
         </div>
-
-        <p class="product-list-info">Opciones: 1.- Oro 2.- Diamante 3.- Mayoreo</p>
-
+        <input type="hidden" name="estatus" value="pendiente">
+        
         <!-- Productos -->
         <h2 class="section-title">Seleccionar Productos</h2>
         <div class="productos-selection" id="productosContainer">
@@ -75,7 +104,8 @@
 <!-- Campos ocultos para enviar los datos -->
 <input type="hidden" id="direccion_cliente_hidden" name="direccion_cliente" value="">
 <input type="hidden" id="telefono_cliente_hidden" name="telefono_cliente" value="">
-<input type="hidden" id="email_cliente_hidden" name="email_cliente" value="">
+<input type="hidden" name="estatus" value="pendiente">
+
 
 <!-- JavaScript para manejar el filtrado con AJAX y autocompletar los datos del cliente -->
 <script>
@@ -141,27 +171,42 @@
         const clienteSelect = document.getElementById('id_cliente');
 
         clienteSelect.addEventListener('change', function () {
-            const clienteId = clienteSelect.value;  // Obtenemos el ID del cliente seleccionado
-            console.log("Cliente seleccionado:", clienteId); // Depuración
-
+            const clienteId = clienteSelect.value;
             if (clienteId) {
-                // Realizamos la solicitud AJAX al backend para obtener los datos del cliente
                 fetch(`/modulo_ventas/obtener_datos_cliente/?cliente_id=${clienteId}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log("Datos del cliente:", data); // Depuración
                         if (data.error) {
                             alert(data.error);
                         } else {
-                            // Llenamos los campos con los datos del cliente
-                            document.getElementById('numero_cliente').value = data.numero_cliente;
-                            document.getElementById('calle').value = data.calle;
-                            document.getElementById('colonia').value = data.colonia;
-                            document.getElementById('municipio').value = data.municipio;
-                            document.getElementById('estado').value = data.estado;
-                            document.getElementById('codigo').value = data.codigo;
-                            document.getElementById('email').value = data.email;
-                            document.getElementById('telefono').value = data.telefono;
+                            if (document.getElementById('numero_cliente')) {
+                                document.getElementById('numero_cliente').value = data.numero_cliente || '';
+                            }
+                            if (document.getElementById('cliente')) {
+                                document.getElementById('cliente').value = data.cliente || '';
+                            }
+                            if (document.getElementById('calle')) {
+                                document.getElementById('calle').value = data.calle || '';
+                            }
+                            if (document.getElementById('colonia')) {
+                                document.getElementById('colonia').value = data.colonia || 'No especificada';
+                            }
+                            if (document.getElementById('municipio')) {
+                                document.getElementById('municipio').value = data.municipio || '';
+                            }
+                            if (document.getElementById('estado')) {
+                                document.getElementById('estado').value = data.estado || '';
+                            }
+                            if (document.getElementById('codigo')) {
+                                document.getElementById('codigo').value = data.codigo || '';
+                            }
+                            if (document.getElementById('email')) {
+                                document.getElementById('email').value = data.email || 'Sin email';
+                            }
+                            if (document.getElementById('telefono_cliente')) {
+                                document.getElementById('telefono_cliente').value = data.telefono_cliente || '';
+                            }
+                            
                         }
                     })
                     .catch(error => {

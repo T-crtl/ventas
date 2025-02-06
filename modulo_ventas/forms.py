@@ -6,9 +6,21 @@ from django.utils.safestring import mark_safe
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['nombre_contacto', 'calle', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items', 'estatus']
+        fields = ['nombre_cliente', 'numero_cliente', 'nombre_contacto', 'calle', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items', 'estatus']
+        widgets = {
+            'calle': forms.TextInput(attrs={'readonly': True}),
+            'colonia': forms.TextInput(attrs={'readonly': True}),
+            'municipio': forms.TextInput(attrs={'readonly': True}),
+            'estado': forms.TextInput(attrs={'readonly': True}),
+            'codigo_postal': forms.TextInput(attrs={'readonly': True}),
+            'telefono': forms.TextInput(attrs={'readonly': True}),
+            'estatus': forms.Select(attrs={'class': 'form-control'})
+        }
+    # Si quieres asegurarte de que se envíe un valor predeterminado
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['estatus'].initial = 'pendiente'  # Valor predeterminado
 
-    # Cambiar el campo cliente a un ModelChoiceField
     cliente = forms.ModelChoiceField(queryset=Client.objects.all(), required=True)
     
 class DetallePedidoForm(forms.Form):
