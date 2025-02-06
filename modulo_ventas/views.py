@@ -184,7 +184,7 @@ def obtener_datos_cliente(request):
     # Si se proporciona un cliente_id
     if cliente_id:
         try:
-            cliente = Client.objects.get(id=cliente_id)  # Obtenemos el cliente desde la base de datos
+            cliente = Client.objects.get(clave_cliente=cliente_id)  # Obtenemos el cliente desde la base de datos
             # Devolvemos los datos del cliente como JSON
             if not cliente.numint:
                 codigo = f"{cliente.numext}"

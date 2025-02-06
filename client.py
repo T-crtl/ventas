@@ -13,8 +13,8 @@ from modulo_ventas.models import Client
 #conectar a DB aspel
 servidor = 'SERVIDOR2'
 database = 'SAE9EMPRE01'
-username = 'sa'
-password = 'Aspel01'
+username = ''
+password = ''
 connection_string = f'DRIVER={{SQL SERVER}};SERVER={servidor};DATABASE={database};UID={username};PWD={password}'
 
 try:
