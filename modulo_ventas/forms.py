@@ -1,13 +1,16 @@
 from django import forms
-from .models import Pedido, Producto, DetallePedido
+from .models import Pedido, Producto, DetallePedido, Client
 from django.utils.safestring import mark_safe
 
 
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['nombre_cliente', 'numero_cliente', 'nombre_contacto', 'calle', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items']
+        fields = ['nombre_contacto', 'calle', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items', 'estatus']
 
+    # Cambiar el campo cliente a un ModelChoiceField
+    cliente = forms.ModelChoiceField(queryset=Client.objects.all(), required=True)
+    
 class DetallePedidoForm(forms.Form):
     # Creamos dinámicamente los campos de cantidades
     def __init__(self, *args, **kwargs):

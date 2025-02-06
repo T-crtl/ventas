@@ -16,8 +16,6 @@
     </select>
 </form>
 
-
-<!-- test -->
 <!-- Pasar los IDs de los productos al JavaScript -->
 <div id="idsProductos" style="display: none;">{{ ids_productos|json_script:"idsProductos" }}</div>
 
@@ -26,13 +24,37 @@
     <h2 class="section-title">Datos del Pedido</h2>
     <form method="POST" class="pedido-form">
         {% csrf_token %}
+
         <!-- Datos del pedido -->
         <div class="form-section">
             <h3 class="form-title">Formulario de Pedido</h3>
             <div class="form-fields">
-                {{ form_pedido.as_p }}
+                <!-- Campo para seleccionar el cliente -->
+                <div class="form-group">
+                    <label for="id_cliente">Cliente</label>
+                    {{ form_pedido.cliente }} <!-- Aquí se mostrará el campo cliente del formulario -->
+                </div>
+
+                <!-- Campos de los datos del cliente (autocompletados) -->
+                <div class="form-group">
+                    <label for="numero_cliente">Clav cliente</label>
+                    <input type="text" id="numero_cliente" name="direccion_cliente" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="calle_cliente">Calle</label>
+                    <input type="text" id="calle" name="direccion_cliente" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="telefono_cliente">Teléfono</label>
+                    <input type="text" id="telefono" name="telefono_cliente" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="email_cliente">Email</label>
+                    <input type="email" id="email" name="email_cliente" readonly>
+                </div>
             </div>
         </div>
+
         <p class="product-list-info">Opciones: 1.- Oro 2.- Diamante 3.- Mayoreo</p>
 
         <!-- Productos -->
@@ -44,11 +66,18 @@
         <button type="submit" class="submit-btn">Realizar Pedido</button>
     </form>
 </div>
+
 <!-- Contenedor para los productos -->
-<div class="ocultar" id="productosContainer" >
+<div class="ocultar" id="productosContainer">
     {% include 'partials/productos.html' with productos=productos %}
 </div>
-<!-- JavaScript para manejar el filtrado con AJAX -->
+
+<!-- Campos ocultos para enviar los datos -->
+<input type="hidden" id="direccion_cliente_hidden" name="direccion_cliente" value="">
+<input type="hidden" id="telefono_cliente_hidden" name="telefono_cliente" value="">
+<input type="hidden" id="email_cliente_hidden" name="email_cliente" value="">
+
+<!-- JavaScript para manejar el filtrado con AJAX y autocompletar los datos del cliente -->
 <script>
     // Función para guardar las cantidades de todos los productos
     function guardarCantidades(idsProductos) {
@@ -92,19 +121,55 @@
                 'X-Requested-With': 'XMLHttpRequest'  // Para identificar solicitudes AJAX en Django
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Respuesta recibida:', data); // Depuración
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta recibida:', data); // Depuración
 
-            // Actualizar solo la sección de productos
-            document.getElementById('productosContainer').innerHTML = data.html;
+                // Actualizar solo la sección de productos
+                document.getElementById('productosContainer').innerHTML = data.html;
 
-            // Restaurar las cantidades después de cambiar el filtro
-            restaurarCantidades(cantidades);
-        })
-        .catch(error => {
-            console.error('Error en la solicitud Fetch:', error); // Depuración
+                // Restaurar las cantidades después de cambiar el filtro
+                restaurarCantidades(cantidades);
+            })
+            .catch(error => {
+                console.error('Error en la solicitud Fetch:', error); // Depuración
+            });
+    });
+
+    // Esperamos a que el documento cargue completamente
+    document.addEventListener('DOMContentLoaded', function () {
+        const clienteSelect = document.getElementById('id_cliente');
+
+        clienteSelect.addEventListener('change', function () {
+            const clienteId = clienteSelect.value;  // Obtenemos el ID del cliente seleccionado
+            console.log("Cliente seleccionado:", clienteId); // Depuración
+
+            if (clienteId) {
+                // Realizamos la solicitud AJAX al backend para obtener los datos del cliente
+                fetch(`/modulo_ventas/obtener_datos_cliente/?cliente_id=${clienteId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Datos del cliente:", data); // Depuración
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            // Llenamos los campos con los datos del cliente
+                            document.getElementById('numero_cliente').value = data.numero_cliente;
+                            document.getElementById('calle').value = data.calle;
+                            document.getElementById('colonia').value = data.colonia;
+                            document.getElementById('municipio').value = data.municipio;
+                            document.getElementById('estado').value = data.estado;
+                            document.getElementById('codigo').value = data.codigo;
+                            document.getElementById('email').value = data.email;
+                            document.getElementById('telefono').value = data.telefono;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener datos del cliente:', error);
+                    });
+            }
         });
     });
+
 </script>
 {% endblock %}

@@ -64,6 +64,8 @@ def realizar_pedido(request):
             # Guardar el pedido
             pedido = form_pedido.save(commit=False)
             pedido.vendedor = request.user  # Asigna el usuario actual
+            # Guardar el cliente
+            pedido.cliente = form_pedido.cleaned_data['cliente']  # Asocia el cliente al pedido
             pedido.save()
 
             # Guardar los detalles del pedido
@@ -173,3 +175,32 @@ def detalle_pedido(request, pedido_id):
 def perfil_empleado(request):
     user = request.user
     return render(request, 'perfil_empleado.html', {'user': user})
+
+@login_required
+def obtener_datos_cliente(request):
+    # Obtenemos el cliente_id desde la solicitud GET
+    cliente_id = request.GET.get('cliente_id')
+    
+    # Si se proporciona un cliente_id
+    if cliente_id:
+        try:
+            cliente = Client.objects.get(id=cliente_id)  # Obtenemos el cliente desde la base de datos
+            # Devolvemos los datos del cliente como JSON
+            if not cliente.numint:
+                codigo = f"{cliente.numext}"
+            else:
+                codigo = f"{cliente.numext} {cliente.numint}"
+            data = {
+                'numero_cliente': cliente.clave_cliente,
+                'calle': cliente.calle,
+                'colonia': cliente.colonia,
+                'municipio': cliente.municipio,
+                'estado': cliente.estado,
+                'codigo': codigo,
+                'email': cliente.email,
+                'telefono': cliente.telefono,
+            }
+            return JsonResponse(data)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Cliente no encontrado'}, status=404)  # Error si el cliente no existe
+    return JsonResponse({'error': 'ID de cliente no proporcionado'}, status=400)  # Error si no se proporciona un cliente_id
