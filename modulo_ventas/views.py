@@ -201,7 +201,6 @@ def obtener_datos_cliente(request):
                 codigo = f"{cliente.numext}"
             else:
                 codigo = f"{cliente.numext} {cliente.numint}"
-            print(cliente.id)
             data = {
                 'cliente': cliente.id,
                 'numero_cliente': cliente.clave_cliente,
