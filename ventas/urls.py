@@ -23,8 +23,8 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('modulo_ventas/', include('modulo_ventas.urls')),
-    path('', RedirectView.as_view(url='/modulo_ventas/', permanent=True)),
+    path('DISTRIBUIDORABLB/', include('modulo_ventas.urls')),
+    path('', RedirectView.as_view(url='/DISTRIBUIDORABLB/', permanent=True)),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout')

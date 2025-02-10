@@ -1,7 +1,19 @@
 from django import forms
-from .models import Pedido, Producto, DetallePedido, Client
+from .models import Pedido, Producto, DetallePedido, Client, CrearTicket
 from django.utils.safestring import mark_safe
 
+class TicketForm(forms.ModelForm):
+    class Meta:
+        model = CrearTicket
+        fields = [
+            'categoria',
+            'descripcion',
+        ]
+        widgets = {
+            'descripcion' : forms.Textarea(attrs={'rows':4, 'cols':40}),
+            'categoria' : forms.Select(attrs={'class': 'form-control'}),
+        }
+        
 
 class PedidoForm(forms.ModelForm):
     class Meta:

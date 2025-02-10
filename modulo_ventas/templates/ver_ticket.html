@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<h1 class="title-section">Ver tickets</h1>
+<h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
+
+{% if tickets %}
+    <ul>
+        {% for ticket in tickets %}
+            <li>
+                <strong>Número de Ticket:</strong> {{ ticket.numero_ticket }}<br>
+                <strong>Categoría:</strong> {{ ticket.get_categoria_display }}<br>
+                <strong>Descripción:</strong> {{ ticket.descripcion }}<br>
+                <strong>Fecha de Creación:</strong> {{ ticket.fecha_creacion }}<br>
+                <strong>Estado:</strong> {{ ticket.get_estado_display }}<br>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="no-pedidos">No hay tickets realizados.</p>
+{% endif %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if tickets.has_previous %}
+            <a class="btn-detalle" href="?page=1">Primera</a>
+            <a class="btn-detalle" href="?page={{ tickets.previous_page_number }}">Anterior</a>
+        {% endif %}
+        
+        <span>Página {{ tickets.number }} de {{ tickets.paginator.num_pages }}</span>
+        
+        {% if tickets.has_next %}
+            <a class="btn-detalle" href="?page={{ tickets.next_page_number }}">Siguiente</a>
+            <a class="btn-detalle" href="?page={{ tickets.paginator.num_pages }}">Última</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

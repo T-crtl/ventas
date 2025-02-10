@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import PedidoForm, DetallePedidoForm
-from .models import Pedido, DetallePedido, Producto, Client
+from .forms import PedidoForm, DetallePedidoForm, TicketForm
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -216,3 +216,36 @@ def obtener_datos_cliente(request):
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Cliente no encontrado'}, status=404)  # Error si el cliente no existe
     return JsonResponse({'error': 'ID de cliente no proporcionado'}, status=400)  # Error si no se proporciona un cliente_id
+
+@login_required
+def ticket(request):
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            ticket = form.save(commit=False)  # Crea el objeto del modelo pero no lo guarda en la base de datos
+            ticket.nombre_usuario = request.user  # Asigna el usuario autenticado
+            ticket.save()  # Guarda el ticket en la base de datos
+            return redirect('profile')  # Redirige a la página de perfil o a donde desees
+    else:
+        form = TicketForm()
+        
+    return render(request, 'crear_ticket.html', {'form': form})
+
+@login_required
+def ver_ticket(request):
+    
+    tickets = CrearTicket.objects.filter(nombre_usuario=request.user).order_by('-fecha_creacion')
+    
+    # Configura el paginador
+    paginator = Paginator(tickets, 10)  # 10 resultados por página
+    # Obtén el número de página de la URL (?page=1)
+    page_number = request.GET.get('page')
+    # Obtén los resultados de la página actual
+    page_obj = paginator.get_page(page_number)
+    #Contador de cuantos resultados arrojo la busqueda en total
+    contador = tickets.count()
+    
+    return render(request, 'ver_ticket.html', {
+        'tickets': page_obj,
+        'count': contador,
+        })

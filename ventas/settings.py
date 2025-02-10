@@ -134,5 +134,5 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/modulo_ventas/accounts/profile'  # Redirigir al perfil después del login
+LOGIN_REDIRECT_URL = '/DISTRIBUIDORABLB/accounts/profile'  # Redirigir al perfil después del login
 LOGOUT_REDIRECT_URL = '/'

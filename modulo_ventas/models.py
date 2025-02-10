@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -109,6 +110,44 @@ class DetallePedido(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre_producto} x {self.cantidad}" 
+    
+class CrearTicket(models.Model):
+    TICKET = [
+    ('hardware', 'HARDWARE'),
+    ('software', 'SOFTWARE'),
+    ('wifi', 'WIFI'),
+    ('servidor', 'SERVIDOR'),
+    ('redes', 'REDES'),
+    ('seguridad', 'SEGURIDAD'),
+    ('correo', 'CORREO ELECTRÓNICO'),
+    ('base_de_datos', 'BASE DE DATOS'),
+    ('aplicaciones', 'APLICACIONES ESPECÍFICAS'),
+    ('impresion', 'IMPRESIÓN'),
+    ('telefonia', 'TELEFONÍA/VOIP'),
+    ('soporte_usuario', 'SOPORTE A USUARIOS'),
+    ('backup', 'BACKUP/RECUPERACIÓN'),
+]
+    ESTADO = [
+        ('abierto', 'ABIERTO'),
+        ('en_prograso', 'EN PROGRESO'),
+        ('pendiente', 'ESPERANDO RESPUESTO DE UN TERCERO'),
+        ('resuelto', 'RESUELTO'),
+        ('cerrado', 'CERRADO'),
+    ]
+    numero_ticket = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    nombre_usuario =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    estado = models.CharField(
+        max_length=20,
+        choices=ESTADO,
+        default='abierto'
+    )
+    categoria = models.CharField(
+        max_length=20,
+        choices=TICKET,
+        default='soporte_usuario'
+    )
+    descripcion = models.TextField()
     
 
     

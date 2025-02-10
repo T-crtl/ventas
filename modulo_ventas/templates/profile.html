@@ -15,7 +15,8 @@
                 <li><a href="{% url 'realizar_pedido' %}" class="action-link">Realizar pedido</a></li>
                 <li><a href="{% url 'ver_estatus_pedido' %}" class="action-link">Ver estatus de pedido</a></li>
                 {% else %}
-                <p>No tienes acceso a las opciones para vendedores.</p>
+                <li><a href="{% url 'realizar_ticket' %}" class="action-link">Levantar ticket</a></li>
+                <li><a href="{% url 'ver_estatus_ticket' %}" class="action-link">Estatus tickets</a></li>
                 {% endif %}
             </ul>
         </div>
