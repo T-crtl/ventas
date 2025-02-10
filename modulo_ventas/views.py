@@ -225,7 +225,7 @@ def ticket(request):
             ticket = form.save(commit=False)  # Crea el objeto del modelo pero no lo guarda en la base de datos
             ticket.nombre_usuario = request.user  # Asigna el usuario autenticado
             ticket.save()  # Guarda el ticket en la base de datos
-            return redirect('profile')  # Redirige a la página de perfil o a donde desees
+            return redirect('ver_estatus_ticket')  # Redirige a la página de perfil o a donde desees
     else:
         form = TicketForm()
         
