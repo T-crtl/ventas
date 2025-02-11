@@ -7,11 +7,14 @@ class TicketForm(forms.ModelForm):
         model = CrearTicket
         fields = [
             'categoria',
+            'nivel_prioridad',
             'descripcion',
+            
         ]
         widgets = {
             'descripcion' : forms.Textarea(attrs={'rows':4, 'cols':40}),
             'categoria' : forms.Select(attrs={'class': 'form-control'}),
+            'nivel_prioridad' : forms.Select(attrs={'class': 'form-control'})
         }
         
 

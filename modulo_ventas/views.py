@@ -247,5 +247,5 @@ def ver_ticket(request):
     
     return render(request, 'ver_ticket.html', {
         'tickets': page_obj,
-        'count': contador,
+        'contador': contador,
         })

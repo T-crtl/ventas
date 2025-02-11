@@ -134,6 +134,13 @@ class CrearTicket(models.Model):
         ('resuelto', 'RESUELTO'),
         ('cerrado', 'CERRADO'),
     ]
+    
+    PRIORIDAD = [
+        ('critica', 'Crítica (Alta Prioridad)'),
+        ('alta', 'ALTA'),
+        ('media', 'MEDIA'),
+        ('baja', 'BAJA'),
+    ]
     numero_ticket = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     nombre_usuario =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -148,6 +155,11 @@ class CrearTicket(models.Model):
         default='soporte_usuario'
     )
     descripcion = models.TextField()
+    nivel_prioridad = models.CharField(
+        max_length=20,
+        choices=PRIORIDAD,
+        default='baja',
+    )
     
 
     

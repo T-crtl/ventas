@@ -6,9 +6,12 @@
 <h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
 
 {% if tickets %}
+<p class="count_results">Resultados encontrados {{ contador }}</p>
     <ul>
         {% for ticket in tickets %}
             <li>
+                <strong>Ticket de {{ ticket.nombre_usuario }}</strong><br>
+                <strong>Nivel de prioridad:</strong> {{ ticket.nivel_prioridad }}<br>
                 <strong>Número de Ticket:</strong> {{ ticket.numero_ticket }}<br>
                 <strong>Categoría:</strong> {{ ticket.get_categoria_display }}<br>
                 <strong>Descripción:</strong> {{ ticket.descripcion }}<br>
