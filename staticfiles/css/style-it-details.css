@@ -1,0 +1,157 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Contenedor principal */
+.ticket-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+.title-section {
+    font-size: 2rem;
+    color: #14438b;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.name-section {
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.ticket-title {
+    font-size: 1.8rem;
+    color: #14438b;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Información del ticket */
+.ticket-info {
+    margin-bottom: 20px;
+}
+
+.ticket-info p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.ticket-info strong {
+    color: #000000;
+}
+
+/* Formulario y botones */
+.ticket-form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn-proceso {
+    background-color: #14438b;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-proceso:hover {
+    background-color: #0d2c5a;
+}
+
+.btn-volver {
+    display: inline-block;
+    background-color: #14438b;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.btn-volver:hover {
+    background-color: #0d2c5a;
+}
+
+/* Mensaje de no permisos */
+.no-permission {
+    font-size: 1.2rem;
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ticket-detail-container {
+        padding: 15px;
+    }
+
+    .title-section {
+        font-size: 1.8rem;
+    }
+
+    .name-section {
+        font-size: 1.3rem;
+    }
+
+    .ticket-title {
+        font-size: 1.5rem;
+    }
+
+    .ticket-info p {
+        font-size: 0.9rem;
+    }
+
+    .btn-proceso,
+    .btn-volver {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-detail-container {
+        padding: 10px;
+    }
+
+    .title-section {
+        font-size: 1.5rem;
+    }
+
+    .name-section {
+        font-size: 1.2rem;
+    }
+
+    .ticket-title {
+        font-size: 1.3rem;
+    }
+
+    .ticket-info p {
+        font-size: 0.8rem;
+    }
+
+    .btn-proceso,
+    .btn-volver {
+        font-size: 0.8rem;
+    }
+}

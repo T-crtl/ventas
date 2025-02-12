@@ -239,6 +239,27 @@ def ver_ticket(request):
     
     tickets = CrearTicket.objects.filter(nombre_usuario=request.user).order_by('-fecha_creacion')
     
+    # Obtener los filtros desde la URL
+    estado_filtro = request.GET.get('estado', '')
+    fecha_filtro = request.GET.get('fecha_creacion', '')
+    
+    # Aplicar los filtros si existen
+    if estado_filtro:
+        tickets = tickets.filter(estado__icontains=estado_filtro)
+
+    if fecha_filtro:
+        try:
+            # Convertir la fecha de la cadena a un objeto date
+            fecha = datetime.strptime(fecha_filtro, '%Y-%m-%d').date()
+            # Convertir la fecha naive a una fecha consciente de la zona horaria
+            fecha = timezone.make_aware(datetime.combine(fecha, datetime.min.time()))
+            
+            # Filtrar tickets que se crearon en esa fecha sin importar la hora
+            tickets = tickets.filter(fecha_creacion__gte=fecha, fecha_creacion__lt=fecha + timedelta(days=1))
+            print(f"Fecha recibida: {fecha}")
+        except ValueError:
+            print("Formato de fecha no válido")
+            
     # Configura el paginador
     paginator = Paginator(tickets, 10)  # 10 resultados por página
     # Obtén el número de página de la URL (?page=1)

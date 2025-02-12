@@ -6,21 +6,37 @@
 <div class="ticket-list-container">
     <h1 class="title-section">Ver tickets</h1>
     <h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
-
+    <form method="GET" class="filter-form-it">
+        <div class="form-group-it">
+            <label for="fecha_creacion">Fecha de Creación (YYYY-MM-DD)</label>
+            <input type="date" id="fecha_creacion" name="fecha_creacion" value="{{ fecha_filtro }}">
+        </div>
+        <div class="form-group-it">
+            <label for="estado">Estatus</label>
+            <select id="estado" name="estado">
+                <option value="">Seleccionar estatus</option>
+                <option value="abierto" {% if estado_filtro == "abierto" %}selected{% endif %}>abierto</option>
+                <option value="en progreso" {% if estado_filtro == "en progreso" %}selected{% endif %}>en progreso</option>
+                <option value="resuelto" {% if estado_filtro == "resuelto" %}selected{% endif %}>resuelto</option>
+                <option value="cerrado" {% if estado_filtro == "cerrado" %}selected{% endif %}>cerrado</option>
+            </select>
+        </div>
+        <button type="submit" class="filter-btn-it">Buscar</button>
+    </form>
     {% if tickets %}
     <p class="count-results">Resultados encontrados {{ contador }}</p>
     <ul class="ticket-list">
         {% for ticket in tickets %}
-            <li class="ticket-item">
-                <strong>Ticket de {{ ticket.nombre_usuario }}</strong><br>
-                <strong>Nivel de prioridad:</strong> {{ ticket.nivel_prioridad }}<br>
-                <strong>Número de Ticket:</strong> {{ ticket.numero_ticket }}<br>
-                <strong>Categoría:</strong> {{ ticket.get_categoria_display }}<br>
-                <strong>Descripción:</strong> {{ ticket.descripcion }}<br>
-                <strong>Fecha de Creación:</strong> {{ ticket.fecha_creacion }}<br>
-                <strong>Estado:</strong> {{ ticket.get_estado_display }}<br>
-            </li>
-            <hr class="ticket-divider">
+        <li class="ticket-item">
+            <strong>Ticket de {{ ticket.nombre_usuario }}</strong><br>
+            <strong>Nivel de prioridad:</strong> {{ ticket.nivel_prioridad }}<br>
+            <strong>Número de Ticket:</strong> {{ ticket.numero_ticket }}<br>
+            <strong>Categoría:</strong> {{ ticket.get_categoria_display }}<br>
+            <strong>Descripción:</strong> {{ ticket.descripcion }}<br>
+            <strong>Fecha de Creación:</strong> {{ ticket.fecha_creacion }}<br>
+            <strong>Estado:</strong> {{ ticket.get_estado_display }}<br>
+        </li>
+        <hr class="ticket-divider">
         {% endfor %}
     </ul>
     {% else %}
@@ -30,15 +46,15 @@
     <div class="pagination">
         <span class="step-links">
             {% if tickets.has_previous %}
-                <a class="btn-pagination" href="?page=1">Primera</a>
-                <a class="btn-pagination" href="?page={{ tickets.previous_page_number }}">Anterior</a>
+            <a class="btn-pagination" href="?page=1">Primera</a>
+            <a class="btn-pagination" href="?page={{ tickets.previous_page_number }}">Anterior</a>
             {% endif %}
-            
+
             <span>Página {{ tickets.number }} de {{ tickets.paginator.num_pages }}</span>
-            
+
             {% if tickets.has_next %}
-                <a class="btn-pagination" href="?page={{ tickets.next_page_number }}">Siguiente</a>
-                <a class="btn-pagination" href="?page={{ tickets.paginator.num_pages }}">Última</a>
+            <a class="btn-pagination" href="?page={{ tickets.next_page_number }}">Siguiente</a>
+            <a class="btn-pagination" href="?page={{ tickets.paginator.num_pages }}">Última</a>
             {% endif %}
         </span>
     </div>
