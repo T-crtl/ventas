@@ -2,13 +2,15 @@
 {% load static %}
 
 {% block content %}
-<h1 class="title-section">Levantar un ticket</h1>
-<h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
+<link rel="stylesheet" href="{% static 'css/style-ticket-form.css' %}">
+<div class="ticket-form-container">
+    <h1 class="title-section">Levantar un ticket</h1>
+    <h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
 
-<form method="post">
-    {% csrf_token %}  <!-- Protección contra CSRF -->
-    {{ form.as_p }}    <!-- Muestra el formulario -->
-    <button type="submit">Enviar</button>
-</form>
-
+    <form method="post" class="ticket-form">
+        {% csrf_token %}  <!-- Protección contra CSRF -->
+        {{ form.as_p }}    <!-- Muestra el formulario -->
+        <button type="submit" class="btn-submit">Enviar</button>
+    </form>
+</div>
 {% endblock %}

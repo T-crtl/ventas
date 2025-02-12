@@ -1,0 +1,128 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333; /* Texto en negro */
+}
+
+/* Contenedor principal */
+.ticket-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+.title-section {
+    font-size: 2rem;
+    color: #000000; /* Título en negro */
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.name-section {
+    font-size: 1.5rem;
+    color: #000000; /* Subtítulo en negro */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Formulario */
+.ticket-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ticket-form p {
+    margin: 0;
+}
+
+.ticket-form label {
+    font-weight: bold;
+    color: #000000; /* Etiquetas en negro */
+}
+
+.ticket-form input,
+.ticket-form select,
+.ticket-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #333; /* Texto de entrada en negro */
+}
+
+/* Botón de enviar */
+.btn-submit {
+    background-color: #14438b; /* Color del botón */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    align-self: center; /* Centrar el botón */
+}
+
+.btn-submit:hover {
+    background-color: #0d2c5a; /* Color hover del botón */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ticket-form-container {
+        padding: 15px;
+    }
+
+    .title-section {
+        font-size: 1.8rem;
+    }
+
+    .name-section {
+        font-size: 1.3rem;
+    }
+
+    .ticket-form input,
+    .ticket-form select,
+    .ticket-form textarea {
+        font-size: 0.9rem;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-form-container {
+        padding: 10px;
+    }
+
+    .title-section {
+        font-size: 1.5rem;
+    }
+
+    .name-section {
+        font-size: 1.2rem;
+    }
+
+    .ticket-form input,
+    .ticket-form select,
+    .ticket-form textarea {
+        font-size: 0.8rem;
+    }
+
+    .btn-submit {
+        font-size: 0.8rem;
+    }
+}

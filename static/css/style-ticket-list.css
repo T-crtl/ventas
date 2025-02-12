@@ -1,0 +1,161 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Contenedor principal */
+.ticket-list-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+.title-section {
+    font-size: 2rem;
+    color: #14438b;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.name-section {
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Contador de resultados */
+.count-results {
+    font-size: 1.2rem;
+    color: #27ae60;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Lista de tickets */
+.ticket-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ticket-item {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.ticket-item strong {
+    color: #000000;
+}
+
+.ticket-divider {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 20px 0;
+}
+
+/* Mensaje de no tickets */
+.no-tickets {
+    font-size: 1.2rem;
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Paginación */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.step-links {
+    display: inline-block;
+}
+
+.btn-pagination {
+    background-color: #14438b;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin: 0 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-pagination:hover {
+    background-color: #0d2c5a;
+}
+
+.step-links span {
+    font-size: 1rem;
+    color: #333;
+    margin: 0 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ticket-list-container {
+        padding: 15px;
+    }
+
+    .title-section {
+        font-size: 1.8rem;
+    }
+
+    .name-section {
+        font-size: 1.3rem;
+    }
+
+    .count-results {
+        font-size: 1.1rem;
+    }
+
+    .ticket-item {
+        padding: 15px;
+    }
+
+    .btn-pagination {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-list-container {
+        padding: 10px;
+    }
+
+    .title-section {
+        font-size: 1.5rem;
+    }
+
+    .name-section {
+        font-size: 1.2rem;
+    }
+
+    .count-results {
+        font-size: 1rem;
+    }
+
+    .ticket-item {
+        padding: 10px;
+    }
+
+    .btn-pagination {
+        width: 100%;
+        margin: 5px 0;
+        font-size: 0.8rem;
+    }
+}
