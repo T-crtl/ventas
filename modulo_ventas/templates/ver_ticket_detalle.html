@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style-it-details.css' %}">
+{% if it %}
+<div class="ticket-detail-container">
+    <h1 class="title-section">Ver tickets</h1>
+    <h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
+
+    <h1 class="ticket-title">Detalle del Ticket</h1>
+
+    <div class="ticket-info">
+        <p><strong>Número de Ticket:</strong> {{ ticket.numero_ticket }}</p>
+        <p><strong>Categoría:</strong> {{ ticket.get_categoria_display }}</p>
+        <p><strong>Descripción:</strong> {{ ticket.descripcion }}</p>
+        <p><strong>Fecha de Creación:</strong> {{ ticket.fecha_creacion }}</p>
+        <p><strong>Estado:</strong> {{ ticket.get_estado_display }}</p>
+        <p><strong>Prioridad:</strong> {{ ticket.nivel_prioridad }}</p>
+        <p><strong>Usuario:</strong> {{ ticket.nombre_usuario.get_full_name }}</p>
+    </div>
+
+    <form method="POST" action="{% url 'cambiar_estado_ticket' ticket.id %}" class="ticket-form">
+        {% csrf_token %}
+        <button type="submit" class="btn-proceso">MARCAR PARA SIGUIENTE PROCESO</button>
+    </form>
+
+    <a href="{% url 'cerrar_ticket' %}" class="btn-volver">Volver a la lista de tickets</a>
+</div>
+{% else %}
+<p class="no-permission">No tienes permisos de administrador.</p>
+{% endif %}
+{% endblock %}

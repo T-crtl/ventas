@@ -11,4 +11,7 @@ urlpatterns = [
     path('obtener_datos_cliente/', views.obtener_datos_cliente, name='obtener_datos_cliente'),
     path('ticket_it/', views.ticket, name='realizar_ticket'),
     path('ver_ticket/', views.ver_ticket, name='ver_estatus_ticket'),
+    path('resolver_ticket/', views.admin_it, name='cerrar_ticket'),
+    path('ticket/<int:ticket_id>/', views.detalle_ticket_it, name='detalle_ticket'),
+    path('ticket/<int:ticket_id>/cambiar_estado/', views.cambiar_estado_ticket, name='cambiar_estado_ticket'),
 ]

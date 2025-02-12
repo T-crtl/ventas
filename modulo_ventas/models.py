@@ -129,7 +129,7 @@ class CrearTicket(models.Model):
 ]
     ESTADO = [
         ('abierto', 'ABIERTO'),
-        ('en_prograso', 'EN PROGRESO'),
+        ('en progreso', 'EN PROGRESO'),
         ('pendiente', 'ESPERANDO RESPUESTO DE UN TERCERO'),
         ('resuelto', 'RESUELTO'),
         ('cerrado', 'CERRADO'),

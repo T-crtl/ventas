@@ -14,10 +14,19 @@
                 {% if es_vendedor %}
                 <li><a href="{% url 'realizar_pedido' %}" class="action-link">Realizar pedido</a></li>
                 <li><a href="{% url 'ver_estatus_pedido' %}" class="action-link">Ver estatus de pedido</a></li>
-                {% else %}
                 <li><a href="{% url 'realizar_ticket' %}" class="action-link">Levantar ticket</a></li>
-                <li><a href="{% url 'ver_estatus_ticket' %}" class="action-link">Estatus tickets</a></li>
-                {% endif %}
+                <li><a href="{% url 'ver_estatus_ticket' %}" class="action-link">Estatus tickets</a></li>  
+                <br>
+                {% elif not it%}
+                <li><a href="{% url 'realizar_ticket' %}" class="action-link">LEVANTAR UN TICKET</a></li>
+                <li><a href="{% url 'ver_estatus_ticket' %}" class="action-link">ESTATUS DEL TICKET</a></li>   
+                {% elif it %}
+                <li><a href="{% url 'cerrar_ticket' %}" class="action-link">ATENDER TICKET</a></li>
+                <li><a href="{% url 'ver_estatus_ticket' %}" class="action-link">EXTRA</a></li>
+                {% else %}
+                <p>no tienes permisos contacta con el administrador de it sistemas@blb.mx</p>
+                {%endif%}
+                
             </ul>
         </div>
         <div class="card">

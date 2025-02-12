@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 def index(request):
@@ -17,11 +18,13 @@ def index(request):
 def profile(request):
     # Verificar si el usuario pertenece al grupo "Vendedores"
     es_vendedor = request.user.groups.filter(name='Vendedores').exists()
+    admin_it = request.user.groups.filter(name='ADMIN').exists()
     
     # Renderizar la plantilla con el contexto adicional
     return render(request, 'profile.html', {
         'user': request.user,
         'es_vendedor': es_vendedor,
+        'it': admin_it,
     })
 
 @login_required
@@ -249,3 +252,72 @@ def ver_ticket(request):
         'tickets': page_obj,
         'contador': contador,
         })
+    
+@login_required
+def admin_it(request):
+    tickets = CrearTicket.objects.all()
+
+    # Obtener los filtros desde la URL
+    estado_filtro = request.GET.get('estado', '')
+    fecha_filtro = request.GET.get('fecha_creacion', '')
+
+    # Aplicar los filtros si existen
+    if estado_filtro:
+        tickets = tickets.filter(estado__icontains=estado_filtro)
+
+    if fecha_filtro:
+        try:
+            # Convertir la fecha de la cadena a un objeto date
+            fecha = datetime.strptime(fecha_filtro, '%Y-%m-%d').date()
+            # Convertir la fecha naive a una fecha consciente de la zona horaria
+            fecha = timezone.make_aware(datetime.combine(fecha, datetime.min.time()))
+            
+            # Filtrar pedidos que se crearon en esa fecha sin importar la hora
+            tickets = tickets.filter(fecha_creacion__gte=fecha, fecha_creacion__lt=fecha + timedelta(days=1))
+            print(f"Fecha recibida: {fecha}")
+        except ValueError:
+            print("Formato de fecha no válido")
+
+    # Paginación
+    paginator = Paginator(tickets, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    contador = tickets.count()
+
+    return render(request, 'tickets_it.html', {
+        'tickets': page_obj,
+        'contador': contador,
+        'estado_filtro': estado_filtro,
+        'fecha_filtro': fecha_filtro
+    })
+
+@login_required
+def detalle_ticket_it(request, ticket_id):
+    ticket = get_object_or_404(CrearTicket, id=ticket_id)
+    admin_it = request.user.groups.filter(name='ADMIN').exists()
+    # Verifica si el usuario es parte del equipo de IT
+    if not request.user.groups.filter(name='ADMIN').exists():
+        raise PermissionDenied("No tienes permiso para ver este ticket.")
+    
+    
+    return render(request, 'ver_ticket_detalle.html', {
+        'ticket': ticket,
+        'it': admin_it,
+    })
+    
+def cambiar_estado_ticket(request, ticket_id):
+    ticket = get_object_or_404(CrearTicket, id=ticket_id)
+
+    # Verifica si el usuario pertenece al grupo IT
+    if not request.user.groups.filter(name='ADMIN').exists():
+        raise PermissionDenied("No tienes permiso para cambiar el estado del ticket.")
+
+    # Define la lógica para cambiar el estado al siguiente
+    ESTADOS = ['abierto', 'en progreso', 'resuelto', 'cerrado']
+    if ticket.estado in ESTADOS:
+        siguiente_estado_idx = ESTADOS.index(ticket.estado) + 1
+        if siguiente_estado_idx < len(ESTADOS):  # Evita pasarse de "Cerrado"
+            ticket.estado = ESTADOS[siguiente_estado_idx]
+            ticket.save()
+
+    return redirect('detalle_ticket', ticket_id=ticket.id)
