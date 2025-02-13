@@ -20,12 +20,13 @@
     <!-- Barra lateral -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>Modulo de Venta</h2>
+            <h2>DISTRIBUIDORA BLB</h2>
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="{% url 'profile' %}">Inicio</a></li>
                 <li><a href="{% url 'perfil_empleado' %}">Perfil</a></li>
+                <li><a href="{% url 'profile' %}">Inicio</a></li>
+                <li><a href="{% url 'directorios' %}">Directorios</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post" class="logout-form">
                         {% csrf_token %}

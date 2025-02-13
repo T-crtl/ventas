@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm, TicketForm
-from .models import Pedido, DetallePedido, Producto, Client, CrearTicket
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Area, Directorio
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -279,6 +279,10 @@ def admin_it(request):
      # Obtener todos los tickets ordenados por fecha de creación (más recientes primero)
     tickets = CrearTicket.objects.all().order_by('-fecha_creacion')
 
+    # Verifica si el usuario pertenece al grupo IT
+    if not request.user.groups.filter(name='ADMIN').exists():
+        raise PermissionDenied("No tienes permiso para cambiar el estado del ticket.")
+    
     # Obtener los filtros desde la URL
     estado_filtro = request.GET.get('estado', '')
     fecha_filtro = request.GET.get('fecha_creacion', '')
@@ -343,3 +347,9 @@ def cambiar_estado_ticket(request, ticket_id):
             ticket.save()
 
     return redirect('detalle_ticket', ticket_id=ticket.id)
+
+@login_required
+def directorio(request):
+    
+    
+    return render(request, 'directorios.html')

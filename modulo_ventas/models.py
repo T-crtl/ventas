@@ -161,6 +161,31 @@ class CrearTicket(models.Model):
         default='baja',
     )
     
+class Area(models.Model):
+    nombre = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.nombre
+    
+class Directorio(models.Model):
+    TIPO_DOCUMENTO_CHOICES = [
+        ('PDF', 'PDF'),
+        ('WORD', 'Word'),
+        ('EXCEL', 'Excel'),
+        ('OTRO', 'Otro'),
+    ]
+
+    nombre_documento = models.CharField(max_length=255, null=True, blank=True)
+    area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, blank=True)
+    link_documento = models.URLField(max_length=255, null=True, blank=True)
+    tipo_documento = models.CharField(max_length=10, choices=TIPO_DOCUMENTO_CHOICES, default='PDF')
+
+    def __str__(self):
+        return self.nombre_documento
+    
+
+    
+    
 
     
     
