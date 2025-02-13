@@ -161,12 +161,6 @@ class CrearTicket(models.Model):
         default='baja',
     )
     
-class Area(models.Model):
-    nombre = models.CharField(max_length=255, unique=True)
-
-    def __str__(self):
-        return self.nombre
-    
 class Directorio(models.Model):
     TIPO_DOCUMENTO_CHOICES = [
         ('PDF', 'PDF'),
@@ -174,14 +168,36 @@ class Directorio(models.Model):
         ('EXCEL', 'Excel'),
         ('OTRO', 'Otro'),
     ]
-
+    AREA_CHOICES = [
+        ('Administracion', 'Administracion'),
+        ('Asistente', 'Asistente'),
+        ('Cobranza', 'Cobranza'),
+        ('Compras', 'Compras'),
+        ('Produccion', 'Produccion'),
+        ('Ventas', 'Ventas'),
+        ('Rh', 'Rh'),
+        ('Formulaciones', 'Formulaciones'),
+        ('Imagen', 'Imagen'),
+        ('Community', 'Community'),
+        ('Recepcion', 'Recepcion'),
+        ('Calidad', 'Calidad'),
+        ('Proyectos', 'Proyectos'),
+        ('CEO', 'CEO'),
+        ('BLB', 'BLB'),
+        ('Sistemas', 'Sistemas'),
+    ]
+    
     nombre_documento = models.CharField(max_length=255, null=True, blank=True)
-    area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, blank=True)
+    area = models.CharField(max_length=20, choices=AREA_CHOICES, default='publica')
     link_documento = models.URLField(max_length=255, null=True, blank=True)
     tipo_documento = models.CharField(max_length=10, choices=TIPO_DOCUMENTO_CHOICES, default='PDF')
+    publico = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre_documento
+    
+class Area(models.Model):
+    pass
     
 
     

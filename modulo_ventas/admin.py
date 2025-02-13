@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pedido, Producto, DetallePedido, Client, CrearTicket
+from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Directorio, Area
 
 # Register your models here.
 @admin.register(Pedido)
@@ -26,3 +26,8 @@ class ClientAdmin(admin.ModelAdmin):
 @admin.register(CrearTicket)
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('estado', 'fecha_creacion', 'nombre_usuario', 'numero_ticket')
+
+@admin.register(Directorio)
+class DirectorioAdmin(admin.ModelAdmin):
+    list_display = ('nombre_documento', 'area', 'link_documento', 'tipo_documento')
+    

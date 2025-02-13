@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<H1>Directorios</H1>
+
+{% if tiene_acceso_total %}
+        <p>Tienes acceso a todos los directorios.</p>
+    {% else %}
+        <p>Tienes acceso a los directorios de tu área y los públicos.</p>
+    {% endif %}
+
+    <ul>
+        {% for directorio in directorios %}
+            <li>
+                <a href="{{ directorio.link_documento }}" target="_blank">
+                    {{ directorio.nombre_documento }} ({{ directorio.area }})
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

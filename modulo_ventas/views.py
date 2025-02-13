@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm, TicketForm
-from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Area, Directorio
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -350,6 +350,50 @@ def cambiar_estado_ticket(request, ticket_id):
 
 @login_required
 def directorio(request):
+    # Obtener el grupo del usuario
+    user_groups = request.user.groups.values_list('name', flat=True)
     
+    # Verificar si el usuario pertenece a algún grupo específico
+    is_administracion = 'Administracion' in user_groups
+    is_asistente = 'Asistente' in user_groups
+    is_sistemas = 'ADMIN' in user_groups
+    is_cobranza = 'Cobranza' in user_groups
+    is_compras = 'Compras' in user_groups
+    is_produccion = 'Produccion' in user_groups
+    is_ventas = 'Ventas' in user_groups
+    is_rh = 'Rh' in user_groups
+    is_formulaciones = 'Formulaciones' in user_groups
+    is_imagen = 'Imagen' in user_groups
+    is_community = 'Community' in user_groups
+    is_recepcion = 'Recepcion' in user_groups
+    is_calidad = 'Calidad' in user_groups
+    is_proyectos = 'Proyectos' in user_groups
+    is_ceo = 'Ceo' in user_groups
+    # Agrega más verificaciones según tus grupos...
+
+    # Pasar el contexto a la plantilla
+    return render(request, 'directorios.html', {
+        'is_administracion': is_administracion,
+        'is_asistente': is_asistente,
+        'is_sistemas': is_sistemas,
+        'is_cobranza': is_cobranza,
+        'is_compras' : is_compras,
+        'is_produccion' : is_produccion,
+        'is_ventas' : is_ventas,
+        'is_rh' : is_rh,
+        'is_formulaciones' : is_formulaciones,
+        'is_imagen' : is_imagen,
+        'is_community' : is_community,
+        'is_recepcion' : is_recepcion,
+        'is_calidad' : is_calidad,
+        'is_proyectos' : is_proyectos,
+        'is_ceo' : is_ceo
+        # Agrega más variables de contexto según tus grupos...
+    })
     
-    return render(request, 'directorios.html')
+def sistemas_dir(request):
+    directorios = Directorio.objects.filter(area= 'Sistemas')
+
+    return render(request, 'sistemas_dir.html', {
+        'directorios' : directorios,
+    })
