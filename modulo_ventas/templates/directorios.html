@@ -4,7 +4,13 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style-directory.css' %}">
 <H1>Directorios</H1>
+{% if is_sistemas %}
+<h1>Bienvenido Administrador del Sistemas</h1>
+{% else %}
+<h1>Bienvendio a los directorios</h1>
+{% endif %}
 <div class="folder-container">
+
     {% if is_sistemas %}
     <div class="folder">
         <div class="folder-icon">📁</div>
