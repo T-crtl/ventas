@@ -1,0 +1,67 @@
+/* Estilos para el contenedor de las carpetas */
+.folder-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center; /* Centra las carpetas en pantallas grandes */
+}
+
+/* Estilos para cada carpeta */
+.folder {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 150px; /* Tamaño base para pantallas grandes */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex: 1 1 calc(25% - 40px); /* 4 carpetas por fila en pantallas grandes */
+    max-width: calc(25% - 40px); /* Limita el ancho máximo */
+}
+
+.folder:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el ícono de la carpeta */
+.folder-icon {
+    font-size: 40px;
+    color: #4CAF50; /* Color verde para el ícono */
+    margin-bottom: 10px;
+}
+
+/* Estilos para el texto de la carpeta */
+.folder-text {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+}
+
+/* Media Queries para hacerlo responsive */
+
+/* Pantallas medianas (tablets) */
+@media (max-width: 768px) {
+    .folder {
+        flex: 1 1 calc(50% - 40px); /* 2 carpetas por fila */
+        max-width: calc(50% - 40px);
+    }
+}
+
+/* Pantallas pequeñas (móviles) */
+@media (max-width: 480px) {
+    .folder {
+        flex: 1 1 calc(100% - 40px); /* 1 carpeta por fila */
+        max-width: calc(100% - 40px);
+    }
+
+    .folder-icon {
+        font-size: 30px; /* Reduce el tamaño del ícono en móviles */
+    }
+
+    .folder-text {
+        font-size: 14px; /* Reduce el tamaño del texto en móviles */
+    }
+}

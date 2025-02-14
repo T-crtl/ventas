@@ -2,22 +2,34 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style-doc.css' %}">
 <H1>Directorios</H1>
 
 {% if tiene_acceso_total %}
-        <p>Tienes acceso a todos los directorios.</p>
-    {% else %}
-        <p>Tienes acceso a los directorios de tu área y los públicos.</p>
-    {% endif %}
+    <p>Tienes acceso a todos los directorios.</p>
+{% else %}
+    <p>Tienes acceso a los directorios de tu área y los públicos.</p>
+{% endif %}
 
-    <ul>
-        {% for directorio in directorios %}
-            <li>
-                <a href="{{ directorio.link_documento }}" target="_blank">
-                    {{ directorio.nombre_documento }} ({{ directorio.area }})
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+<ul class="document-list">
+    {% for directorio in directorios %}
+        <li class="document-item">
+            <!-- Ícono según el tipo de documento -->
+            {% if directorio.tipo_documento == 'PDF' %}
+                <span class="document-icon pdf">📄</span>
+            {% elif directorio.tipo_documento == 'WORD' %}
+                <span class="document-icon word">📝</span>
+            {% elif directorio.tipo_documento == 'EXCEL' %}
+                <span class="document-icon excel">📊</span>
+            {% else %}
+                <span class="document-icon other">📂</span>
+            {% endif %}
 
+            <!-- Nombre del documento y área -->
+            <a class="document-text" href="{{ directorio.link_documento }}" target="_blank">
+                {{ directorio.nombre_documento }} ({{ directorio.area }})
+            </a>
+        </li>
+    {% endfor %}
+</ul>
 {% endblock %}

@@ -2,75 +2,221 @@
 {% load static %}
 
 {% block content %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'css/style-directory.css' %}">
 <H1>Directorios</H1>
+<div class="folder-container">
+    {% if is_sistemas %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'sistemas_dir' %}">SISTEMAS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'administracion_dir' %}">ADMINISTRACION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'asistente_dir' %}">ASISTENTE</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'cobranza_dir' %}">COBRANZA</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'compras_dir' %}">COMPRAS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'produccion_dir' %}">PRODUCCION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'ventas_dir' %}">VENTAS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'rh_dir' %}">RH</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'formulaciones_dir' %}">FORMULACIONES</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'imagen_dir' %}">IMAGEN</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'community_dir' %}">COMMUNITY</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'recepcion_dir' %}">RECEPCION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'calidad_dir' %}">CALIDAD</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'proyectos_dir' %}">PROYECTOS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'ceo_dir' %}">CEO</a>
+    </div>
 
-{% if is_sistemas %}
-<a href="{%url 'sistemas_dir'%}">SISTEMAS</a><br>
-<a href="{%url 'administracion_dir'%}">ADMINISTRACION</a><br>
-<a href="{%url 'asistente_dir'%}">ASISTENTE</a><br>
-<a href="{%url 'cobranza_dir'%}">COBRANZA</a><br>
-<a href="{%url 'compras_dir'%}">COMPRAS</a><br>
-<a href="{%url 'produccion_dir'%}">PRODUCCION</a><br>
-<a href="{%url 'ventas_dir'%}">VENTAS</a><br>
-<a href="{%url 'rh_dir'%}">RH</a><br>
-<a href="{%url 'formulaciones_dir'%}">FORMULACIONES</a><br>
-<a href="{%url 'imagen_dir'%}">IMAGEN</a><br>
-<a href="{%url 'community_dir'%}">COMMUNITY</a><br>
-<a href="{%url 'recepcion_dir'%}">RECEPCION</a><br>
-<a href="{%url 'calidad_dir'%}">CALIDAD</a><br>
-<a href="{%url 'proyectos_dir'%}">PROYECTOS</a><br>
-<a href="{%url 'ceo_dir'%}">CEO</a><br>
-{% elif is_asistente %}
-<a href="{%url 'asistente_dir'%}">ASISTENTE</a>
-{% elif is_administracion %}
-<a href="{%url 'administracion_dir'%}">ADMINISTRACION</a>
-<a href="{%url 'cobranza_dir'%}">COBRANZA</a><br>
-<a href="{%url 'compras_dir'%}">COMPRAS</a><br>
-{% elif is_cobranza %}
-<a href="{%url 'cobranza_dir'%}">COBRANZA</a>
-{% elif is_compras %}
-<a href="{%url 'compras_dir'%}">COMPRAS</a>
-{% elif is_produccion %}
-<a href="{%url 'produccion_dir'%}">PRODUCCION</a>
-{% elif is_ventas %}
-<a href="{%url 'ventas_dir'%}">VENTAS</a>
-{% elif is_rh %}
-<a href="{%url 'rh_dir'%}">RH</a>
-{% elif is_imagen %}
-<a href="{%url 'imagen_dir'%}">IMAGEN</a>
-<a href="{%url 'community_dir'%}">COMMUNITY</a><br>
-{% elif is_community %}
-<a href="{%url 'community_dir'%}">COMMUNITY</a>
-<a href="{%url 'imagen_dir'%}">IMAGEN</a>
-{% elif is_recepcion %}
-<a href="{%url 'recepcion_dir'%}">RECEPCION</a>
-{% elif is_calidad %}
-<a href="{%url 'calidad_dir'%}">CALIDAD</a>
-{% elif is_proyectos %}
-<a href="{%url 'proyectos_dir'%}">PROYECTOS</a>
-{% elif is_formulaciones %}
-<a href="{%url 'formulaciones_dir'%}">FORMULACIONES</a>
+    {% elif is_asistente %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'asistente_dir' %}">ASISTENTE</a>
+    </div>
+    {% elif is_administracion %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'administracion_dir' %}">ADMINISTRACION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'cobranza_dir' %}">COBRANZA</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'compras_dir' %}">COMPRAS</a>
+    </div>
+    {% elif is_cobranza %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'cobranza_dir' %}">COBRANZA</a>
+    </div>
+    {% elif is_compras %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'compras_dir' %}">COMPRAS</a>
+    </div>
+    {% elif is_produccion %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'produccion_dir' %}">PRODUCCION</a>
+    </div>
+    {% elif is_ventas %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'ventas_dir' %}">VENTAS</a>
+    </div>
+    {% elif is_rh %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'rh_dir' %}">RH</a>
+    </div>
+    {% elif is_imagen %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'imagen_dir' %}">IMAGEN</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'community_dir' %}">COMMUNITY</a>
+    </div>
+    {% elif is_community %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'community_dir' %}">COMMUNITY</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'imagen_dir' %}">IMAGEN</a>
+    </div>
+    {% elif is_recepcion %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'recepcion_dir' %}">RECEPCION</a>
+    </div>
+    {% elif is_calidad %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'calidad_dir' %}">CALIDAD</a>
+    </div>
+    {% elif is_proyectos %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'proyectos_dir' %}">PROYECTOS</a>
+    </div>
+    {% elif is_formulaciones %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'formulaciones_dir' %}">FORMULACIONES</a>
+    </div>
 
-{% elif is_ceo %}
-<a href="{%url 'sistemas_dir'%}">SISTEMAS</a><br>
-<a href="{%url 'administracion_dir'%}">ADMINISTRACION</a><br>
-<a href="{%url 'asistente_dir'%}">ASISTENTE</a><br>
-<a href="{%url 'cobranza_dir'%}">COBRANZA</a><br>
-<a href="{%url 'compras_dir'%}">COMPRAS</a><br>
-<a href="{%url 'produccion_dir'%}">PRODUCCION</a><br>
-<a href="{%url 'ventas_dir'%}">VENTAS</a><br>
-<a href="{%url 'rh_dir'%}">RH</a><br>
-<a href="{%url 'formulaciones_dir'%}">FORMULACIONES</a><br>
-<a href="{%url 'imagen_dir'%}">IMAGEN</a><br>
-<a href="{%url 'community_dir'%}">COMMUNITY</a><br>
-<a href="{%url 'recepcion_dir'%}">RECEPCION</a><br>
-<a href="{%url 'calidad_dir'%}">CALIDAD</a><br>
-<a href="{%url 'proyectos_dir'%}">PROYECTOS</a><br>
-<a href="{%url 'ceo_dir'%}">CEO</a><br>
+    {% elif is_ceo %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'sistemas_dir' %}">SISTEMAS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'administracion_dir' %}">ADMINISTRACION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'asistente_dir' %}">ASISTENTE</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'cobranza_dir' %}">COBRANZA</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'compras_dir' %}">COMPRAS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'produccion_dir' %}">PRODUCCION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'ventas_dir' %}">VENTAS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'rh_dir' %}">RH</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'formulaciones_dir' %}">FORMULACIONES</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'imagen_dir' %}">IMAGEN</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'community_dir' %}">COMMUNITY</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'recepcion_dir' %}">RECEPCION</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'calidad_dir' %}">CALIDAD</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'proyectos_dir' %}">PROYECTOS</a>
+    </div>
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'ceo_dir' %}">CEO</a>
+    </div>
 
-{% else %}
+    {% else %}
 
-{% endif %}
-<a href="{%url 'blb_dir'%}">BLB</a>
+    {% endif %}
+    <div class="folder">
+        <div class="folder-icon">📁</div>
+        <a class="folder-text" href="{% url 'blb_dir' %}">BLB</a>
+    </div>
+</div>
 {% endblock %}
