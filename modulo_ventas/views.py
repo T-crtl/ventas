@@ -394,6 +394,111 @@ def directorio(request):
 def sistemas_dir(request):
     directorios = Directorio.objects.filter(area= 'Sistemas')
 
-    return render(request, 'sistemas_dir.html', {
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def administracion_dir(request):
+    directorios = Directorio.objects.filter(area= 'Administracion')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+
+def cobranza_dir(request):
+    directorios = Directorio.objects.filter(area= 'Cobranza')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def asistente_dir(request):
+    directorios = Directorio.objects.filter(area= 'Asistente')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+
+def compras_dir(request):
+    directorios = Directorio.objects.filter(area= 'Compras')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def produccion_dir(request):
+    directorios = Directorio.objects.filter(area= 'Produccion')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def ventas_dir(request):
+    directorios = Directorio.objects.filter(area= 'Ventas')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+
+def rh_dir(request):
+    directorios = Directorio.objects.filter(area= 'Rh')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def formulaciones_dir(request):
+    directorios = Directorio.objects.filter(area= 'Formulaciones')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def imagen_dir(request):
+    directorios = Directorio.objects.filter(area= 'Imagen')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def community_dir(request):
+    directorios = Directorio.objects.filter(area= 'Community')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def recepcion_dir(request):
+    directorios = Directorio.objects.filter(area= 'Recepcion')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def calidad_dir(request):
+    directorios = Directorio.objects.filter(area= 'Calidad')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def proyectos_dir(request):
+    directorios = Directorio.objects.filter(area= 'Proyectos')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def ceo_dir(request):
+    directorios = Directorio.objects.filter(area= 'CEO')
+
+    return render(request, 'template_dir.html', {
+        'directorios' : directorios,
+    })
+    
+def blb_dir(request):
+    directorios = Directorio.objects.filter(area= 'BLB')
+
+    return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
