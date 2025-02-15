@@ -1,7 +1,7 @@
 Developed by Cesar Abraham Duran Cuevas
 
 Link provisional online 
-https://abrahamduran69.pythonanywhere.com/modulo_ventas/
+https://abrahamduran69.pythonanywhere.com/DISTRIBUIDORABLB/
 
 Provisional access
 ricardo_beltran
