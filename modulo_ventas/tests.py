@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Client, Pedido, Directorio, DetallePedido, CrearTicket, Producto
 
@@ -181,3 +182,4 @@ class DirectorioModelTest(TestCase):
         self.assertEqual(self.documento.nombre_documento, "Documento Test")
         self.assertEqual(self.documento.area, "Administracion")
         self.assertTrue(self.documento.publico)
+        
