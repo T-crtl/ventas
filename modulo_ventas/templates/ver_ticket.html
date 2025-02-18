@@ -7,11 +7,12 @@
     <h1 class="title-section">Ver tickets</h1>
     <h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
     <form method="GET" class="filter-form-it">
+
         <div class="form-group-it">
-            <label for="numero_ticket">Número de Ticket</label>
-            <input type="text" id="ticket" name="numero_ticket" value="{{ numero_ticket_filtro }}">
+            <label for="ticket">Número de Ticket</label>
+            <input type="text" id="ticket" name="ticket" value="{{ numero_ticket_filtro }}">
         </div>
-        
+
         <div class="form-group-it">
             <label for="fecha_creacion">Fecha de Creación (YYYY-MM-DD)</label>
             <input type="date" id="fecha_creacion" name="fecha_creacion" value="{{ fecha_filtro }}">

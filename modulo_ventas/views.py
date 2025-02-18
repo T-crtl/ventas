@@ -250,9 +250,9 @@ def ver_ticket(request):
         try:
             # Convertir el valor del filtro a UUID
             uuid_filtro = UUID(numero_ticket_filtro)
-            print(f"UUID a buscar: {uuid_filtro}")  # Depuración
+            #print(f"UUID a buscar: {uuid_filtro}")  # Depuración
             tickets = tickets.filter(numero_ticket=uuid_filtro)
-            print(f"Tickets filtrados: {tickets.count()}")  # Depuración
+            #print(f"Tickets filtrados: {tickets.count()}")  # Depuración
         except ValueError:
             # Si el valor no es un UUID válido, ignora el filtro
             print("UUID de ticket no válido")
@@ -309,9 +309,9 @@ def admin_it(request):
         try:
             # Convertir el valor del filtro a UUID
             uuid_filtro = UUID(numero_ticket_filtro)
-            print(f"UUID a buscar: {uuid_filtro}")  # Depuración
+            #print(f"UUID a buscar: {uuid_filtro}")  # Depuración
             tickets = tickets.filter(numero_ticket=uuid_filtro)
-            print(f"Tickets filtrados: {tickets.count()}")  # Depuración
+            #print(f"Tickets filtrados: {tickets.count()}")  # Depuración
         except ValueError:
             # Si el valor no es un UUID válido, ignora el filtro
             print("UUID de ticket no válido")
