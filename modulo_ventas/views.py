@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
+from uuid import UUID
 
 # Create your views here.
 def index(request):
@@ -240,10 +241,22 @@ def ver_ticket(request):
     tickets = CrearTicket.objects.filter(nombre_usuario=request.user).order_by('-fecha_creacion')
     
     # Obtener los filtros desde la URL
+    numero_ticket_filtro = request.GET.get('ticket', '')
     estado_filtro = request.GET.get('estado', '')
     fecha_filtro = request.GET.get('fecha_creacion', '')
     
     # Aplicar los filtros si existen
+    if numero_ticket_filtro:
+        try:
+            # Convertir el valor del filtro a UUID
+            uuid_filtro = UUID(numero_ticket_filtro)
+            print(f"UUID a buscar: {uuid_filtro}")  # Depuración
+            tickets = tickets.filter(numero_ticket=uuid_filtro)
+            print(f"Tickets filtrados: {tickets.count()}")  # Depuración
+        except ValueError:
+            # Si el valor no es un UUID válido, ignora el filtro
+            print("UUID de ticket no válido")
+        
     if estado_filtro:
         tickets = tickets.filter(estado__icontains=estado_filtro)
 
@@ -259,20 +272,23 @@ def ver_ticket(request):
             print(f"Fecha recibida: {fecha}")
         except ValueError:
             print("Formato de fecha no válido")
-            
+    print(f"Número de ticket filtro: {numero_ticket_filtro}")  # Depuración       
     # Configura el paginador
     paginator = Paginator(tickets, 10)  # 10 resultados por página
     # Obtén el número de página de la URL (?page=1)
     page_number = request.GET.get('page')
     # Obtén los resultados de la página actual
     page_obj = paginator.get_page(page_number)
-    #Contador de cuantos resultados arrojo la busqueda en total
+    # Contador de cuantos resultados arrojo la busqueda en total
     contador = tickets.count()
     
     return render(request, 'ver_ticket.html', {
         'tickets': page_obj,
         'contador': contador,
-        })
+        'numero_ticket_filtro': numero_ticket_filtro,
+        'fecha_filtro': fecha_filtro,
+        'estado_filtro': estado_filtro,
+    })
     
 @login_required
 def admin_it(request):
@@ -284,10 +300,22 @@ def admin_it(request):
         raise PermissionDenied("No tienes permiso para cambiar el estado del ticket.")
     
     # Obtener los filtros desde la URL
+    numero_ticket_filtro = request.GET.get('ticket', '')
     estado_filtro = request.GET.get('estado', '')
     fecha_filtro = request.GET.get('fecha_creacion', '')
 
     # Aplicar los filtros si existen
+    if numero_ticket_filtro:
+        try:
+            # Convertir el valor del filtro a UUID
+            uuid_filtro = UUID(numero_ticket_filtro)
+            print(f"UUID a buscar: {uuid_filtro}")  # Depuración
+            tickets = tickets.filter(numero_ticket=uuid_filtro)
+            print(f"Tickets filtrados: {tickets.count()}")  # Depuración
+        except ValueError:
+            # Si el valor no es un UUID válido, ignora el filtro
+            print("UUID de ticket no válido")
+            
     if estado_filtro:
         tickets = tickets.filter(estado__icontains=estado_filtro)
 
@@ -314,7 +342,8 @@ def admin_it(request):
         'tickets': page_obj,
         'contador': contador,
         'estado_filtro': estado_filtro,
-        'fecha_filtro': fecha_filtro
+        'fecha_filtro': fecha_filtro,
+        'numero_ticket_filtro': numero_ticket_filtro,
     })
 
 @login_required
