@@ -186,7 +186,6 @@ class Directorio(models.Model):
         ('BLB', 'BLB'),
         ('Sistemas', 'Sistemas'),
     ]
-    
     nombre_documento = models.CharField(max_length=255, null=True, blank=True)
     area = models.CharField(max_length=20, choices=AREA_CHOICES, default='publica')
     link_documento = models.URLField(max_length=255, null=True, blank=True)

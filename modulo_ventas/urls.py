@@ -31,4 +31,6 @@ urlpatterns = [
     path('proyectos_dir/', views.proyectos_dir, name='proyectos_dir'),
     path('ceo_dir/', views.ceo_dir, name='ceo_dir'),
     path('blb_dir/', views.blb_dir, name='blb_dir'),
+    path('cambiar-contrasenia/', views.cambiar_contrasenia, name='cambiar_contrasenia'),
+    path('cambiar-email/', views.cambiar_email, name='cambiar_email'),
 ]

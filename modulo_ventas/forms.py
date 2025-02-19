@@ -1,6 +1,8 @@
 from django import forms
 from .models import Pedido, Producto, DetallePedido, Client, CrearTicket
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 class TicketForm(forms.ModelForm):
     class Meta:
@@ -98,3 +100,34 @@ class DetallePedidoForm(forms.Form):
             raise forms.ValidationError("Debes agregar al menos un producto con cantidad mayor a 0.")
         
         return {'productos': productos_seleccionados, 'cantidades': cantidades}
+    
+class CambiarContraseniaForm(forms.Form):
+    old_password = forms.CharField(
+        label="Contraseña Actual",
+        widget=forms.PasswordInput,
+        required=True
+    )
+    new_password1 = forms.CharField(
+        label="Nueva Contraseña",
+        widget=forms.PasswordInput,
+        required=True
+    )
+    new_password2 = forms.CharField(
+        label="Confirmar Nueva Contraseña",
+        widget=forms.PasswordInput,
+        required=True
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get("new_password1")
+        new_password2 = cleaned_data.get("new_password2")
+
+        if new_password1 and new_password2 and new_password1 != new_password2:
+            raise ValidationError("Las nuevas contraseñas no coinciden.")
+
+class CambiarEmailForm(forms.Form):
+    new_email = forms.EmailField(
+        label="Nuevo Correo Electrónico",
+        required=True
+    )

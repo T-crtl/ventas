@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import PedidoForm, DetallePedidoForm, TicketForm
+from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm
 from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
@@ -10,6 +10,10 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
 from uuid import UUID
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.hashers import check_password
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -531,3 +535,45 @@ def blb_dir(request):
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
+    
+@login_required
+def cambiar_contrasenia(request):
+    if request.method == 'POST':
+        form = CambiarContraseniaForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            old_password = form.cleaned_data['old_password']
+            new_password1 = form.cleaned_data['new_password1']
+
+            # Verificar que la contraseña actual es correcta
+            if not check_password(old_password, user.password):
+                messages.error(request, 'La contraseña actual es incorrecta.')
+            else:
+                # Cambiar la contraseña
+                user.set_password(new_password1)
+                user.save()
+                # Actualizar la sesión para evitar que el usuario se desconecte
+                update_session_auth_hash(request, user)
+                messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
+                return redirect('perfil_empleado')
+    else:
+        form = CambiarContraseniaForm()
+
+    return render(request, 'cambiar_contrasenia.html', {'form': form})
+
+
+@login_required
+def cambiar_email(request):
+    if request.method == 'POST':
+        form = CambiarEmailForm(request.POST)
+        if form.is_valid():
+            new_email = form.cleaned_data['new_email']
+            user = request.user
+            user.email = new_email
+            user.save()
+            messages.success(request, '¡Tu correo electrónico ha sido actualizado exitosamente!')
+            return redirect('perfil_empleado')
+    else:
+        form = CambiarEmailForm()
+
+    return render(request, 'cambiar_email.html', {'form': form})

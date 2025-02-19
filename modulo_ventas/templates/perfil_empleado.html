@@ -2,9 +2,26 @@
 {% load static %}
 
 {% block content %}
+
 <h1>Perfil de {{ user.username }}</h1>
 <p>Email: {{ user.email }}</p>
 <p>Nombre: {{ user.first_name }}</p>
 <p>Apellido: {{ user.last_name }}</p>
 <p>Último inicio de sesión: {{ user.last_login }}</p>
+
+<!-- Enlace para cambiar contraseña -->
+<a href="{% url 'cambiar_contrasenia' %}">Cambiar Contraseña</a>
+
+<!-- Enlace para cambiar correo electrónico -->
+<a href="{% url 'cambiar_email' %}">Cambiar Correo Electrónico</a>
+
+<!-- Mostrar mensajes de retroalimentación -->
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+
+{% endif %}
 {% endblock %}
