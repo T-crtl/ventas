@@ -2,20 +2,27 @@
 {% load static %}
 
 {% block content %}
-<h1>Cambiar Correo Electrónico</h1>
+<div class="cambiar-email-container">
+  <div class="cambiar-email-card">
+    <h1 class="cambiar-email-title">Cambiar Correo Electrónico</h1>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Cambiar Correo</button>
-</form>
+    <form method="post" class="cambiar-email-form">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.new_email.label_tag }}
+        {{ form.new_email }}
+      </div>
+      <button type="submit" class="btn cambiar-email-btn">Cambiar Correo</button>
+    </form>
 
-<!-- Mostrar mensajes de retroalimentación -->
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+    <!-- Mostrar mensajes de retroalimentación -->
+    {% if messages %}
+      <ul class="messages cambiar-email-messages">
+        {% for message in messages %}
+          <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

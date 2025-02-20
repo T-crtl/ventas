@@ -2,26 +2,28 @@
 {% load static %}
 
 {% block content %}
+<div class="perfil-empleado-container">
+  <div class="perfil-empleado-card">
+    <h1 class="tittle-perfil-empleado">Perfil de {{ user.username }}</h1>
+    <div class="perfil-empleado-info">
+      <p class="email-perfil-empleado"><span class="label">Email:</span> {{ user.email }}</p>
+      <p class="nombre-perfil-empleado"><span class="label">Nombre:</span> {{ user.first_name }}</p>
+      <p class="apellido"><span class="label">Apellido:</span> {{ user.last_name }}</p>
+      <p class="login-perfil-empleado"><span class="label">Último inicio de sesión:</span> {{ user.last_login }}</p>
+    </div>
+    <div class="perfil-empleado-actions">
+      <a href="{% url 'cambiar_contrasenia' %}" class="cambiar_contrasenia-perfil-empleado btn">Cambiar Contraseña</a>
+      <a href="{% url 'cambiar_email' %}" class="cambiar_correo-perfil-empleado btn">Cambiar Correo Electrónico</a>
+    </div>
+  </div>
 
-<h1>Perfil de {{ user.username }}</h1>
-<p>Email: {{ user.email }}</p>
-<p>Nombre: {{ user.first_name }}</p>
-<p>Apellido: {{ user.last_name }}</p>
-<p>Último inicio de sesión: {{ user.last_login }}</p>
-
-<!-- Enlace para cambiar contraseña -->
-<a href="{% url 'cambiar_contrasenia' %}">Cambiar Contraseña</a>
-
-<!-- Enlace para cambiar correo electrónico -->
-<a href="{% url 'cambiar_email' %}">Cambiar Correo Electrónico</a>
-
-<!-- Mostrar mensajes de retroalimentación -->
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-
-{% endif %}
+  <!-- Mostrar mensajes de retroalimentación -->
+  {% if messages %}
+    <ul class="messages-perfil-empleado">
+      {% for message in messages %}
+        <li class="mensajes-perfil-empleado {{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
 {% endblock %}

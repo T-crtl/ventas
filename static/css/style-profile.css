@@ -51,7 +51,7 @@ body {
 }
 
 .sidebar-nav ul li a:hover {
-    background-color: #1a56b1;
+    background-color: #1a69e0;
 }
 
 /* Estilos para el área principal */
@@ -198,3 +198,323 @@ body {
     }
 }
 
+/* perfil empleado ajustado clases no cambiar */
+/* Estilos generales para la vista de perfil-empleado */
+.perfil-empleado-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .perfil-empleado-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .tittle-perfil-empleado {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .perfil-empleado-info {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .perfil-empleado-info p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+  }
+  
+  .label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .perfil-empleado-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cambiar_contrasenia-perfil-empleado {
+    background-color: #14438b;
+    color: #fff;
+  }
+  
+  .cambiar_contrasenia-perfil-empleado:hover {
+    background-color: #1d5dbe;
+  }
+  
+  .cambiar_correo-perfil-empleado {
+    background-color: #14438b;
+    color: #fff;
+  }
+  
+  .cambiar_correo-perfil-empleado:hover {
+    background-color: #246ad3;
+  }
+  
+  /* Estilos para mensajes */
+  .messages-perfil-empleado {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .mensajes-perfil-empleado {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .mensajes-perfil-empleado.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .mensajes-perfil-empleado.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .mensajes-perfil-empleado.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+  
+  .mensajes-perfil-empleado.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
+
+  /*cambio de contrasenia disenio */
+  /* Estilos generales para la vista de cambiar-contrasenia */
+.cambiar-contrasenia-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .cambiar-contrasenia-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .cambiar-contrasenia-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .cambiar-contrasenia-form {
+    text-align: left;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  .cambiar-contrasenia-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #14438b;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cambiar-contrasenia-btn:hover {
+    background-color: #1e65cf;
+  }
+  
+  /* Estilos para mensajes */
+  .cambiar-contrasenia-messages {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .message {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+  
+  .message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
+
+/* disenio para cambio de email */
+/* Estilos generales para la vista de cambiar-email */
+.cambiar-email-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .cambiar-email-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .cambiar-email-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .cambiar-email-form {
+    text-align: left;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  .cambiar-email-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #14438b;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cambiar-email-btn:hover {
+    background-color: #2169d4;
+  }
+  
+  /* Estilos para mensajes */
+  .cambiar-email-messages {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .message {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+  
+  .message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
