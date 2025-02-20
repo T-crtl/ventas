@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="error-container">
+    <h1>Error 404: Página no encontrada</h1>
+    <p>Lo sentimos, la página que estás buscando no existe.</p>
+    <img src="{% static 'images/404.png' %}" alt="Error 404" class="error-image">
+    <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
+  </div>
+{% endblock %}
