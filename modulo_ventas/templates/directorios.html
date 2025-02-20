@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<link rel="preload" href="{% static 'css/style-directory.css' %}" as="style" onload="this.rel='stylesheet'">
 <link rel="stylesheet" type="text/css" href="{% static 'css/style-directory.css' %}">
 <H1>Directorios</H1>
 {% if is_sistemas %}

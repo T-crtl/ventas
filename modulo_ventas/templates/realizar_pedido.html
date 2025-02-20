@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<link rel="preload" href="{% static 'css/style-form.css' %}" as="style" onload="this.rel='stylesheet'">
 <link rel="stylesheet" type="text/css" href="{% static 'css/style-form.css' %}">
 <h1 class="page-title">Realizar un Pedido</h1>
 <p class="intro-text">Aquí podrás realizar tu pedido de manera fácil y rápida.</p>

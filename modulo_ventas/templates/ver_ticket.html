@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<link rel="preload" href="{% static 'css/style-ticket-list.css' %}" as="style" onload="this.rel='stylesheet'">
 <link rel="stylesheet" href="{% static 'css/style-ticket-list.css' %}">
 <div class="ticket-list-container">
     <h1 class="title-section">Ver tickets</h1>

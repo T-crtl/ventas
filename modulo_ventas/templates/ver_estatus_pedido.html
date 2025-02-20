@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<link rel="preload" href="{% static 'css/styles-detail.css' %}" as="style" onload="this.rel='stylesheet'">
 <link rel="stylesheet" href="{% static 'css/styles-detail.css' %}">
 <h1 class="pedidos-titulo2">Estatus del Pedido</h1>
 <p>Aquí verás el estatus de tu pedido</p>

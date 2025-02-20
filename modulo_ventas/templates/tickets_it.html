@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<link rel="preload" href="{% static 'css/style-it.css' %}" as="style" onload="this.rel='stylesheet'">
 <link rel="stylesheet" href="{% static 'css/style-it.css' %}">
 <h1 class="title-section-it">Bienvenido personal IT</h1>
 <h3 class="name-section-it">Nombre: {{ user.get_full_name }}</h3>
