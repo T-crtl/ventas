@@ -21,6 +21,10 @@ from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from modulo_ventas import views
+
+
+handler404 = views.vista_404 
 
 urlpatterns = [
     path('DISTRIBUIDORABLB/', include('modulo_ventas.urls')),
