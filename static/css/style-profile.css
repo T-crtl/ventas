@@ -200,166 +200,219 @@ body {
 
 /* perfil empleado ajustado clases no cambiar */
 /* Estilos generales para la vista de perfil-empleado */
+/* Contenedor principal */
 .perfil-empleado-container {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-  }
-  
-  .perfil-empleado-card {
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* Tarjeta de perfil */
+.perfil-empleado-card {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+    padding: 20px; /* Reducir el padding en móviles */
     text-align: center;
-  }
-  
-  .tittle-perfil-empleado {
-    font-size: 2rem;
+}
+
+/* Título */
+.tittle-perfil-empleado {
+    font-size: 1.8rem; /* Reducir el tamaño en móviles */
     color: #2c3e50;
-    margin-bottom: 20px;
-  }
-  
-  .perfil-empleado-info {
+    margin-bottom: 15px;
+}
+
+/* Información del perfil */
+.perfil-empleado-info {
     text-align: left;
     margin-bottom: 20px;
-  }
-  
-  .perfil-empleado-info p {
-    font-size: 1.1rem;
-    margin: 10px 0;
-  }
-  
-  .label {
+}
+
+.perfil-empleado-info p {
+    font-size: 1rem; /* Reducir el tamaño en móviles */
+    margin: 8px 0;
+}
+
+.label {
     font-weight: bold;
     color: #555;
-  }
-  
-  .perfil-empleado-actions {
+}
+
+/* Acciones (botones) */
+.perfil-empleado-actions {
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    flex-direction: column; /* Cambiar a columna en móviles */
+    gap: 10px;
     margin-top: 20px;
-  }
-  
-  .btn {
+}
+
+.btn {
     padding: 10px 20px;
     border-radius: 8px;
     text-decoration: none;
     font-size: 1rem;
     transition: background-color 0.3s ease;
-  }
-  
-  .cambiar_contrasenia-perfil-empleado {
+    width: 100%; /* Hacer que los botones ocupen el ancho completo en móviles */
+    box-sizing: border-box;
+}
+
+.cambiar_contrasenia-perfil-empleado {
     background-color: #14438b;
     color: #fff;
-  }
-  
-  .cambiar_contrasenia-perfil-empleado:hover {
+}
+
+.cambiar_contrasenia-perfil-empleado:hover {
     background-color: #1d5dbe;
-  }
-  
-  .cambiar_correo-perfil-empleado {
+}
+
+.cambiar_correo-perfil-empleado {
     background-color: #14438b;
     color: #fff;
-  }
-  
-  .cambiar_correo-perfil-empleado:hover {
+}
+
+.cambiar_correo-perfil-empleado:hover {
     background-color: #246ad3;
-  }
-  
-  /* Estilos para mensajes */
-  .messages-perfil-empleado {
+}
+
+/* Mensajes */
+.messages-perfil-empleado {
     list-style: none;
     padding: 0;
     margin-top: 20px;
-  }
-  
-  .mensajes-perfil-empleado {
+}
+
+.mensajes-perfil-empleado {
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 10px;
     text-align: center;
-  }
-  
-  .mensajes-perfil-empleado.success {
+}
+
+.mensajes-perfil-empleado.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
-  }
-  
-  .mensajes-perfil-empleado.error {
+}
+
+.mensajes-perfil-empleado.error {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
-  }
-  
-  .mensajes-perfil-empleado.info {
+}
+
+.mensajes-perfil-empleado.info {
     background-color: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
-  }
-  
-  .mensajes-perfil-empleado.warning {
+}
+
+.mensajes-perfil-empleado.warning {
     background-color: #fff3cd;
     color: #856404;
     border: 1px solid #ffeeba;
-  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .perfil-empleado-container {
+        padding: 10px; /* Reducir el padding en móviles */
+    }
+
+    .perfil-empleado-card {
+        padding: 15px; /* Reducir el padding en móviles */
+    }
+
+    .tittle-perfil-empleado {
+        font-size: 1.5rem; /* Reducir el tamaño del título en móviles */
+    }
+
+    .perfil-empleado-info p {
+        font-size: 0.9rem; /* Reducir el tamaño del texto en móviles */
+    }
+
+    .btn {
+        font-size: 0.9rem; /* Reducir el tamaño de los botones en móviles */
+    }
+}
+
+@media (max-width: 480px) {
+    .perfil-empleado-container {
+        max-width: 100%; /* Ocupar todo el ancho en pantallas muy pequeñas */
+    }
+
+    .perfil-empleado-actions {
+        flex-direction: column; /* Botones en columna en pantallas pequeñas */
+    }
+
+    .btn {
+        width: 100%; /* Botones ocupen todo el ancho */
+    }
+}
 
   /*cambio de contrasenia disenio */
   /* Estilos generales para la vista de cambiar-contrasenia */
+/* Contenedor principal */
 .cambiar-contrasenia-container {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-  }
-  
-  .cambiar-contrasenia-card {
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* Tarjeta de cambio de contraseña */
+.cambiar-contrasenia-card {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+    padding: 20px; /* Reducir el padding en móviles */
     text-align: center;
-  }
-  
-  .cambiar-contrasenia-title {
-    font-size: 2rem;
+}
+
+/* Título */
+.cambiar-contrasenia-title {
+    font-size: 1.8rem; /* Reducir el tamaño en móviles */
     color: #2c3e50;
-    margin-bottom: 20px;
-  }
-  
-  .cambiar-contrasenia-form {
+    margin-bottom: 15px;
+}
+
+/* Formulario */
+.cambiar-contrasenia-form {
     text-align: left;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 15px; /* Reducir el margen en móviles */
+}
+
+.form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
     color: #555;
-  }
-  
-  .form-group input {
+}
+
+.form-group input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
-  }
-  
-  .form-group input:focus {
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+}
+
+.form-group input:focus {
     border-color: #3498db;
     outline: none;
-  }
-  
-  .cambiar-contrasenia-btn {
+}
+
+/* Botón de cambio de contraseña */
+.cambiar-contrasenia-btn {
     width: 100%;
     padding: 10px;
     border: none;
@@ -369,103 +422,152 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  .cambiar-contrasenia-btn:hover {
+}
+
+.cambiar-contrasenia-btn:hover {
     background-color: #1e65cf;
-  }
-  
-  /* Estilos para mensajes */
-  .cambiar-contrasenia-messages {
+}
+
+/* Mensajes */
+.cambiar-contrasenia-messages {
     list-style: none;
     padding: 0;
     margin-top: 20px;
-  }
-  
-  .message {
+}
+
+.message {
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 10px;
     text-align: center;
-  }
-  
-  .message.success {
+}
+
+.message.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
-  }
-  
-  .message.error {
+}
+
+.message.error {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
-  }
-  
-  .message.info {
+}
+
+.message.info {
     background-color: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
-  }
-  
-  .message.warning {
+}
+
+.message.warning {
     background-color: #fff3cd;
     color: #856404;
     border: 1px solid #ffeeba;
-  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .cambiar-contrasenia-container {
+        padding: 10px; /* Reducir el padding en móviles */
+    }
+
+    .cambiar-contrasenia-card {
+        padding: 15px; /* Reducir el padding en móviles */
+    }
+
+    .cambiar-contrasenia-title {
+        font-size: 1.5rem; /* Reducir el tamaño del título en móviles */
+    }
+
+    .form-group input {
+        font-size: 0.9rem; /* Reducir el tamaño del texto en móviles */
+    }
+
+    .cambiar-contrasenia-btn {
+        font-size: 0.9rem; /* Reducir el tamaño del botón en móviles */
+    }
+}
+
+@media (max-width: 480px) {
+    .cambiar-contrasenia-container {
+        max-width: 100%; /* Ocupar todo el ancho en pantallas muy pequeñas */
+    }
+
+    .cambiar-contrasenia-title {
+        font-size: 1.3rem; /* Reducir aún más el tamaño del título en móviles pequeños */
+    }
+
+    .form-group input {
+        padding: 8px; /* Reducir el padding en móviles pequeños */
+    }
+
+    .cambiar-contrasenia-btn {
+        padding: 8px; /* Reducir el padding del botón en móviles pequeños */
+    }
+}
 
 /* disenio para cambio de email */
 /* Estilos generales para la vista de cambiar-email */
+/* Contenedor principal */
 .cambiar-email-container {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-  }
-  
-  .cambiar-email-card {
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* Tarjeta de cambio de email */
+.cambiar-email-card {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+    padding: 20px; /* Reducir el padding en móviles */
     text-align: center;
-  }
-  
-  .cambiar-email-title {
-    font-size: 2rem;
+}
+
+/* Título */
+.cambiar-email-title {
+    font-size: 1.8rem; /* Reducir el tamaño en móviles */
     color: #2c3e50;
-    margin-bottom: 20px;
-  }
-  
-  .cambiar-email-form {
+    margin-bottom: 15px;
+}
+
+/* Formulario */
+.cambiar-email-form {
     text-align: left;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 15px; /* Reducir el margen en móviles */
+}
+
+.form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
     color: #555;
-  }
-  
-  .form-group input {
+}
+
+.form-group input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
-  }
-  
-  .form-group input:focus {
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+}
+
+.form-group input:focus {
     border-color: #3498db;
     outline: none;
-  }
-  
-  .cambiar-email-btn {
+}
+
+/* Botón de cambio de email */
+.cambiar-email-btn {
     width: 100%;
     padding: 10px;
     border: none;
@@ -475,46 +577,87 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  .cambiar-email-btn:hover {
+}
+
+.cambiar-email-btn:hover {
     background-color: #2169d4;
-  }
-  
-  /* Estilos para mensajes */
-  .cambiar-email-messages {
+}
+
+/* Mensajes */
+.cambiar-email-messages {
     list-style: none;
     padding: 0;
     margin-top: 20px;
-  }
-  
-  .message {
+}
+
+.message {
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 10px;
     text-align: center;
-  }
-  
-  .message.success {
+}
+
+.message.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
-  }
-  
-  .message.error {
+}
+
+.message.error {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
-  }
-  
-  .message.info {
+}
+
+.message.info {
     background-color: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
-  }
-  
-  .message.warning {
+}
+
+.message.warning {
     background-color: #fff3cd;
     color: #856404;
     border: 1px solid #ffeeba;
-  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .cambiar-email-container {
+        padding: 10px; /* Reducir el padding en móviles */
+    }
+
+    .cambiar-email-card {
+        padding: 15px; /* Reducir el padding en móviles */
+    }
+
+    .cambiar-email-title {
+        font-size: 1.5rem; /* Reducir el tamaño del título en móviles */
+    }
+
+    .form-group input {
+        font-size: 0.9rem; /* Reducir el tamaño del texto en móviles */
+    }
+
+    .cambiar-email-btn {
+        font-size: 0.9rem; /* Reducir el tamaño del botón en móviles */
+    }
+}
+
+@media (max-width: 480px) {
+    .cambiar-email-container {
+        max-width: 100%; /* Ocupar todo el ancho en pantallas muy pequeñas */
+    }
+
+    .cambiar-email-title {
+        font-size: 1.3rem; /* Reducir aún más el tamaño del título en móviles pequeños */
+    }
+
+    .form-group input {
+        padding: 8px; /* Reducir el padding en móviles pequeños */
+    }
+
+    .cambiar-email-btn {
+        padding: 8px; /* Reducir el padding del botón en móviles pequeños */
+    }
+}
