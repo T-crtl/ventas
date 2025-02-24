@@ -580,3 +580,6 @@ def cambiar_email(request):
 
 def vista_404(request, exception=None):
     return render(request, '404.html', status=404)
+
+def vista_403(request, exception=None):
+    return render(request, '403.html', status=403)

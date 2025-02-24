@@ -25,6 +25,7 @@ from modulo_ventas import views
 
 
 handler404 = views.vista_404 
+handler403 = views.vista_403 
 
 urlpatterns = [
     path('DISTRIBUIDORABLB/', include('modulo_ventas.urls')),
