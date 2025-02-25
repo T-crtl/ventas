@@ -662,20 +662,38 @@ body {
     }
 }
 
-/* disenio para manejo de errores */
-.error-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ocupa toda la altura de la pantalla */
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa; /* Fondo claro para resaltar la imagen */
-  }
+
+    /* Estilos para manejo de errores */
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Ocupa toda la altura de la pantalla */
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa; /* Fondo claro para resaltar la imagen */
+      }
   
-  .error-image {
-    max-width: 100%; /* La imagen no superará el ancho del contenedor */
-    height: auto; /* Mantiene la proporción de la imagen */
-    display: block; /* Evita espacios no deseados alrededor de la imagen */
-  }
+      .error-image {
+        width: 100%;
+        height: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+  
+      /* Imagen para móviles */
+      @media (max-width: 768px) {
+        .error-image {
+          background-image: url("{% static 'images/404-1.png' %}");
+        }
+      }
+  
+      /* Imagen para escritorio */
+      @media (min-width: 769px) {
+        .error-image {
+          background-image: url("{% static 'images/404.png' %}");
+        }
+      }
+    
 
