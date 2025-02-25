@@ -670,7 +670,7 @@ body {
     height: 100vh; /* Ocupa toda la altura de la pantalla */
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa; /* Fondo claro para resaltar la imagen */
+    background-color: #e2e2e2; /* Fondo claro para resaltar la imagen */
   }
   
   .error-image404 {
