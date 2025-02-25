@@ -5,12 +5,6 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
 <div class="error-container">
-    <!-- Usamos la etiqueta <picture> para cargar imágenes responsivas -->
-    <picture>
-        <!-- Imagen para móviles -->
-        <source srcset="{% static 'images/403-1.png' %}" media="(max-width: 768px)">
-        <!-- Imagen para escritorio -->
-        <img src="{% static 'images/403.png' %}" alt="Error 403" class="error-image">
-    </picture>
+  <div class="error-image"></div>
 </div>
 {% endblock %}
