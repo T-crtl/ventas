@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     clienteSelect.addEventListener('change', function () {
         const clienteId = clienteSelect.value;
         if (clienteId) {
-            fetch(`/modulo_ventas/obtener_datos_cliente/?cliente_id=${clienteId}`)
+            fetch(`/DISTRIBUIDORABLB/obtener_datos_cliente/?cliente_id=${clienteId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
