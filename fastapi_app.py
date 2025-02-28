@@ -41,3 +41,4 @@ async def buscar_cantidad(cvelote: str):
         raise HTTPException(status_code=500, detail=str(e))
     
 #test code
+#only for test
