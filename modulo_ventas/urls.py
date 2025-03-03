@@ -34,4 +34,5 @@ urlpatterns = [
     path('blb_dir/', views.blb_dir, name='blb_dir'),
     path('cambiar-contrasenia/', views.cambiar_contrasenia, name='cambiar_contrasenia'),
     path('cambiar-email/', views.cambiar_email, name='cambiar_email'),
+    path('buscar_cantidad/', views.buscar_cantidad, name='buscar_cantidad'),
 ]

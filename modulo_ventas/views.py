@@ -14,6 +14,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
 from django.contrib import messages
+import requests
 
 # Create your views here.
 def index(request):
@@ -583,3 +584,38 @@ def vista_404(request, exception=None):
 
 def vista_403(request, exception=None):
     return render(request, '403.html', status=403)
+
+def buscar_cantidad(request):
+    cvelote = request.GET.get('cvelote')
+    error = None
+    cantidad = None
+
+    if cvelote:
+        try:
+            # URL de la API de FastAPI (usando la URL pública de ngrok)
+            api_url = f'https://3b1f-129-222-90-213.ngrok-free.app/buscar_cantidad/?cvelote={cvelote}'
+
+            # Llamar a la API de FastAPI con el encabezado personalizado
+            headers = {
+                'ngrok-skip-browser-warning': 'true'  # Agregar este encabezado
+            }
+            response = requests.get(api_url, headers=headers)
+
+            # Verificar si la API devolvió un resultado válido
+            if response.status_code == 200:
+                datos = response.json()
+                cantidad = datos['cantidad']
+            else:
+                error = 'Error al obtener los datos del lote'
+
+        except Exception as e:
+            error = str(e)
+    else:
+        error = 'Ingrese una clave de lote'
+
+    # Renderizar la plantilla con los datos
+    return render(request, 'resultado.html', {
+        'cvelote': cvelote,
+        'cantidad': cantidad,
+        'error': error,
+    })
