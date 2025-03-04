@@ -586,6 +586,12 @@ def vista_403(request, exception=None):
     return render(request, '403.html', status=403)
 
 def buscar_cantidad(request):
+    """""
+    Busca la cantidad de un lote en la base de datos.
+    :param cvelote: Clave del lote a buscar.
+    :return: Cantidad del lote o None si no se encuentra.
+    """""
+    # Lógica de la función
     cvelote = request.GET.get('cvelote')
     error = None
     cantidad = None
