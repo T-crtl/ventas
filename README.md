@@ -17,8 +17,10 @@ el cual consiste en un modulo de tickets para el departamento de IT y llevar un 
 1. Clona el repositorio:
 ```bash
    git clone https://github.com/T-crtl/ventas.git
+```
 
 2. Instala los requerimientos 
 ```bash
     pip install -r requirements.txt
+```
 
