@@ -1,26 +1,36 @@
 Developed by Cesar Abraham Duran Cuevas
 
-Link provisional online 
+Temporary Online Link
 https://abrahamduran69.pythonanywhere.com/DISTRIBUIDORABLB/
 
-Provisional access
-ricardo_beltran
-#iFiJse4
+Temporary Access
+Username: ricardo_beltran
+Password: #iFiJse4
+Web Application for DISTRIBUIDORA BLB
+Description
 
-# Aplicacion web Distribuidora BLB  
+This project is a custom system designed to meet the specific requirements of the company DISTRIBUIDORA BLB. It is tailored to their needs and includes the following features:
 
-## Descripción
-Este proyecto es un sistema diseñado a medida con los requerimientos solicitados por la empresa DISTRIBUIDORA BLB adaptandose a sus necesidades 
-el cual consiste en un modulo de tickets para el departamento de IT y llevar un registro sobre los incidentes ocurridos, documentacion interna para los empleados, integracion de un endpoint y api que conecta con el servidor local de la empresa y realiza consultas con respecto a Aspel mediante consultas SQL
+    A ticketing module for the IT department to track and manage incidents.
 
-## Instalación
-1. Clona el repositorio:
-```bash
-   git clone https://github.com/T-crtl/ventas.git
-```
+    Internal documentation for employees.
 
-2. Instala los requerimientos 
-```bash
-    pip install -r requirements.txt
-```
+    Integration of an endpoint and API that connects to the company's local server and performs SQL queries to interact with the Aspel system.
 
+Installation
+
+    Clone the repository:
+
+bash
+Copy
+
+git clone https://github.com/T-crtl/ventas.git
+
+    Install the required dependencies:
+
+bash
+Copy
+
+pip install -r requirements.txt
+
+    Set up the database and configure the credentials.
