@@ -20,17 +20,12 @@ This project is a custom system designed to meet the specific requirements of th
 Installation
 
     Clone the repository:
-
-bash
-Copy
-
+```bash
 git clone https://github.com/T-crtl/ventas.git
+```
 
     Install the required dependencies:
-
-bash
-Copy
-
+```bash
 pip install -r requirements.txt
-
+```
     Set up the database and configure the credentials.
