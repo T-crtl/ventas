@@ -29,3 +29,7 @@ git clone https://github.com/T-crtl/ventas.git
 pip install -r requirements.txt
 ```
 3- Set up the database and configure the credentials.
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
