@@ -382,47 +382,64 @@ def cambiar_estado_ticket(request, ticket_id):
 
     return redirect('detalle_ticket', ticket_id=ticket.id)
 
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def directorio(request):
-    # Obtener el grupo del usuario
+    # Diccionario que mapea grupos a directorios permitidos
+    grupos_directorios = {
+        'Administracion': ['administracion_dir', 'cobranza_dir', 'compras_dir'],
+        'Asistente': ['asistente_dir'],
+        'ADMIN': ['sistemas_dir', 'administracion_dir', 'asistente_dir', 'cobranza_dir', 'compras_dir', 'produccion_dir', 'ventas_dir', 'rh_dir', 'formulaciones_dir', 'imagen_dir', 'community_dir', 'recepcion_dir', 'calidad_dir', 'proyectos_dir', 'ceo_dir'],
+        'Cobranza': ['cobranza_dir'],
+        'Compras': ['compras_dir'],
+        'Produccion': ['produccion_dir'],
+        'Ventas': ['ventas_dir'],
+        'Rh': ['rh_dir'],
+        'Formulaciones': ['formulaciones_dir'],
+        'Imagen': ['imagen_dir', 'community_dir'],
+        'Community': ['community_dir', 'imagen_dir'],
+        'Recepcion': ['recepcion_dir'],
+        'Calidad': ['calidad_dir'],
+        'Proyectos': ['proyectos_dir'],
+        'Ceo': ['sistemas_dir', 'administracion_dir', 'asistente_dir', 'cobranza_dir', 'compras_dir', 'produccion_dir', 'ventas_dir', 'rh_dir', 'formulaciones_dir', 'imagen_dir', 'community_dir', 'recepcion_dir', 'calidad_dir', 'proyectos_dir', 'ceo_dir'],
+    }
+
+    # Obtener los grupos del usuario
     user_groups = request.user.groups.values_list('name', flat=True)
-    
-    # Verificar si el usuario pertenece a algún grupo específico
-    is_administracion = 'Administracion' in user_groups
-    is_asistente = 'Asistente' in user_groups
-    is_sistemas = 'ADMIN' in user_groups
-    is_cobranza = 'Cobranza' in user_groups
-    is_compras = 'Compras' in user_groups
-    is_produccion = 'Produccion' in user_groups
-    is_ventas = 'Ventas' in user_groups
-    is_rh = 'Rh' in user_groups
-    is_formulaciones = 'Formulaciones' in user_groups
-    is_imagen = 'Imagen' in user_groups
-    is_community = 'Community' in user_groups
-    is_recepcion = 'Recepcion' in user_groups
-    is_calidad = 'Calidad' in user_groups
-    is_proyectos = 'Proyectos' in user_groups
-    is_ceo = 'Ceo' in user_groups
-    # Agrega más verificaciones según tus grupos...
+
+    # Determinar los directorios permitidos para el usuario
+    directorios_permitidos = set()
+    for group in user_groups:
+        if group in grupos_directorios:
+            directorios_permitidos.update(grupos_directorios[group])
+
+    # Lista de todos los directorios disponibles
+    todos_directorios = [
+        {'nombre': 'SISTEMAS', 'url': 'sistemas_dir'},
+        {'nombre': 'ADMINISTRACION', 'url': 'administracion_dir'},
+        {'nombre': 'ASISTENTE', 'url': 'asistente_dir'},
+        {'nombre': 'COBRANZA', 'url': 'cobranza_dir'},
+        {'nombre': 'COMPRAS', 'url': 'compras_dir'},
+        {'nombre': 'PRODUCCION', 'url': 'produccion_dir'},
+        {'nombre': 'VENTAS', 'url': 'ventas_dir'},
+        {'nombre': 'RH', 'url': 'rh_dir'},
+        {'nombre': 'FORMULACIONES', 'url': 'formulaciones_dir'},
+        {'nombre': 'IMAGEN', 'url': 'imagen_dir'},
+        {'nombre': 'COMMUNITY', 'url': 'community_dir'},
+        {'nombre': 'RECEPCION', 'url': 'recepcion_dir'},
+        {'nombre': 'CALIDAD', 'url': 'calidad_dir'},
+        {'nombre': 'PROYECTOS', 'url': 'proyectos_dir'},
+        {'nombre': 'CEO', 'url': 'ceo_dir'},
+    ]
+
+    # Filtrar los directorios permitidos
+    directorios_filtrados = [dir for dir in todos_directorios if dir['url'] in directorios_permitidos]
 
     # Pasar el contexto a la plantilla
     return render(request, 'directorios.html', {
-        'is_administracion': is_administracion,
-        'is_asistente': is_asistente,
-        'is_sistemas': is_sistemas,
-        'is_cobranza': is_cobranza,
-        'is_compras' : is_compras,
-        'is_produccion' : is_produccion,
-        'is_ventas' : is_ventas,
-        'is_rh' : is_rh,
-        'is_formulaciones' : is_formulaciones,
-        'is_imagen' : is_imagen,
-        'is_community' : is_community,
-        'is_recepcion' : is_recepcion,
-        'is_calidad' : is_calidad,
-        'is_proyectos' : is_proyectos,
-        'is_ceo' : is_ceo
-        # Agrega más variables de contexto según tus grupos...
+        'directorios': directorios_filtrados,
+        'is_sistemas': 'ADMIN' in user_groups,  # Solo si necesitas esta variable para otros usos
     })
 
 @login_required    
