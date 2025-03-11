@@ -424,7 +424,8 @@ def directorio(request):
         'is_ceo' : is_ceo
         # Agrega más variables de contexto según tus grupos...
     })
-    
+
+@login_required    
 def sistemas_dir(request):
     directorios = Directorio.objects.filter(area= 'Sistemas')
 
@@ -432,13 +433,15 @@ def sistemas_dir(request):
         'directorios' : directorios,
     })
     
+@login_required    
 def administracion_dir(request):
     directorios = Directorio.objects.filter(area= 'Administracion')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-
+    
+@login_required
 def cobranza_dir(request):
     directorios = Directorio.objects.filter(area= 'Cobranza')
 
@@ -446,13 +449,15 @@ def cobranza_dir(request):
         'directorios' : directorios,
     })
     
+@login_required    
 def asistente_dir(request):
     directorios = Directorio.objects.filter(area= 'Asistente')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-
+    
+@login_required
 def compras_dir(request):
     directorios = Directorio.objects.filter(area= 'Compras')
 
@@ -460,13 +465,15 @@ def compras_dir(request):
         'directorios' : directorios,
     })
     
+@login_required    
 def produccion_dir(request):
     directorios = Directorio.objects.filter(area= 'Produccion')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def ventas_dir(request):
     directorios = Directorio.objects.filter(area= 'Ventas')
 
@@ -474,62 +481,71 @@ def ventas_dir(request):
         'directorios' : directorios,
     })
 
+@login_required
 def rh_dir(request):
     directorios = Directorio.objects.filter(area= 'Rh')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def formulaciones_dir(request):
     directorios = Directorio.objects.filter(area= 'Formulaciones')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def imagen_dir(request):
     directorios = Directorio.objects.filter(area= 'Imagen')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def community_dir(request):
     directorios = Directorio.objects.filter(area= 'Community')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def recepcion_dir(request):
     directorios = Directorio.objects.filter(area= 'Recepcion')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def calidad_dir(request):
     directorios = Directorio.objects.filter(area= 'Calidad')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def proyectos_dir(request):
     directorios = Directorio.objects.filter(area= 'Proyectos')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def ceo_dir(request):
     directorios = Directorio.objects.filter(area= 'CEO')
 
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-    
+
+@login_required    
 def blb_dir(request):
     directorios = Directorio.objects.filter(area= 'BLB')
 
@@ -585,6 +601,7 @@ def vista_404(request, exception=None):
 def vista_403(request, exception=None):
     return render(request, '403.html', status=403)
 
+@login_required
 def buscar_cantidad(request):
     """""
     Busca la cantidad de un lote en la base de datos.
