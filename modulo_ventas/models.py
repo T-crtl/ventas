@@ -197,6 +197,14 @@ class Directorio(models.Model):
     
 class Area(models.Model):
     pass
+
+class Documento(models.Model):
+    nombre = models.CharField(max_length=100)
+    archivo = models.FileField(upload_to='documentos/')
+    fecha_subida = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.nombre
     
 
     
