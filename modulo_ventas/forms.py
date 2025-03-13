@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pedido, Producto, DetallePedido, Client, CrearTicket
+from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Documento
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -131,3 +131,8 @@ class CambiarEmailForm(forms.Form):
         label="Nuevo Correo Electrónico",
         required=True
     )
+    
+class DocumentoForm(forms.ModelForm):
+    class Meta:
+        model = Documento
+        fields = ['nombre', 'archivo']  # Campos del formulario

@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<!-- subir_documento.html -->
+<h1>Subir documento</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Subir</button>
+</form>
+<a href="{% url 'lista_documentos' %}">Ver documentos</a>
+{% endblock %}

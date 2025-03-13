@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<!-- lista_documentos.html -->
+<h1>Documentos subidos</h1>
+<ul>
+    {% for documento in documentos %}
+    <li>
+        {{ documento.nombre }} -
+        <a href="{{ documento.archivo.url }}" target="_blank">Descargar</a>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'subir_documento' %}">Subir otro documento</a>
+{% endblock %}

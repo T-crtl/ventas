@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm
-from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio
+from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm, DocumentoForm
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -659,3 +659,17 @@ def buscar_cantidad(request):
         'cantidad': cantidad,
         'error': error,
     })
+    
+def subir_documento(request):
+    if request.method == 'POST':
+        form = DocumentoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_documentos')  # Redirige a la lista de documentos
+    else:
+        form = DocumentoForm()
+    return render(request, 'subir_documento.html', {'form': form})
+
+def lista_documentos(request):
+    documentos = Documento.objects.all()
+    return render(request, 'lista_documentos.html', {'documentos': documentos})

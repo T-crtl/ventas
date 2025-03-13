@@ -35,4 +35,6 @@ urlpatterns = [
     path('cambiar-contrasenia/', views.cambiar_contrasenia, name='cambiar_contrasenia'),
     path('cambiar-email/', views.cambiar_email, name='cambiar_email'),
     path('buscar_cantidad/', views.buscar_cantidad, name='buscar_cantidad'),
+    path('subir/', views.subir_documento, name='subir_documento'),
+    path('documentos/', views.lista_documentos, name='lista_documentos'),
 ]
