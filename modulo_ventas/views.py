@@ -633,7 +633,7 @@ def buscar_cantidad(request):
     if cvelote:
         try:
             # URL de la API de FastAPI (usando la URL pública de ngrok)
-            api_url = f'https://e179-129-222-90-213.ngrok-free.app/buscar_cantidad/?cvelote={cvelote}'
+            api_url = f'https://9cdf-129-222-90-213.ngrok-free.app/buscar_cantidad/?cvelote={cvelote}'
 
             # Llamar a la API de FastAPI con el encabezado personalizado
             headers = {
