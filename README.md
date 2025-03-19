@@ -1,7 +1,7 @@
 Developed by Cesar Abraham Duran Cuevas
 
 Temporary Online Link
-https://abrahamduran69.pythonanywhere.com/DISTRIBUIDORABLB/
+https://www.distribuidorablb.mx/DISTRIBUIDORABLB/
 
 Temporary Access
 Username: ricardo_beltran
