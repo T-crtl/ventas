@@ -15,6 +15,7 @@ from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import requests
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -364,7 +365,8 @@ def detalle_ticket_it(request, ticket_id):
         'ticket': ticket,
         'it': admin_it,
     })
-    
+
+@login_required    
 def cambiar_estado_ticket(request, ticket_id):
     ticket = get_object_or_404(CrearTicket, id=ticket_id)
 
@@ -381,8 +383,6 @@ def cambiar_estado_ticket(request, ticket_id):
             ticket.save()
 
     return redirect('detalle_ticket', ticket_id=ticket.id)
-
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def directorio(request):
@@ -593,7 +593,6 @@ def cambiar_contrasenia(request):
 
     return render(request, 'cambiar_contrasenia.html', {'form': form})
 
-
 @login_required
 def cambiar_email(request):
     if request.method == 'POST':
@@ -657,7 +656,8 @@ def buscar_cantidad(request):
         'cantidad': cantidad,
         'error': error,
     })
-    
+
+@login_required    
 def subir_documento(request):
     if request.method == 'POST':
         form = DocumentoForm(request.POST, request.FILES)
@@ -668,6 +668,7 @@ def subir_documento(request):
         form = DocumentoForm()
     return render(request, 'subir_documento.html', {'form': form})
 
+@login_required
 def lista_documentos(request):
     documentos = Documento.objects.all()
     return render(request, 'lista_documentos.html', {'documentos': documentos})
