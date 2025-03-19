@@ -25,11 +25,11 @@
             {% else %}
                 <span class="document-icon other">📂</span>
             {% endif %}
-
             <!-- Nombre del documento y área -->
             <a class="document-text" href="{{ directorio.link_documento }}" target="_blank">
                 {{ directorio.nombre_documento }} ({{ directorio.area }})
             </a>
+            
         </li>
     {% endfor %}
 </ul>

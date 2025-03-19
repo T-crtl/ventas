@@ -461,7 +461,6 @@ def administracion_dir(request):
 @login_required
 def cobranza_dir(request):
     directorios = Directorio.objects.filter(area= 'Cobranza')
-
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
@@ -501,7 +500,6 @@ def ventas_dir(request):
 @login_required
 def rh_dir(request):
     directorios = Directorio.objects.filter(area= 'Rh')
-
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
