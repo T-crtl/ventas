@@ -1,6 +1,6 @@
 Developed by Cesar Abraham Duran Cuevas
 
-Temporary Online Link
+Online Link
 https://www.distribuidorablb.mx/DISTRIBUIDORABLB/
 
 Temporary Access
