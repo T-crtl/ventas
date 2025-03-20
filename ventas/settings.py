@@ -139,3 +139,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/DISTRIBUIDORABLB/accounts/profile'  # Redirigir al perfil después del login
 LOGOUT_REDIRECT_URL = '/'
+
+# Configuración para enviar correos electrónicos
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP de Gmail
+EMAIL_PORT = 587  # Puerto para TLS
+EMAIL_USE_TLS = True  # Usar TLS para conexiones seguras
+EMAIL_HOST_USER = 'sistemasblb@gmail.com'  # Tu dirección de correo
+EMAIL_HOST_PASSWORD = 'JYV7H!39!ET8YYZ^!LV6'  # Tu contraseña de correo

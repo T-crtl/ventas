@@ -16,6 +16,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 import requests
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def index(request):
@@ -235,6 +237,23 @@ def ticket(request):
             ticket = form.save(commit=False)  # Crea el objeto del modelo pero no lo guarda en la base de datos
             ticket.nombre_usuario = request.user  # Asigna el usuario autenticado
             ticket.save()  # Guarda el ticket en la base de datos
+            # Enviar correo electrónico
+            # subject = f'Nuevo Ticket Creado: {ticket.numero_ticket}'
+            # message = (
+            #     f'Se ha creado un nuevo ticket con los siguientes detalles:\n\n'
+            #     f'Número de Ticket: {ticket.numero_ticket}\n'
+            #     f'Categoría: {ticket.get_categoria_display()}\n'
+            #     f'Descripción: {ticket.descripcion}\n'
+            #     f'Prioridad: {ticket.get_nivel_prioridad_display()}\n'
+            #     f'Estado: {ticket.get_estado_display()}\n'
+            #     f'Fecha de Creación: {ticket.fecha_creacion}\n'
+            #     f'Usuario: {ticket.nombre_usuario.username}'
+            # )
+            # from_email = settings.EMAIL_HOST_USER
+            # recipient_list = ['sistemas@blb.mx']  # Cambia esto por el correo del destinatario
+
+            #send_mail(subject, message, from_email, recipient_list)
+
             return redirect('ver_estatus_ticket')  # Redirige a la página de perfil o a donde desees
     else:
         form = TicketForm()
