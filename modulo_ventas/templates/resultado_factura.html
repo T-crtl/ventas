@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Resultados de búsqueda</h2>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="folio" class="form-control" placeholder="Ingrese Folio" value="{{ folio|default:'' }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+</form>
+
+{% if facturas %}
+    <h3>Resultados para: {{ cve_doc }}</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>FOLIO</th>
+                    <th>Artículo</th>
+                    <th>Cantidad</th>
+                    <th>Cliente</th>
+                    <th>RFC</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for factura in facturas %}
+                <tr>
+                    <td>{{ factura.FOLIO }}</td>
+                    <td>{{ factura.idARTICULO }} - {{ factura.NOMBRE_DEL_ARTICULO }}</td>
+                    <td>{{ factura.PRODUCTOS_SOLICITADOS }}</td>
+                    <td>{{ factura.Nombre_Cliente }}</td>
+                    <td>{{ factura.RFC }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}

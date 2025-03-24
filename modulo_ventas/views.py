@@ -635,44 +635,49 @@ def vista_403(request, exception=None):
     return render(request, '403.html', status=403)
 
 @login_required
-def buscar_cantidad(request):
-    """""
-    Busca la cantidad de un lote en la base de datos.
-    :param cvelote: Clave del lote a buscar.
-    :return: Cantidad del lote o None si no se encuentra.
-    """""
-    # Lógica de la función
-    cvelote = request.GET.get('cvelote')
+def buscar_por_folio(request):
+    """
+    Busca información de factura por FOLIO usando la API FastAPI
+    :param folio: Número de folio a buscar
+    :return: Datos completos de la factura o error si no se encuentra
+    """
+    folio = request.GET.get('folio')
     error = None
-    cantidad = None
+    facturas = None
 
-    if cvelote:
+    if folio:
         try:
-            # URL de la API de FastAPI (usando la URL pública de ngrok)
-            api_url = f'https://9cdf-129-222-90-213.ngrok-free.app/buscar_cantidad/?cvelote={cvelote}'
+            # URL del nuevo endpoint FastAPI para búsqueda por folio
+            api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
 
-            # Llamar a la API de FastAPI con el encabezado personalizado
+            # Llamar a la API de FastAPI con headers necesarios
             headers = {
-                'ngrok-skip-browser-warning': 'true'  # Agregar este encabezado
+                'ngrok-skip-browser-warning': 'true',
             }
             response = requests.get(api_url, headers=headers)
 
-            # Verificar si la API devolvió un resultado válido
+            # Verificar respuesta de la API
             if response.status_code == 200:
                 datos = response.json()
-                cantidad = datos['cantidad']
+                facturas = datos.get('resultados', [])
+                if not facturas:
+                    error = 'No se encontraron facturas con ese folio'
+            elif response.status_code == 404:
+                error = 'Folio no encontrado'
             else:
-                error = 'Error al obtener los datos del lote'
+                error = f'Error al consultar la API: {response.status_code}'
 
+        except requests.exceptions.RequestException as e:
+            error = f'Error de conexión con la API: {str(e)}'
         except Exception as e:
-            error = str(e)
+            error = f'Error inesperado: {str(e)}'
     else:
-        error = 'Ingrese una clave de lote'
+        error = 'Ingrese un número de folio'
 
     # Renderizar la plantilla con los datos
-    return render(request, 'resultado.html', {
-        'cvelote': cvelote,
-        'cantidad': cantidad,
+    return render(request, 'resultado_factura.html', {
+        'folio': folio,
+        'facturas': facturas,
         'error': error,
     })
 
