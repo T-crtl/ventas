@@ -2,44 +2,94 @@
 {% load static %}
 
 {% block content %}
-<h2>Resultados de búsqueda</h2>
+<div class="container mt-4">
+    <h2 class="mb-4">Detalles de Factura</h2>
+    
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
 
-{% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-{% endif %}
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="folio" class="form-control" placeholder="Ingrese número de folio" value="{{ folio|default:'' }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
 
-<form method="get" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="folio" class="form-control" placeholder="Ingrese Folio" value="{{ folio|default:'' }}">
-        <button type="submit" class="btn btn-primary">Buscar</button>
-    </div>
-</form>
+    {% if facturas %}
+        {% for factura in facturas %}
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>Factura: {{ factura.FACTURA }} | Folio: {{ factura.FOLIO }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Información del Cliente</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Cliente:</th>
+                                <td>{{ factura.Clave_Cliente }} - {{ factura.Nombre_Cliente }}</td>
+                            </tr>
+                            <tr>
+                                <th>RFC:</th>
+                                <td>{{ factura.RFC }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dirección:</th>
+                                <td>
+                                    {{ factura.CALLE }} {{ factura.NUMEXT }} {% if factura.NUMINT %}(Int. {{ factura.NUMINT }}){% endif %}<br>
+                                    Entre {{ factura.CRUZAMIENTOS }} y {{ factura.CRUZAMIENTOS2 }}<br>
+                                    Col. {{ factura.COLONIA }}, C.P. {{ factura.CP }}<br>
+                                    {{ factura.LOCALIDAD }}, {{ factura.MUNICIPIO }}, {{ factura.ESTADO }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono:</th>
+                                <td>{{ factura.TELEFONO }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Detalles del Producto</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Código Artículo:</th>
+                                <td>{{ factura.idARTICULO }}</td>
+                            </tr>
+                            <tr>
+                                <th>Descripción:</th>
+                                <td>{{ factura.NOMBRE_DEL_ARTICULO }}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad:</th>
+                                <td>{{ factura.PRODUCTOS_SOLICITADOS|floatformat:2 }}</td>
+                            </tr>
+                        </table>
+                        
+                        <h4 class="mt-4">Información Adicional</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Documento:</th>
+                                <td>{{ factura.CVE_DOC }}</td>
+                            </tr>
+                            <tr>
+                                <th>Documento Siguiente:</th>
+                                <td>{{ factura.DOC_SIG }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
 
-{% if facturas %}
-    <h3>Resultados para: {{ cve_doc }}</h3>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>FOLIO</th>
-                    <th>Artículo</th>
-                    <th>Cantidad</th>
-                    <th>Cliente</th>
-                    <th>RFC</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for factura in facturas %}
-                <tr>
-                    <td>{{ factura.FOLIO }}</td>
-                    <td>{{ factura.idARTICULO }} - {{ factura.NOMBRE_DEL_ARTICULO }}</td>
-                    <td>{{ factura.PRODUCTOS_SOLICITADOS }}</td>
-                    <td>{{ factura.Nombre_Cliente }}</td>
-                    <td>{{ factura.RFC }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% endif %}
+<style>
+    .table th {
+        width: 30%;
+        background-color: #f8f9fa;
+    }
+</style>
 {% endblock %}

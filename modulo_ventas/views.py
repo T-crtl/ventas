@@ -647,19 +647,24 @@ def buscar_por_folio(request):
 
     if folio:
         try:
-            # URL del nuevo endpoint FastAPI para búsqueda por folio
             api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
-
-            # Llamar a la API de FastAPI con headers necesarios
-            headers = {
-                'ngrok-skip-browser-warning': 'true',
-            }
+            headers = {'ngrok-skip-browser-warning': 'true'}
             response = requests.get(api_url, headers=headers)
 
-            # Verificar respuesta de la API
             if response.status_code == 200:
                 datos = response.json()
                 facturas = datos.get('resultados', [])
+                
+                # Limpiar los datos antes de enviarlos al template
+                for factura in facturas:
+                    # Eliminar espacios en blanco de campos clave
+                    factura['CVE_DOC'] = factura['CVE_DOC'].strip()
+                    factura['Clave_Cliente'] = factura['Clave_Cliente'].strip()
+                    
+                    # Convertir valores numéricos
+                    factura['FOLIO'] = int(factura['FOLIO'])
+                    factura['PRODUCTOS SOLICITADOS'] = float(factura['PRODUCTOS SOLICITADOS'])
+                    
                 if not facturas:
                     error = 'No se encontraron facturas con ese folio'
             elif response.status_code == 404:
@@ -674,7 +679,6 @@ def buscar_por_folio(request):
     else:
         error = 'Ingrese un número de folio'
 
-    # Renderizar la plantilla con los datos
     return render(request, 'resultado_factura.html', {
         'folio': folio,
         'facturas': facturas,
