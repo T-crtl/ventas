@@ -663,7 +663,8 @@ def buscar_por_folio(request):
                     
                     # Convertir valores numéricos
                     factura['FOLIO'] = int(factura['FOLIO'])
-                    factura['PRODUCTOS SOLICITADOS'] = float(factura['PRODUCTOS SOLICITADOS'])
+                    factura['PRODUCTOS_SOLICITADOS'] = float(factura['PRODUCTOS SOLICITADOS'])
+                    factura['nombre_articulo'] = factura['NOMBRE DEL ARTICULO']
                     
                 if not facturas:
                     error = 'No se encontraron facturas con ese folio'
@@ -678,7 +679,7 @@ def buscar_por_folio(request):
             error = f'Error inesperado: {str(e)}'
     else:
         error = 'Ingrese un número de folio'
-
+    print(facturas)
     return render(request, 'resultado_factura.html', {
         'folio': folio,
         'facturas': facturas,
