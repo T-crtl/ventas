@@ -206,6 +206,33 @@ class Documento(models.Model):
     def __str__(self):
         return self.nombre
     
+class Factura(models.Model):
+    cve_doc = models.CharField(max_length=20, unique=True)
+    doc_sig = models.CharField(max_length=20, blank=True, null=True)
+    folio = models.CharField(max_length=20)
+    factura = models.CharField(max_length=20)
+    cliente_clave = models.CharField(max_length=30)
+    cliente_nombre = models.CharField(max_length=100)
+    rfc = models.CharField(max_length=20)
+    fecha_creacion = models.DateField(auto_now_add=True)
+    direccion = models.TextField()
+    
+    def __str__(self):
+        return f"Factura {self.factura} (Folio: {self.folio}) "
+
+class ProductoFactura(models.Model):
+    folio = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='productos')
+    id_articulo = models.CharField(max_length=20)
+    nombre_articulo = models.CharField(max_length=100)
+    cantidad_solicitada = models.FloatField()
+    lote_asignado = models.FloatField(max_length=50, blank=True, null=True)
+    cantidad_real = models.FloatField(blank=True, null=True)
+    comentaros = models.TextField(blank=True)
+    
+    def __str__(self):
+        return f"{self.id_articulo} - {self.nombre_articulo}"
+    
+    
     
 
     
