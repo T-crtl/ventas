@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm, DocumentoForm
-from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento, Factura, ProductoFactura
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -18,6 +18,7 @@ import requests
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db import transaction
 
 # Create your views here.
 def index(request):
@@ -638,12 +639,11 @@ def vista_403(request, exception=None):
 def buscar_por_folio(request):
     """
     Busca información de factura por FOLIO usando la API FastAPI
-    :param folio: Número de folio a buscar
-    :return: Datos completos de la factura o error si no se encuentra
+    y guarda los datos en los modelos Factura y ProductoFactura
     """
     folio = request.GET.get('folio')
     error = None
-    facturas = None
+    facturas_api = None  # Renombrado para evitar confusión con el modelo Factura
 
     if folio:
         try:
@@ -653,20 +653,61 @@ def buscar_por_folio(request):
 
             if response.status_code == 200:
                 datos = response.json()
-                facturas = datos.get('resultados', [])
+                facturas_api = datos.get('resultados', [])
                 
-                # Limpiar los datos antes de enviarlos al template
-                for factura in facturas:
-                    # Eliminar espacios en blanco de campos clave
-                    factura['CVE_DOC'] = factura['CVE_DOC'].strip()
-                    factura['Clave_Cliente'] = factura['Clave_Cliente'].strip()
+                if facturas_api:
+                    # Procesar la primera factura para obtener datos del cliente
+                    primera_factura = facturas_api[0]
                     
-                    # Convertir valores numéricos
-                    factura['FOLIO'] = int(factura['FOLIO'])
-                    factura['PRODUCTOS_SOLICITADOS'] = float(factura['PRODUCTOS SOLICITADOS'])
-                    factura['nombre_articulo'] = factura['NOMBRE DEL ARTICULO']
+                    # Crear dirección completa
+                    direccion_completa = (
+                        f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
+                        f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
+                        f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
+                        f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
+                    )
                     
-                if not facturas:
+                    # Verificar si la factura ya existe en la base de datos
+                    factura, created = Factura.objects.get_or_create(
+                        cve_doc=primera_factura['CVE_DOC'].strip(),
+                        defaults={
+                            'doc_sig': primera_factura['DOC_SIG'],
+                            'folio': str(primera_factura['FOLIO']),
+                            'factura': primera_factura['FACTURA'],
+                            'cliente_clave': primera_factura['Clave_Cliente'].strip(),
+                            'cliente_nombre': primera_factura['Nombre_Cliente'],
+                            'rfc': primera_factura['RFC'],
+                            'direccion': direccion_completa
+                        }
+                    )
+                    
+                    # Solo agregar productos si es una factura nueva
+                    if created:
+                        for producto_api in facturas_api:
+                            ProductoFactura.objects.create(
+                                folio=factura,
+                                id_articulo=producto_api['idARTICULO'],
+                                nombre_articulo=producto_api['NOMBRE DEL ARTICULO'],
+                                cantidad_solicitada=producto_api['PRODUCTOS SOLICITADOS']
+                            )
+                        
+                        message = f"Factura {factura.factura} registrada correctamente con {len(facturas_api)} productos"
+                    else:
+                        message = f"La factura {factura.factura} ya existe en la base de datos"
+                    
+                    # Preparar datos para el template
+                    factura_local = {
+                        'factura': factura,
+                        'productos': factura.productos.all(),
+                        'message': message
+                    }
+                    
+                    return render(request, 'resultado_factura.html', {
+                        'folio': folio,
+                        'factura_local': factura_local,
+                        'error': error
+                    })
+                else:
                     error = 'No se encontraron facturas con ese folio'
             elif response.status_code == 404:
                 error = 'Folio no encontrado'
@@ -679,10 +720,9 @@ def buscar_por_folio(request):
             error = f'Error inesperado: {str(e)}'
     else:
         error = 'Ingrese un número de folio'
-    print(facturas)
+    
     return render(request, 'resultado_factura.html', {
         'folio': folio,
-        'facturas': facturas,
         'error': error,
     })
 

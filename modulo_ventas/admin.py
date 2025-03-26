@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Directorio, Area, Documento
+from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Directorio, Area, Documento, Factura, ProductoFactura
 
 # Register your models here.
 @admin.register(Pedido)
@@ -35,3 +35,10 @@ class DirectorioAdmin(admin.ModelAdmin):
 class DocumentoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'archivo')
     
+@admin.register(Factura)
+class FacturaAdmin(admin.ModelAdmin):
+    list_display = ('cve_doc', 'folio')
+    
+@admin.register(ProductoFactura)
+class ProductoFacturaAdmin(admin.ModelAdmin):
+    list_display = ('folio', 'id_articulo')
