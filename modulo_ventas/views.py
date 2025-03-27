@@ -641,90 +641,140 @@ def buscar_por_folio(request):
     Busca información de factura por FOLIO usando la API FastAPI
     y guarda los datos en los modelos Factura y ProductoFactura
     """
-    folio = request.GET.get('folio')
-    error = None
-    facturas_api = None  # Renombrado para evitar confusión con el modelo Factura
+    if request.method == 'GET':
+        folio = request.GET.get('folio')
+        error = None
+        factura_api_data = None
 
-    if folio:
-        try:
-            api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
-            headers = {'ngrok-skip-browser-warning': 'true'}
-            response = requests.get(api_url, headers=headers)
+        if folio:
+            try:
+                api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
+                headers = {'ngrok-skip-browser-warning': 'true'}
+                response = requests.get(api_url, headers=headers)
 
-            if response.status_code == 200:
-                datos = response.json()
-                facturas_api = datos.get('resultados', [])
-                
-                if facturas_api:
-                    # Procesar la primera factura para obtener datos del cliente
-                    primera_factura = facturas_api[0]
+                if response.status_code == 200:
+                    datos = response.json()
+                    facturas_api = datos.get('resultados', [])
                     
-                    # Crear dirección completa
-                    direccion_completa = (
-                        f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
-                        f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
-                        f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
-                        f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
-                    )
-                    
-                    # Verificar si la factura ya existe en la base de datos
-                    factura, created = Factura.objects.get_or_create(
-                        cve_doc=primera_factura['CVE_DOC'].strip(),
-                        defaults={
+                    if facturas_api:
+                        # Procesar la primera factura para obtener datos del cliente
+                        primera_factura = facturas_api[0]
+                        
+                        # Crear dirección completa
+                        direccion_completa = (
+                            f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
+                            f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
+                            f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
+                            f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
+                        )
+                        
+                        # Preparar datos para mostrar (sin guardar aún)
+                        factura_data = {
+                            'cve_doc': primera_factura['CVE_DOC'].strip(),
                             'doc_sig': primera_factura['DOC_SIG'],
                             'folio': str(primera_factura['FOLIO']),
                             'factura': primera_factura['FACTURA'],
                             'cliente_clave': primera_factura['Clave_Cliente'].strip(),
                             'cliente_nombre': primera_factura['Nombre_Cliente'],
                             'rfc': primera_factura['RFC'],
-                            'direccion': direccion_completa
+                            'direccion': direccion_completa,
+                            'productos': []
                         }
-                    )
-                    
-                    # Solo agregar productos si es una factura nueva
-                    if created:
-                        for producto_api in facturas_api:
-                            ProductoFactura.objects.create(
-                                folio=factura,
-                                id_articulo=producto_api['idARTICULO'],
-                                nombre_articulo=producto_api['NOMBRE DEL ARTICULO'],
-                                cantidad_solicitada=producto_api['PRODUCTOS SOLICITADOS']
-                            )
                         
-                        message = f"Factura {factura.factura} registrada correctamente con {len(facturas_api)} productos"
+                        for producto_api in facturas_api:
+                            factura_data['productos'].append({
+                                'id_articulo': producto_api['idARTICULO'],
+                                'nombre_articulo': producto_api['NOMBRE DEL ARTICULO'],
+                                'cantidad_solicitada': producto_api['PRODUCTOS SOLICITADOS']
+                            })
+                        
+                        # Guardar datos en sesión para posible guardado posterior
+                        request.session['factura_temp'] = factura_data
+                        
+                        return render(request, 'resultado_factura.html', {
+                            'folio': folio,
+                            'factura_data': factura_data,
+                            'error': error,
+                            'existe_en_bd': Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists()
+                        })
                     else:
-                        message = f"La factura {factura.factura} ya existe en la base de datos"
-                    
-                    # Preparar datos para el template
-                    factura_local = {
-                        'factura': factura,
-                        'productos': factura.productos.all(),
-                        'message': message
-                    }
-                    
-                    return render(request, 'resultado_factura.html', {
-                        'folio': folio,
-                        'factura_local': factura_local,
-                        'error': error
-                    })
+                        error = 'No se encontraron facturas con ese folio'
+                elif response.status_code == 404:
+                    error = 'Folio no encontrado'
                 else:
-                    error = 'No se encontraron facturas con ese folio'
-            elif response.status_code == 404:
-                error = 'Folio no encontrado'
-            else:
-                error = f'Error al consultar la API: {response.status_code}'
+                    error = f'Error al consultar la API: {response.status_code}'
 
-        except requests.exceptions.RequestException as e:
-            error = f'Error de conexión con la API: {str(e)}'
-        except Exception as e:
-            error = f'Error inesperado: {str(e)}'
-    else:
-        error = 'Ingrese un número de folio'
+            except requests.exceptions.RequestException as e:
+                error = f'Error de conexión con la API: {str(e)}'
+            except Exception as e:
+                error = f'Error inesperado: {str(e)}'
+        else:
+            error = 'Ingrese un número de folio'
+        
+        return render(request, 'resultado_factura.html', {
+            'folio': folio,
+            'error': error,
+        })
     
-    return render(request, 'resultado_factura.html', {
-        'folio': folio,
-        'error': error,
-    })
+    # Manejar el guardado por POST
+    elif request.method == 'POST':
+        factura_data = request.session.get('factura_temp')
+        if not factura_data:
+            return render(request, 'resultado_factura.html', {
+                'error': 'No hay datos de factura para guardar. Realice una búsqueda primero.'
+            })
+        
+        # Verificar si la factura ya existe
+        if Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists():
+            return render(request, 'resultado_factura.html', {
+                'error': 'Esta factura ya existe en la base de datos',
+                'factura_data': factura_data,
+                'existe_en_bd': True
+            })
+        
+        # Crear la factura y los productos
+        try:
+            factura = Factura.objects.create(
+                cve_doc=factura_data['cve_doc'],
+                doc_sig=factura_data['doc_sig'],
+                folio=factura_data['folio'],
+                factura=factura_data['factura'],
+                cliente_clave=factura_data['cliente_clave'],
+                cliente_nombre=factura_data['cliente_nombre'],
+                rfc=factura_data['rfc'],
+                direccion=factura_data['direccion']
+            )
+            
+            for producto in factura_data['productos']:
+                ProductoFactura.objects.create(
+                    folio=factura,
+                    id_articulo=producto['id_articulo'],
+                    nombre_articulo=producto['nombre_articulo'],
+                    cantidad_solicitada=producto['cantidad_solicitada']
+                )
+            
+            message = f"Factura {factura.factura} registrada correctamente con {len(factura_data['productos'])} productos"
+            
+            # Limpiar datos temporales
+            if 'factura_temp' in request.session:
+                del request.session['factura_temp']
+            
+            return render(request, 'resultado_factura.html', {
+                'folio': factura_data['folio'],
+                'factura_local': {
+                    'factura': factura,
+                    'productos': factura.productos.all(),
+                    'message': message
+                },
+                'existe_en_bd': True
+            })
+        
+        except Exception as e:
+            return render(request, 'resultado_factura.html', {
+                'error': f'Error al guardar la factura: {str(e)}',
+                'factura_data': factura_data,
+                'existe_en_bd': False
+            })
 
 @login_required    
 def subir_documento(request):
