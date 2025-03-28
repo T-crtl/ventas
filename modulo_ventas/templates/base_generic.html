@@ -1,4 +1,3 @@
-<!-- templates/mi_app/dashboard.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -8,12 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil BLB</title>
 
-    <!-- Enlazamos el archivo CSS desde la carpeta estática de Django -->
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tus estilos personalizados -->
     <link rel="preload" href="{% static 'css/style-profile.css' %}" as="style" onload="this.rel='stylesheet'">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style-profile.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'modulo_ventas/favicon.ico' %}">
 
+    <!-- Font Awesome para iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -48,21 +52,36 @@
                 <button class="menu-toggle">☰</button>
             </div>
             <div class="topbar-right">
-                <span class="user-name">Hola, {{ user.username }}</span> <!-- Nombre de usuario -->
-                <img src="{% static 'images/Logo_-.jpg' %}" alt="Logo"> <!-- Avatar del usuario -->
+                <span class="user-name">Hola, {{ user.username }}</span>
+                <img src="{% static 'images/Logo_-.jpg' %}" alt="Logo">
             </div>
         </header>
 
         <!-- Contenido principal -->
         <section class="content">
+            <!-- Mensajes de Django -->
+            <div class="container mt-3">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
             
             {% block content %}
-            
             {% endblock %}
         </section>
 
     </div>
 
+    <!-- Bootstrap 5 JS Bundle con Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Tu script personalizado si lo necesitas -->
+    <script src="{% static 'js/scripts.js' %}"></script>
 </body>
 
 </html>

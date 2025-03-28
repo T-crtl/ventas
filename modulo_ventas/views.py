@@ -716,18 +716,16 @@ def buscar_por_folio(request):
             'error': error,
         })
     
-    # Manejar el guardado por POST
     elif request.method == 'POST':
         factura_data = request.session.get('factura_temp')
         if not factura_data:
-            return render(request, 'resultado_factura.html', {
-                'error': 'No hay datos de factura para guardar. Realice una búsqueda primero.'
-            })
+            messages.error(request, 'No hay datos de factura para guardar. Realice una búsqueda primero.')
+            return redirect('buscar_por_folio')  # Ajusta esto al nombre de tu URL
         
         # Verificar si la factura ya existe
         if Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists():
+            messages.warning(request, 'Esta factura ya existe en la base de datos')
             return render(request, 'resultado_factura.html', {
-                'error': 'Esta factura ya existe en la base de datos',
                 'factura_data': factura_data,
                 'existe_en_bd': True
             })
@@ -753,25 +751,17 @@ def buscar_por_folio(request):
                     cantidad_solicitada=producto['cantidad_solicitada']
                 )
             
-            message = f"Factura {factura.factura} registrada correctamente con {len(factura_data['productos'])} productos"
+            # Mensaje de éxito
+            messages.success(request, f'✅ Factura {factura.factura} guardada correctamente con {len(factura_data["productos"])} productos')
             
-            # Limpiar datos temporales
+            # Limpiar datos temporales y redirigir
             if 'factura_temp' in request.session:
                 del request.session['factura_temp']
-            
-            return render(request, 'resultado_factura.html', {
-                'folio': factura_data['folio'],
-                'factura_local': {
-                    'factura': factura,
-                    'productos': factura.productos.all(),
-                    'message': message
-                },
-                'existe_en_bd': True
-            })
+            return redirect('buscar_por_folio')  # Ajusta esto al nombre de tu URL
         
         except Exception as e:
+            messages.error(request, f'❌ Error al guardar la factura: {str(e)}')
             return render(request, 'resultado_factura.html', {
-                'error': f'Error al guardar la factura: {str(e)}',
                 'factura_data': factura_data,
                 'existe_en_bd': False
             })

@@ -3,6 +3,16 @@
 
 {% block content %}
 <div class="container mt-4">
+    <!-- Mensajes de confirmación/error -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <h2 class="mb-4">Detalles de Factura</h2>
     
     {% if error %}
@@ -17,12 +27,90 @@
     </form>
 
     {% if factura_local %}
-        <!-- Mostrar datos ya guardados -->
         <div class="card mb-4">
-            <!-- ... (mantén el mismo código para mostrar facturas existentes) ... -->
+            <div class="card-header bg-primary text-white">
+                <h3>Factura: {{ factura_local.factura.factura }} | Folio: {{ factura_local.factura.folio }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Información del Cliente</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Cliente:</th>
+                                <td>{{ factura_local.factura.cliente_clave }} - {{ factura_local.factura.cliente_nombre }}</td>
+                            </tr>
+                            <tr>
+                                <th>RFC:</th>
+                                <td>{{ factura_local.factura.rfc }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dirección:</th>
+                                <td>{{ factura_local.factura.direccion }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha Creación:</th>
+                                <td>{{ factura_local.factura.fecha_creacion|date:"d/m/Y" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Documentos</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Clave Documento:</th>
+                                <td>{{ factura_local.factura.cve_doc }}</td>
+                            </tr>
+                            <tr>
+                                <th>Documento Siguiente:</th>
+                                <td>{{ factura_local.factura.doc_sig|default:"-" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h4>Productos ({{ factura_local.productos|length }})</h4>
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cant. Solicitada</th>
+                                <th>Lote Asignado</th>
+                                <th>Cant. Real</th>
+                                <th>Comentarios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in factura_local.productos %}
+                            <tr>
+                                <td>{{ producto.id_articulo }}</td>
+                                <td>{{ producto.nombre_articulo }}</td>
+                                <td>{{ producto.cantidad_solicitada|floatformat:2 }}</td>
+                                <td>
+                                    {% if producto.lote_asignado %}
+                                        {{ producto.lote_asignado }}
+                                    {% else %}
+                                        <span class="text-muted">Pendiente</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if producto.cantidad_real %}
+                                        {{ producto.cantidad_real|floatformat:2 }}
+                                    {% else %}
+                                        <span class="text-muted">Pendiente</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ producto.comentarios|default:"" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     {% elif factura_data %}
-        <!-- Mostrar datos de factura encontrada pero no guardada -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
                 <h3>Factura: {{ factura_data.factura }} | Folio: {{ factura_data.folio }}</h3>
@@ -91,7 +179,9 @@
                 {% if not existe_en_bd %}
                 <form method="post" class="mt-3">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Guardar Factura</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Guardar Factura
+                    </button>
                 </form>
                 {% endif %}
             </div>
@@ -106,6 +196,27 @@
     }
     .table thead th {
         background-color: #e9ecef;
+    }
+    /* Estilos para alertas */
+    .alert-success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border-color: #badbcc;
+    }
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #664d03;
+        border-color: #ffecb5;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #842029;
+        border-color: #f5c2c7;
+    }
+    .alert-info {
+        background-color: #cff4fc;
+        color: #055160;
+        border-color: #b6effb;
     }
 </style>
 {% endblock %}
