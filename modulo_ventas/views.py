@@ -781,3 +781,9 @@ def subir_documento(request):
 def lista_documentos(request):
     documentos = Documento.objects.all()
     return render(request, 'lista_documentos.html', {'documentos': documentos})
+
+@login_required
+def pedidos_almacen(request):
+    facturas = Factura.objects.all()
+    print(facturas)
+    return render(request, 'almacen_factura.html', {'facturas': facturas})

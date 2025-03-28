@@ -37,4 +37,5 @@ urlpatterns = [
     path('buscar-por-folio/', views.buscar_por_folio, name='buscar_por_folio'),
     path('subir/', views.subir_documento, name='subir_documento'),
     path('documentos/', views.lista_documentos, name='lista_documentos'),
+    path('pedidos-de-facturacion/', views.pedidos_almacen, name='pedido_facturacion')
 ]
