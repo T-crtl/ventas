@@ -3,22 +3,20 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Facturas Registradas</h2>
-    
+
     <!-- Formulario de Búsqueda -->
     <form method="get" class="mb-4">
         <div class="row">
             <div class="col-md-6">
-                <input type="text" name="q" class="form-control" 
-                       placeholder="Buscar por folio, factura o cliente" 
-                       value="{{ search_query }}">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por folio, factura o cliente"
+                    value="{{ search_query }}">
             </div>
             <div class="col-md-3">
-                <input type="date" name="fecha_inicio" class="form-control" 
-                       value="{{ fecha_inicio }}" placeholder="Desde">
+                <input type="date" name="fecha_inicio" class="form-control" value="{{ fecha_inicio }}"
+                    placeholder="Desde">
             </div>
             <div class="col-md-3">
-                <input type="date" name="fecha_fin" class="form-control" 
-                       value="{{ fecha_fin }}" placeholder="Hasta">
+                <input type="date" name="fecha_fin" class="form-control" value="{{ fecha_fin }}" placeholder="Hasta">
             </div>
         </div>
         <button type="submit" class="btn btn-primary mt-2">Buscar</button>
@@ -33,11 +31,6 @@
                 <small>{{ factura.fecha_creacion|date:"d/m/Y" }}</small>
             </div>
             <p class="mb-1">{{ factura.cliente_nombre }}</p>
-            <div class="progress mt-2" style="height: 5px;">
-                <div class="progress-bar" 
-                     style="width: {% widthratio factura.productos_completos factura.productos.count 100 %}%">
-                </div>
-            </div>
             <small>
                 {{ factura.productos_completos }} de {{ factura.productos.count }} productos completados
             </small>
