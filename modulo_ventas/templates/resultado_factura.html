@@ -28,7 +28,7 @@
 
     {% if factura_local %}
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header">
                 <h3>Factura: {{ factura_local.factura.factura }} | Folio: {{ factura_local.factura.folio }}</h3>
             </div>
             <div class="card-body">
@@ -112,7 +112,7 @@
         </div>
     {% elif factura_data %}
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header">
                 <h3>Factura: {{ factura_data.factura }} | Folio: {{ factura_data.folio }}</h3>
                 {% if existe_en_bd %}
                     <span class="badge bg-warning float-end">Ya existe en la base de datos</span>
