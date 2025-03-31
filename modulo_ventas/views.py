@@ -19,6 +19,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
+from django.db.models import Q, Count
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 def index(request):
@@ -784,6 +786,90 @@ def lista_documentos(request):
 
 @login_required
 def pedidos_almacen(request):
-    facturas = Factura.objects.all()
-    print(facturas)
-    return render(request, 'almacen_factura.html', {'facturas': facturas})
+    # Facturas que tienen productos incompletos (sin lote o sin cantidad)
+    facturas = Factura.objects.annotate(
+        productos_incompletos=Count(
+            'productos',
+            filter=Q(productos__lote_asignado__isnull=True) | 
+            Q(productos__cantidad_real__isnull=True)
+        )
+    ).filter(productos_incompletos__gt=0).order_by('-fecha_creacion')
+    
+    # Filtros de búsqueda
+    query = request.GET.get('q')
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    
+    if query:
+        facturas = facturas.filter(
+            Q(folio__icontains=query) |
+            Q(factura__icontains=query) |
+            Q(cliente_nombre__icontains=query)
+        )
+    
+    if fecha_inicio:
+        try:
+            fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+            facturas = facturas.filter(fecha_creacion__gte=fecha_inicio)
+        except ValueError:
+            pass
+    
+    if fecha_fin:
+        try:
+            fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+            facturas = facturas.filter(fecha_creacion__lte=fecha_fin)
+        except ValueError:
+            pass
+    
+    return render(request, 'almacen_factura.html', {
+        'facturas': facturas,
+        'search_query': query or '',
+        'fecha_inicio': fecha_inicio or '',
+        'fecha_fin': fecha_fin or ''
+    })
+
+@login_required
+def detalle_factura(request, factura_id):
+    factura = get_object_or_404(Factura, pk=factura_id)
+    
+    if request.method == 'POST':
+        errores = []
+        
+        for producto in factura.productos.all():
+            lote_key = f'lote_{producto.id}'
+            cantidad_key = f'cantidad_{producto.id}'
+            
+            lote = request.POST.get(lote_key, '').strip()
+            cantidad_str = request.POST.get(cantidad_key, '').strip()
+            
+            # Validación de campos
+            if not lote or not cantidad_str:
+                errores.append(f"El producto {producto.nombre_articulo} requiere lote y cantidad")
+                continue
+                
+            try:
+                cantidad = float(cantidad_str)
+                if cantidad <= 0:
+                    errores.append(f"Cantidad inválida para {producto.nombre_articulo}")
+                    continue
+                    
+                producto.lote_asignado = lote
+                producto.cantidad_real = cantidad
+                producto.save()
+                
+            except ValueError:
+                errores.append(f"Cantidad no válida para {producto.nombre_articulo}")
+                continue
+        
+        if errores:
+            messages.error(request, "Corrige los siguientes errores:")
+            for error in errores:
+                messages.error(request, error)
+        else:
+            messages.success(request, "¡Datos guardados correctamente!")
+            return redirect('detalle_factura', factura_id=factura.id)
+    
+    return render(request, 'detalle_factura.html', {
+        'factura': factura,
+        'messages': messages.get_messages(request)
+    })

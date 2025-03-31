@@ -219,13 +219,20 @@ class Factura(models.Model):
     
     def __str__(self):
         return f"Factura {self.factura} (Folio: {self.folio}) "
+    
+    @property
+    def productos_completos(self):
+        return self.productos.filter(
+            lote_asignado__isnull=False,
+            cantidad_real__isnull=False
+        ).count()
 
 class ProductoFactura(models.Model):
     folio = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='productos')
     id_articulo = models.CharField(max_length=20)
     nombre_articulo = models.CharField(max_length=100)
     cantidad_solicitada = models.FloatField()
-    lote_asignado = models.FloatField(max_length=50, blank=True, null=True)
+    lote_asignado = models.CharField(max_length=50, blank=True, null=True)
     cantidad_real = models.FloatField(blank=True, null=True)
     comentaros = models.TextField(blank=True)
     

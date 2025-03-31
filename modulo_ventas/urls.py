@@ -37,5 +37,7 @@ urlpatterns = [
     path('buscar-por-folio/', views.buscar_por_folio, name='buscar_por_folio'),
     path('subir/', views.subir_documento, name='subir_documento'),
     path('documentos/', views.lista_documentos, name='lista_documentos'),
-    path('pedidos-de-facturacion/', views.pedidos_almacen, name='pedido_facturacion')
+    #path('pedidos-de-facturacion/', views.pedidos_almacen, name='pedido_facturacion'),
+    path('almacen/facturas/', views.pedidos_almacen, name='pedidos_almacen'),
+    path('almacen/facturas/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
 ]
