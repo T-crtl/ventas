@@ -1,0 +1,69 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="fas fa-check-circle text-success me-2"></i>
+        Facturas Completadas
+    </h2>
+    
+    <div class="card">
+        <div class="card-body">
+            {% if facturas %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Folio</th>
+                            <th>Factura</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Productos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for factura in facturas %}
+                        <tr>
+                            <td>{{ factura.folio }}</td>
+                            <td>{{ factura.factura }}</td>
+                            <td>
+                                <div class="fw-bold">{{ factura.cliente_nombre }}</div>
+                                <small class="text-muted">{{ factura.rfc }}</small>
+                            </td>
+                            <td>{{ factura.fecha_creacion|date:"d/m/Y" }}</td>
+                            <td>{{ factura.productos.count }}</td>
+                            <td>
+                                <a href="{% url 'detalle_factura' factura.id %}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                   <i class="fas fa-eye"></i> Ver
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
+                <h5 class="text-muted">No hay facturas completadas</h5>
+                <p class="text-muted">Las facturas aparecerán aquí cuando todos sus productos tengan lote y cantidad asignados</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    .text-muted {
+        color: #6c757d !important;
+    }
+</style>
+{% endblock %}

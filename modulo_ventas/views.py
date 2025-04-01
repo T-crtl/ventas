@@ -873,3 +873,18 @@ def detalle_factura(request, factura_id):
         'factura': factura,
         'messages': messages.get_messages(request)
     })
+    
+@login_required
+def facturacion_final(request):
+    # Facturas donde todos los productos tienen lote y cantidad asignados
+    facturas_completas = Factura.objects.annotate(
+        productos_pendientes=Count(
+            'productos',
+            filter=Q(productos__lote_asignado__isnull=True) | 
+            Q(productos__cantidad_real__isnull=True)
+        )
+    ).filter(productos_pendientes=0).order_by('-fecha_creacion')
+    
+    return render(request, 'facturacion_final.html', {
+        'facturas': facturas_completas
+    })

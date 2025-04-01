@@ -40,4 +40,5 @@ urlpatterns = [
     #path('pedidos-de-facturacion/', views.pedidos_almacen, name='pedido_facturacion'),
     path('almacen/facturas/', views.pedidos_almacen, name='pedidos_almacen'),
     path('almacen/facturas/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
+    path('almacen/facturacion_estatus/', views.facturacion_final, name='facturacion_final'),
 ]
