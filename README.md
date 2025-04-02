@@ -7,9 +7,11 @@ Web Application for DISTRIBUIDORA BLB
 Description
 
 # Intern System - Distribuidora BLB  
-![Captura Dashboard](./screenshots/dashboard_main.PNG)\
-
-![Captura Perfil](./screenshots/perfil.PNG)\
+![Captura Dashboard](./screenshots/dashboard_main.PNG)
+Profile Capture
+![Captura Perfil](./screenshots/perfil.PNG)
+documentation
+![Captura Documentacion](./screenshots/documentacion.PNG)
 
 ## ✨ Features  
 - ✅ Invoice registration with batches  
