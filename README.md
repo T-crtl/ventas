@@ -7,7 +7,7 @@ Web Application for DISTRIBUIDORA BLB
 Description
 
 # Sistema de Gestión de Ventas - Distribuidora BLB  
-![Captura Dashboard](screenshots/dashboard_main.png)  
+![Captura Dashboard](./screenshots/dashboard_main.png)  
 
 ## ✨ Features  
 - ✅ Registro de facturas con lotes  
