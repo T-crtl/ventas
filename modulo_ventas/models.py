@@ -213,7 +213,7 @@ class Factura(models.Model):
     factura = models.CharField(max_length=20)
     cliente_clave = models.CharField(max_length=30)
     cliente_nombre = models.CharField(max_length=100)
-    rfc = models.CharField(max_length=20)
+    rfc = models.CharField(max_length=20, blank=True, null=True)
     fecha_creacion = models.DateField(auto_now_add=True)
     direccion = models.TextField()
     
