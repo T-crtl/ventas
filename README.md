@@ -8,9 +8,11 @@ Description
 
 # Intern System - Distribuidora BLB  
 ![Captura Dashboard](./screenshots/dashboard_main.PNG)
-Profile Capture
+# Profile Capture
 ![Captura Perfil](./screenshots/perfil.PNG)
-documentation
+# Documentation
+![Captura Documentacion](./screenshots/documentacion.PNG)
+# 
 ![Captura Documentacion](./screenshots/documentacion.PNG)
 
 ## ✨ Features  
