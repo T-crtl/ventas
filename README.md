@@ -3,11 +3,16 @@ Developed by Cesar Abraham Duran Cuevas
 Online Link
 https://www.distribuidorablb.mx/DISTRIBUIDORABLB/
 
-Temporary Access
-Username: ricardo_beltran
-Password: #iFiJse4
 Web Application for DISTRIBUIDORA BLB
 Description
+
+# Sistema de Gestión de Ventas - Distribuidora BLB  
+![Captura Dashboard](screenshots/dashboard_main.png)  
+
+## ✨ Features  
+- ✅ Registro de facturas con lotes  
+- ✅ Búsqueda inteligente por folio/cliente  
+- ✅ API de integración (FastAPI)  
 
 This project is a custom system designed to meet the specific requirements of the company DISTRIBUIDORA BLB. It is tailored to their needs and includes the following features:
 
