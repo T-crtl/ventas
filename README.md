@@ -6,13 +6,13 @@ https://www.distribuidorablb.mx/DISTRIBUIDORABLB/
 Web Application for DISTRIBUIDORA BLB
 Description
 
-# Sistema de Gestión de Ventas - Distribuidora BLB  
+# Intern System - Distribuidora BLB  
 ![Captura Dashboard](./screenshots/dashboard_main.PNG)  
 
 ## ✨ Features  
-- ✅ Registro de facturas con lotes  
-- ✅ Búsqueda inteligente por folio/cliente  
-- ✅ API de integración (FastAPI)  
+- ✅ Invoice registration with batches  
+- ✅ Intelligent search by folio/client  
+- ✅ Integration API (FastAPI) 
 
 This project is a custom system designed to meet the specific requirements of the company DISTRIBUIDORA BLB. It is tailored to their needs and includes the following features:
 
