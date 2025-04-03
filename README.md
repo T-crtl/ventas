@@ -13,7 +13,7 @@ Description
 # Documentation
 ![Captura Documentacion](./screenshots/documentacion.PNG)
 # 
-![Captura Documentacion](./screenshots/documentacion.PNG)
+![Captura Documentacion](./screenshots/facturas.PNG)
 
 ## ✨ Features  
 - ✅ Invoice registration with batches  
