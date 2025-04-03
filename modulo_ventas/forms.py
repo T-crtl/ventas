@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Documento
+from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Documento, BackOrder, ProductoBackOrder
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -136,3 +136,28 @@ class DocumentoForm(forms.ModelForm):
     class Meta:
         model = Documento
         fields = ['nombre', 'archivo']  # Campos del formulario
+        
+class BuscarFacturaForm(forms.Form):
+    folio = forms.CharField(
+        label='Número de Folio',
+        max_length=20,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ej: FOL-12345',
+            'class': 'form-control'
+        })
+    )
+
+class ProductoBackOrderForm(forms.ModelForm):
+    class Meta:
+        model = ProductoBackOrder
+        fields = ['lote_asignado', 'cantidad_real']
+        widgets = {
+            'lote_asignado': forms.TextInput(attrs={
+                'placeholder': 'Ej: LOTE-001',
+                'class': 'form-control'
+            }),
+            'cantidad_real': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'step': '0.01'
+            })
+        }

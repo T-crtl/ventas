@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm, DocumentoForm
-from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento, Factura, ProductoFactura
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento, Factura, ProductoFactura, ProductoBackOrder, BackOrder
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -21,6 +21,7 @@ from django.conf import settings
 from django.db import transaction
 from django.db.models import Q, Count
 from django.views.decorators.http import require_POST
+from .forms import BuscarFacturaForm, ProductoBackOrderForm
 
 # Create your views here.
 def index(request):
@@ -887,4 +888,124 @@ def facturacion_final(request):
     
     return render(request, 'facturacion_final.html', {
         'facturas': facturas_completas
+    })
+    
+@login_required
+def crear_backorder(request):
+    """
+    Vista para crear backorders, integrando:
+    1. Formulario Django para búsqueda
+    2. Conexión con API externa
+    3. Creación de registros en DB
+    """
+    buscar_form = BuscarFacturaForm(request.POST or None)
+    
+    if request.method == 'POST' and buscar_form.is_valid():
+        folio = buscar_form.cleaned_data['folio']
+        
+        try:
+            # 1. CONSULTA A TU API
+            api_url = f'https://tu-api/buscar_por_folio/?folio={folio}'
+            headers = {'ngrok-skip-browser-warning': 'true'}
+            response = requests.get(api_url, headers=headers)
+            
+            if response.status_code == 200:
+                datos_api = response.json().get('resultados', [])
+                
+                if datos_api:
+                    primera_factura = datos_api[0]
+                    
+                    # 2. CREAR BACKORDER EN TU DB (con campos vacíos)
+                    backorder = BackOrder.objects.create(
+                        folio_original=folio,
+                        cliente_clave=primera_factura['Clave_Cliente'].strip(),
+                        cliente_nombre=primera_factura['Nombre_Cliente'],
+                        rfc=primera_factura['RFC'],
+                        direccion=(
+                            f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
+                            f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
+                            f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
+                            f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
+                        ),
+                        factura_relacionada=Factura.objects.filter(folio=folio).first()
+                    )
+                    
+                    # 3. AGREGAR PRODUCTOS (con campos lote/cantidad NULL)
+                    for producto_api in datos_api:
+                        ProductoBackOrder.objects.create(
+                            backorder=backorder,
+                            id_articulo=producto_api['idARTICULO'],
+                            nombre_articulo=producto_api['NOMBRE DEL ARTICULO'],
+                            cantidad_pendiente=float(producto_api['PRODUCTOS SOLICITADOS'])
+                            # lote_asignado y cantidad_real quedan NULL por defecto
+                        )
+                    
+                    return redirect('surtir_backorder', backorder_id=backorder.id)
+            
+            # Manejo de errores de la API
+            error_msg = 'No se encontraron datos' if response.status_code == 200 else f'Error API: {response.status_code}'
+            buscar_form.add_error('folio', error_msg)
+            
+        except requests.exceptions.RequestException as e:
+            buscar_form.add_error('folio', f'Error de conexión: {str(e)}')
+        except Exception as e:
+            buscar_form.add_error(None, f'Error inesperado: {str(e)}')
+    
+    return render(request, 'backorders.html', {
+        'form': buscar_form
+    })
+
+@login_required
+def surtir_backorder(request, backorder_id):
+    """
+    Vista para surtir backorders usando:
+    1. Formularios Django por cada producto
+    2. Validación automática
+    3. Actualización de campos NULL (lote/cantidad)
+    """
+    backorder = get_object_or_404(BackOrder, id=backorder_id)
+    
+    if request.method == 'POST':
+        forms_validos = True
+        
+        # Crear diccionario para guardar los forms procesados
+        forms_procesados = []
+        
+        for producto in backorder.productos.all():
+            # Usamos prefijos únicos para cada producto
+            form = ProductoBackOrderForm(
+                request.POST,
+                prefix=f"prod_{producto.id}",
+                instance=producto
+            )
+            
+            if form.is_valid():
+                # Guardamos el form pero NO commit a DB aún
+                instancia = form.save(commit=False)
+                # Actualizamos fecha solo si se está surtiendo
+                if instancia.cantidad_real and not producto.cantidad_real:
+                    instancia.fecha_surtido = timezone.now()
+                instancia.save()
+                forms_procesados.append((producto, form))
+            else:
+                forms_validos = False
+                break
+        
+        if forms_validos:
+            return redirect('detalle_backorder', backorder_id=backorder.id)
+    else:
+        # Preparar formularios iniciales (GET request)
+        forms_procesados = [
+            (producto, ProductoBackOrderForm(
+                prefix=f"prod_{producto.id}",
+                instance=producto,
+                initial={
+                    'cantidad_real': producto.cantidad_pendiente  # Sugerir cantidad pendiente por defecto
+                }
+            )) for producto in backorder.productos.all()
+        ]
+    
+    return render(request, 'backorders_surtir.html', {
+        'backorder': backorder,
+        'forms_productos': forms_procesados
     })

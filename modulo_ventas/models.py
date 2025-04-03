@@ -239,6 +239,38 @@ class ProductoFactura(models.Model):
     def __str__(self):
         return f"{self.id_articulo} - {self.nombre_articulo}"
     
+class BackOrder(models.Model):
+    folio_original = models.CharField(max_length=20)  # Folio de la factura original
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    
+    # Datos del cliente (copiados de la factura original)
+    cliente_clave = models.CharField(max_length=30)
+    cliente_nombre = models.CharField(max_length=100)
+    rfc = models.CharField(max_length=20, blank=True, null=True)
+    direccion = models.TextField()
+    
+    # Relación opcional con factura (si existe en tu sistema)
+    factura_relacionada = models.ForeignKey('Factura', on_delete=models.SET_NULL, null=True, blank=True)
+    
+    def __str__(self):
+        return f"BackOrder #{self.id} - Folio: {self.folio_original}"
+
+class ProductoBackOrder(models.Model):
+    backorder = models.ForeignKey(BackOrder, on_delete=models.CASCADE, related_name='productos')
+    id_articulo = models.CharField(max_length=20)
+    nombre_articulo = models.CharField(max_length=100)
+    cantidad_pendiente = models.FloatField()  # Cantidad faltante
+    
+    # Campos que se llenarán después (inicialmente vacíos)
+    lote_asignado = models.CharField(max_length=50, blank=True, null=True)
+    cantidad_real = models.FloatField(blank=True, null=True)
+    fecha_surtido = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        status = "Surtido" if self.cantidad_real else "Pendiente"
+        return f"{self.id_articulo} - {self.nombre_articulo} ({self.cantidad_pendiente} {status})"
+    
+    
     
     
 
