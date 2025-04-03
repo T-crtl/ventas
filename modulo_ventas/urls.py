@@ -41,4 +41,6 @@ urlpatterns = [
     path('almacen/facturas/', views.pedidos_almacen, name='pedidos_almacen'),
     path('almacen/facturas/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
     path('almacen/facturacion_estatus/', views.facturacion_final, name='facturacion_final'),
+    path('almacen/backorders/', views.crear_backorder, name='crear_backorder'),
+    path('almacen/backorders/surtir', views.surtir_backorder, name='surtir_backorder'),
 ]
