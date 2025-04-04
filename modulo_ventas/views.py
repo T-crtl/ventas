@@ -898,62 +898,80 @@ def crear_backorder(request):
     2. Conexión con API externa
     3. Creación de registros en DB
     """
-    buscar_form = BuscarFacturaForm(request.POST or None)
-    
-    if request.method == 'POST' and buscar_form.is_valid():
-        folio = buscar_form.cleaned_data['folio']
-        
-        try:
-            # 1. CONSULTA A TU API
-            api_url = f'https://tu-api/buscar_por_folio/?folio={folio}'
-            headers = {'ngrok-skip-browser-warning': 'true'}
-            response = requests.get(api_url, headers=headers)
-            
-            if response.status_code == 200:
-                datos_api = response.json().get('resultados', [])
-                
-                if datos_api:
-                    primera_factura = datos_api[0]
+    if request.method == 'GET':
+        folio = request.GET.get('folio')
+        error = None
+
+        if folio:
+            try:
+                api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
+                headers = {'ngrok-skip-browser-warning': 'true'}
+                response = requests.get(api_url, headers=headers)
+
+                if response.status_code == 200:
+                    datos = response.json()
+                    facturas_api = datos.get('resultados', [])
                     
-                    # 2. CREAR BACKORDER EN TU DB (con campos vacíos)
-                    backorder = BackOrder.objects.create(
-                        folio_original=folio,
-                        cliente_clave=primera_factura['Clave_Cliente'].strip(),
-                        cliente_nombre=primera_factura['Nombre_Cliente'],
-                        rfc=primera_factura['RFC'],
-                        direccion=(
+                    if facturas_api:
+                        # Procesar la primera factura para obtener datos del cliente
+                        primera_factura = facturas_api[0]
+                        
+                        # Crear dirección completa
+                        direccion_completa = (
                             f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
                             f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
                             f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
                             f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
-                        ),
-                        factura_relacionada=Factura.objects.filter(folio=folio).first()
-                    )
-                    
-                    # 3. AGREGAR PRODUCTOS (con campos lote/cantidad NULL)
-                    for producto_api in datos_api:
-                        ProductoBackOrder.objects.create(
-                            backorder=backorder,
-                            id_articulo=producto_api['idARTICULO'],
-                            nombre_articulo=producto_api['NOMBRE DEL ARTICULO'],
-                            cantidad_pendiente=float(producto_api['PRODUCTOS SOLICITADOS'])
-                            # lote_asignado y cantidad_real quedan NULL por defecto
                         )
-                    
-                    return redirect('surtir_backorder', backorder_id=backorder.id)
-            
-            # Manejo de errores de la API
-            error_msg = 'No se encontraron datos' if response.status_code == 200 else f'Error API: {response.status_code}'
-            buscar_form.add_error('folio', error_msg)
-            
-        except requests.exceptions.RequestException as e:
-            buscar_form.add_error('folio', f'Error de conexión: {str(e)}')
-        except Exception as e:
-            buscar_form.add_error(None, f'Error inesperado: {str(e)}')
-    
-    return render(request, 'backorders.html', {
-        'form': buscar_form
-    })
+                        
+                        # Preparar datos para mostrar (sin guardar aún)
+                        factura_data = {
+                            'cve_doc': primera_factura['CVE_DOC'].strip(),
+                            'doc_sig': primera_factura['DOC_SIG'],
+                            'folio': str(primera_factura['FOLIO']),
+                            'factura': primera_factura['FACTURA'],
+                            'cliente_clave': primera_factura['Clave_Cliente'].strip(),
+                            'cliente_nombre': primera_factura['Nombre_Cliente'],
+                            'rfc': primera_factura['RFC'],
+                            'direccion': direccion_completa,
+                            'productos': []
+                        }
+                        
+                        for producto_api in facturas_api:
+                            factura_data['productos'].append({
+                                'id_articulo': producto_api['idARTICULO'],
+                                'nombre_articulo': producto_api['NOMBRE DEL ARTICULO'],
+                                'cantidad_solicitada': producto_api['PRODUCTOS SOLICITADOS']
+                            })
+                        
+                        # Guardar datos en sesión para posible guardado posterior
+                        request.session['factura_temp'] = factura_data
+                        
+                        return render(request, 'resultado_factura.html', {
+                            'folio': folio,
+                            'factura_data': factura_data,
+                            'error': error,
+                            'existe_en_bd': Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists()
+                        })
+                    else:
+                        error = 'No se encontraron facturas con ese folio'
+                elif response.status_code == 404:
+                    error = 'Folio no encontrado'
+                else:
+                    error = f'Error al consultar la API: {response.status_code}'
+
+            except requests.exceptions.RequestException as e:
+                error = f'Error de conexión con la API: {str(e)}'
+            except Exception as e:
+                error = f'Error inesperado: {str(e)}'
+        else:
+            error = 'Ingrese un número de folio'
+        
+        return render(request, 'resultado_factura.html', {
+            'folio': folio,
+            'error': error,
+        }) 
+   
 
 @login_required
 def surtir_backorder(request, backorder_id):
