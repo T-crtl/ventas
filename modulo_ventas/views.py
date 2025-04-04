@@ -941,13 +941,12 @@ def crear_backorder(request):
                             factura_data['productos'].append({
                                 'id_articulo': producto_api['idARTICULO'],
                                 'nombre_articulo': producto_api['NOMBRE DEL ARTICULO'],
-                                'cantidad_solicitada': producto_api['PRODUCTOS SOLICITADOS']
                             })
                         
                         # Guardar datos en sesión para posible guardado posterior
                         request.session['factura_temp'] = factura_data
                         
-                        return render(request, 'resultado_factura.html', {
+                        return render(request, 'backorders.html', {
                             'folio': folio,
                             'factura_data': factura_data,
                             'error': error,
@@ -967,7 +966,7 @@ def crear_backorder(request):
         else:
             error = 'Ingrese un número de folio'
         
-        return render(request, 'resultado_factura.html', {
+        return render(request, 'backorders.html', {
             'folio': folio,
             'error': error,
         }) 
