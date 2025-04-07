@@ -260,7 +260,6 @@ class ProductoBackOrder(models.Model):
     id_articulo = models.CharField(max_length=20)
     nombre_articulo = models.CharField(max_length=100)
     cantidad_pendiente = models.FloatField()  # Cantidad faltante
-    
     # Campos que se llenarán después (inicialmente vacíos)
     lote_asignado = models.CharField(max_length=50, blank=True, null=True)
     cantidad_real = models.FloatField(blank=True, null=True)
