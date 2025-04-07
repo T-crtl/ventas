@@ -898,78 +898,113 @@ def crear_backorder(request):
     2. Conexión con API externa
     3. Creación de registros en DB
     """
-    if request.method == 'GET':
-        folio = request.GET.get('folio')
-        error = None
+    context = {
+        'error': None,
+        'folio': request.GET.get('folio', ''),
+        'factura_data': None,
+        'productos_manuales': request.session.get('productos_manuales', [])
+    }
 
-        if folio:
-            try:
-                api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
-                headers = {'ngrok-skip-browser-warning': 'true'}
-                response = requests.get(api_url, headers=headers)
+    # --- BÚSQUEDA DE FACTURA (GET) ---
+    if request.method == 'GET' and context['folio']:
+        try:
+            # Consulta a tu API
+            api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={context["folio"]}'
+            response = requests.get(api_url, headers={'ngrok-skip-browser-warning': 'true'})
 
-                if response.status_code == 200:
-                    datos = response.json()
-                    facturas_api = datos.get('resultados', [])
+            if response.status_code == 200:
+                datos_api = response.json().get('resultados', [])
+                
+                if datos_api:
+                    primera_factura = datos_api[0]
                     
-                    if facturas_api:
-                        # Procesar la primera factura para obtener datos del cliente
-                        primera_factura = facturas_api[0]
-                        
-                        # Crear dirección completa
-                        direccion_completa = (
+                    # Estructura de datos para el template
+                    context['factura_data'] = {
+                        'folio': str(primera_factura['FOLIO']),
+                        'cliente_nombre': primera_factura['Nombre_Cliente'],
+                        'rfc': primera_factura['RFC'],
+                        'direccion': (
                             f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
                             f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
                             f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
                             f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
-                        )
-                        
-                        # Preparar datos para mostrar (sin guardar aún)
-                        factura_data = {
-                            'cve_doc': primera_factura['CVE_DOC'].strip(),
-                            'doc_sig': primera_factura['DOC_SIG'],
-                            'folio': str(primera_factura['FOLIO']),
-                            'factura': primera_factura['FACTURA'],
-                            'cliente_clave': primera_factura['Clave_Cliente'].strip(),
-                            'cliente_nombre': primera_factura['Nombre_Cliente'],
-                            'rfc': primera_factura['RFC'],
-                            'direccion': direccion_completa,
-                            'productos': []
-                        }
-                        
-                        for producto_api in facturas_api:
-                            factura_data['productos'].append({
-                                'id_articulo': producto_api['idARTICULO'],
-                                'nombre_articulo': producto_api['NOMBRE DEL ARTICULO'],
-                            })
-                        
-                        # Guardar datos en sesión para posible guardado posterior
-                        request.session['factura_temp'] = factura_data
-                        
-                        return render(request, 'backorders.html', {
-                            'folio': folio,
-                            'factura_data': factura_data,
-                            'error': error,
-                            'existe_en_bd': Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists()
-                        })
-                    else:
-                        error = 'No se encontraron facturas con ese folio'
-                elif response.status_code == 404:
-                    error = 'Folio no encontrado'
+                        ),
+                        'productos_api': [
+                            {
+                                'id_articulo': p['idARTICULO'],
+                                'nombre': p['NOMBRE DEL ARTICULO'],
+                                'cantidad': p['PRODUCTOS SOLICITADOS']
+                            } for p in datos_api
+                        ]
+                    }
+                    request.session['factura_data'] = context['factura_data']
                 else:
-                    error = f'Error al consultar la API: {response.status_code}'
+                    context['error'] = 'No se encontraron facturas con ese folio'
+            else:
+                context['error'] = f'Error en API: {response.status_code}'
 
-            except requests.exceptions.RequestException as e:
-                error = f'Error de conexión con la API: {str(e)}'
-            except Exception as e:
-                error = f'Error inesperado: {str(e)}'
-        else:
-            error = 'Ingrese un número de folio'
+        except Exception as e:
+            context['error'] = f'Error: {str(e)}'
+
+    # --- AGREGAR PRODUCTO MANUAL (POST) ---
+    elif request.method == 'POST' and 'agregar_producto' in request.POST:
+        producto_manual = {
+            'id_articulo': request.POST.get('id_manual', '').strip(),
+            'nombre': request.POST.get('nombre_manual', '').strip(),
+            'cantidad': float(request.POST.get('cantidad_manual', 0))
+        }
         
-        return render(request, 'backorders.html', {
-            'folio': folio,
-            'error': error,
-        }) 
+        if producto_manual['id_articulo'] and producto_manual['nombre']:
+            productos_manuales = request.session.get('productos_manuales', [])
+            productos_manuales.append(producto_manual)
+            request.session['productos_manuales'] = productos_manuales
+            context['productos_manuales'] = productos_manuales
+
+    # --- GUARDAR BACKORDER (POST) ---
+    elif request.method == 'POST' and 'guardar_backorder' in request.POST:
+        try:
+            factura_data = request.session.get('factura_data')
+            productos_manuales = request.session.get('productos_manuales', [])
+            
+            if not factura_data:
+                raise ValueError("No hay datos de factura para guardar")
+
+            # Crear BackOrder
+            backorder = BackOrder.objects.create(
+                folio_original=factura_data['folio'],
+                cliente_nombre=factura_data['cliente_nombre'],
+                rfc=factura_data['rfc'],
+                direccion=factura_data['direccion']
+            )
+
+            # Guardar productos de API
+            for p in factura_data['productos_api']:
+                ProductoBackOrder.objects.create(
+                    backorder=backorder,
+                    id_articulo=p['id_articulo'],
+                    nombre_articulo=p['nombre'],
+                    cantidad_pendiente=p['cantidad']
+                )
+
+            # Guardar productos manuales
+            for p in productos_manuales:
+                ProductoBackOrder.objects.create(
+                    backorder=backorder,
+                    id_articulo=p['id_articulo'],
+                    nombre_articulo=p['nombre'],
+                    cantidad_pendiente=p['cantidad']
+                )
+
+            # Limpiar sesión
+            del request.session['factura_data']
+            del request.session['productos_manuales']
+            
+            return redirect('surtir_backorder', backorder_id=backorder.id)
+
+        except Exception as e:
+            context['error'] = f'Error al guardar: {str(e)}'
+
+    return render(request, 'backorders.html', context)
    
 
 @login_required
