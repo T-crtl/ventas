@@ -899,116 +899,73 @@ def crear_backorder(request):
     2. Conexión con API externa
     3. Creación de registros en DB
     """
-    context = {
-        'error': None,
-        'folio': request.GET.get('folio', ''),
-        'factura_data': None,
-        'productos_manuales': request.session.get('productos_manuales', [])
-    }
-
-    # --- BÚSQUEDA DE FACTURA ---
-    if request.method == 'GET' and context['folio']:
+    @login_required
+def backorders_view(request):
+    context = {}
+    
+    if request.method == 'GET' and 'folio' in request.GET:
+        folio = request.GET.get('folio')
+        context['folio'] = folio
+        
         try:
+            # Consultar la API
             response = requests.get(
-                f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={context["folio"]}',
+                f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}',
                 headers={'ngrok-skip-browser-warning': 'true'},
-                timeout=10  # Agregar timeout
+                timeout=10
             )
-            response.raise_for_status()  # Lanza excepción para códigos 4xx/5xx
+            response.raise_for_status()
             
             datos_api = response.json().get('resultados', [])
             if not datos_api:
-                context['error'] = 'No se encontraron facturas con ese folio'
+                messages.error(request, 'No se encontraron facturas con ese folio')
                 return render(request, 'backorders.html', context)
                 
             primera_factura = datos_api[0]
-            context['factura_data'] = {
+            factura_data = {
                 'folio': str(primera_factura['FOLIO']),
                 'cliente_nombre': primera_factura['Nombre_Cliente'],
                 'rfc': primera_factura['RFC'],
-                'direccion': f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}...",
-                'productos_api': [{
-                    'id_articulo': p['idARTICULO'],
-                    'nombre': p['NOMBRE DEL ARTICULO'],
-                    'cantidad': float(p['PRODUCTOS SOLICITADOS'])  # Convertir a float aquí
-                } for p in datos_api]
-            }
-            request.session['factura_data'] = context['factura_data']
-
-        except requests.RequestException as e:
-            context['error'] = f'Error de conexión: {str(e)}'
-        except (KeyError, ValueError) as e:
-            context['error'] = f'Error en datos de API: {str(e)}'
-
-    # --- AGREGAR PRODUCTO MANUAL ---
-    elif request.method == 'POST' and 'agregar_producto' in request.POST:
-        try:
-            cantidad = float(request.POST.get('cantidad_manual', 0))
-            if cantidad <= 0:
-                raise ValidationError("La cantidad debe ser positiva")
-                
-            producto_manual = {
-                'id_articulo': request.POST.get('id_manual', '').strip(),
-                'nombre': request.POST.get('nombre_manual', '').strip(),
-                'cantidad': cantidad
+                'direccion': f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}",
+                'cliente_clave': primera_factura.get('CLAVE_CLIENTE', '')  # Asumiendo que existe
             }
             
-            if not (producto_manual['id_articulo'] and producto_manual['nombre']):
-                raise ValidationError("Faltan campos obligatorios")
-                
-            productos_manuales = request.session.get('productos_manuales', [])
-            productos_manuales.append(producto_manual)
-            request.session['productos_manuales'] = productos_manuales
-            context['productos_manuales'] = productos_manuales
+            request.session['factura_data'] = factura_data
+            context['factura_data'] = factura_data
 
-        except (ValueError, ValidationError) as e:
-            context['error'] = str(e)
-
-    # --- GUARDAR BACKORDER ---
-    elif request.method == 'POST' and 'guardar_backorder' in request.POST:
-        try:
-            factura_data = request.session.get('factura_data')
-            if not factura_data:
-                raise ValueError("No hay datos de factura para guardar")
-
-            with transaction.atomic():
-                backorder = BackOrder.objects.create(
-                    folio_original=factura_data['folio'],
-                    cliente_nombre=factura_data['cliente_nombre'],
-                    rfc=factura_data['rfc'],
-                    direccion=factura_data['direccion']
-                )
-
-                # Crear todos los productos en una sola operación
-                productos = [
-                    ProductoBackOrder(
-                        backorder=backorder,
-                        id_articulo=p['id_articulo'],
-                        nombre_articulo=p['nombre'],
-                        cantidad_pendiente=p['cantidad']
-                    ) for p in factura_data['productos_api']
-                ] + [
-                    ProductoBackOrder(
-                        backorder=backorder,
-                        id_articulo=p['id_articulo'],
-                        nombre_articulo=p['nombre'],
-                        cantidad_pendiente=p['cantidad']
-                    ) for p in request.session.get('productos_manuales', [])
-                ]
-
-                ProductoBackOrder.objects.bulk_create(productos)
-                
-                # Limpiar sesión
-                request.session.pop('factura_data', None)
-                request.session.pop('productos_manuales', None)
-                
-                return redirect('surtir_backorder', backorder_id=backorder.id)
-
-        except Exception as e:
-            context['error'] = f'Error al guardar: {str(e)}'
-            transaction.set_rollback(True)
-
+        except requests.RequestException as e:
+            messages.error(request, f'Error de conexión: {str(e)}')
+        except (KeyError, ValueError) as e:
+            messages.error(request, f'Error en datos de API: {str(e)}')
+    
     return render(request, 'backorders.html', context)
+
+@login_required
+def guardar_backorder(request):
+    if request.method == 'POST':
+        factura_data = request.session.get('factura_data')
+        
+        if not factura_data:
+            messages.error(request, 'No hay datos de factura para procesar')
+            return redirect('backorders')
+        
+        try:
+            # Crear el BackOrder con los datos de la factura
+            backorder = BackOrder.objects.create(
+                folio_original=factura_data['folio'],
+                cliente_nombre=factura_data['cliente_nombre'],
+                cliente_clave=factura_data['cliente_clave'],
+                rfc=factura_data['rfc'],
+                direccion=factura_data['direccion']
+            )
+            
+            messages.success(request, f'BackOrder creado exitosamente (Folio: {backorder.folio_original})')
+            return redirect('backorders')
+            
+        except Exception as e:
+            messages.error(request, f'Error al crear BackOrder: {str(e)}')
+    
+    return redirect('backorders')
    
 
 @login_required
