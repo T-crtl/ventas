@@ -1,133 +1,56 @@
-{% extends "base_generic.html" %}
+{% extends 'base_generic.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <!-- Formulario de Búsqueda -->
-    <form method="get" class="mb-4 p-3 bg-light rounded">
-        <div class="input-group">
-            <input type="text" name="folio" class="form-control" 
-                   placeholder="Ingrese folio" value="{{ folio }}">
-            <button type="submit" class="btn btn-primary">Buscar</button>
+<div class="container mt-4">
+    <h2>Crear BackOrder</h2>
+    
+    <!-- Mensajes -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Formulario de búsqueda -->
+    <form method="GET" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="folio" class="form-control" 
+                       placeholder="Ingrese folio de factura" required>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Buscar Factura</button>
+            </div>
         </div>
     </form>
-
-    <!-- Mostrar errores -->
-    {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-
-    <!-- Datos de Factura desde API -->
+    
+    <!-- Mostrar datos de factura -->
     {% if factura_data %}
     <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h4>Factura: {{ factura_data.folio }}</h4>
+        <div class="card-header">
+            <h4>Factura #{{ factura_data.folio }}</h4>
         </div>
         <div class="card-body">
-            <h5>Cliente: {{ factura_data.cliente_nombre }}</h5>
-            <p>RFC: {{ factura_data.rfc }}</p>
-            <p>Dirección: {{ factura_data.direccion }}</p>
-
-            <h5 class="mt-4">Productos de Factura</h5>
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in factura_data.productos_api %}
-                    <tr>
-                        <td>{{ p.id_articulo }}</td>
-                        <td>{{ p.nombre }}</td>
-                        <td>{{ p.cantidad }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Formulario para agregar productos manuales -->
-    <div class="card mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Agregar Productos Manualmente</h4>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <input type="text" name="id_manual" class="form-control" 
-                               placeholder="Código producto" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="nombre_manual" class="form-control" 
-                               placeholder="Nombre producto" required>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number" name="cantidad_manual" class="form-control" 
-                               placeholder="Cantidad" step="0.01" min="0" required>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" name="agregar_producto" 
-                                class="btn btn-success w-100">
-                            Agregar
-                        </button>
-                    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Cliente:</strong> {{ factura_data.cliente_nombre }}</p>
+                    <p><strong>RFC:</strong> {{ factura_data.rfc }}</p>
                 </div>
+                <div class="col-md-6">
+                    <p><strong>Dirección:</strong> {{ factura_data.direccion }}</p>
+                    <p><strong>Clave Cliente:</strong> {{ factura_data.cliente_clave }}</p>
+                </div>
+            </div>
+            
+            <form method="POST" action="{% url 'guardar_backorder' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="fas fa-save"></i> Guardar BackOrder
+                </button>
             </form>
-
-            <!-- Lista de productos manuales agregados -->
-            {% if productos_manuales %}
-            <table class="table table-sm mt-3">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in productos_manuales %}
-                    <tr>
-                        <td>{{ p.id_articulo }}</td>
-                        <td>{{ p.nombre }}</td>
-                        <td>{{ p.cantidad }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
         </div>
     </div>
-
-    <!-- Botón para guardar todo -->
-    {% if factura_data %}
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="guardar_backorder" 
-                class="btn btn-lg btn-primary">
-            <i class="fas fa-save"></i> Guardar BackOrder
-        </button>
-    </form>
     {% endif %}
 </div>
-
-<script>
-// JavaScript para mejorar la experiencia
-document.addEventListener('DOMContentLoaded', function() {
-    // Auto-focus en el campo de búsqueda
-    document.querySelector('input[name="folio"]').focus();
-    
-    // Validación antes de enviar
-    document.querySelector('button[name="guardar_backorder"]')?.addEventListener('click', function(e) {
-        if (!confirm('¿Estás seguro de guardar este BackOrder?')) {
-            e.preventDefault();
-        }
-    });
-});
-</script>
 {% endblock %}
