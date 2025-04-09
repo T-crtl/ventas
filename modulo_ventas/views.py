@@ -889,14 +889,15 @@ def facturacion_final(request):
     return render(request, 'facturacion_final.html', {
         'facturas': facturas_completas
     })
+    
+@login_required
+def backorders_view(request):
     """
     Vista para crear backorders, integrando:
     1. Formulario Django para búsqueda
     2. Conexión con API externa
     3. Creación de registros en DB
     """
-@login_required
-def backorders_view(request):
     context = {}
     
     if request.method == 'GET' and 'folio' in request.GET:
