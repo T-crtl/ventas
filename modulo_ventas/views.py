@@ -878,6 +878,52 @@ def detalle_factura(request, factura_id):
     })
     
 @login_required
+def detalle_factura_Final(request, factura_id):
+    factura = get_object_or_404(Factura, pk=factura_id)
+    
+    if request.method == 'POST':
+        errores = []
+        
+        for producto in factura.productos.all():
+            lote_key = f'lote_{producto.id}'
+            cantidad_key = f'cantidad_{producto.id}'
+            
+            lote = request.POST.get(lote_key, '').strip()
+            cantidad_str = request.POST.get(cantidad_key, '').strip()
+            
+            # Validación de campos
+            if not lote or not cantidad_str:
+                errores.append(f"El producto {producto.nombre_articulo} requiere lote y cantidad")
+                continue
+                
+            try:
+                cantidad = float(cantidad_str)
+                if cantidad <= 0:
+                    errores.append(f"Cantidad inválida para {producto.nombre_articulo}")
+                    continue
+                    
+                producto.lote_asignado = lote
+                producto.cantidad_real = cantidad
+                producto.save()
+                
+            except ValueError:
+                errores.append(f"Cantidad no válida para {producto.nombre_articulo}")
+                continue
+        
+        if errores:
+            messages.error(request, "Corrige los siguientes errores:")
+            for error in errores:
+                messages.error(request, error)
+        else:
+            messages.success(request, "¡Datos guardados correctamente!")
+            return redirect('detalle_factura_final', factura_id=factura.id)
+    
+    return render(request, 'detalle_factura_final.html', {
+        'factura': factura,
+        'messages': messages.get_messages(request)
+    })
+    
+@login_required
 def facturacion_final(request):
     # Facturas donde todos los productos tienen lote y cantidad asignados
     facturas_completas = Factura.objects.annotate(
