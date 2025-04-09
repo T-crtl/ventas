@@ -23,6 +23,8 @@ from django.db.models import Q, Count
 from django.views.decorators.http import require_POST
 from .forms import BuscarFacturaForm, ProductoBackOrderForm
 
+API_BASE_URL = 'https://95c1-129-222-90-213.ngrok-free.app'
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -651,7 +653,7 @@ def buscar_por_folio(request):
 
         if folio:
             try:
-                api_url = f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}'
+                api_url = f'{API_BASE_URL}/buscar_por_folio/?folio={folio}'
                 headers = {'ngrok-skip-browser-warning': 'true'}
                 response = requests.get(api_url, headers=headers)
 
@@ -907,7 +909,7 @@ def backorders_view(request):
         try:
             # Consultar la API
             response = requests.get(
-                f'https://95c1-129-222-90-213.ngrok-free.app/buscar_por_folio/?folio={folio}',
+                f'{API_BASE_URL}/buscar_por_folio/?folio={folio}',
                 headers={'ngrok-skip-browser-warning': 'true'},
                 timeout=10
             )
