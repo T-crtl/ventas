@@ -23,7 +23,7 @@ from django.db.models import Q, Count
 from django.views.decorators.http import require_POST
 from .forms import BuscarFacturaForm, ProductoBackOrderForm
 
-API_BASE_URL = 'https://95c1-129-222-90-213.ngrok-free.app'
+API_BASE_URL = 'https://f1e4-129-222-90-213.ngrok-free.app'
 
 # Create your views here.
 def index(request):
