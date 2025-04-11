@@ -552,7 +552,7 @@ def community_dir(request):
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
     })
-
+    
 @login_required    
 def recepcion_dir(request):
     directorios = Directorio.objects.filter(area= 'Recepcion')
