@@ -147,17 +147,44 @@ class BuscarFacturaForm(forms.Form):
         })
     )
 
-class ProductoBackOrderForm(forms.ModelForm):
-    class Meta:
-        model = ProductoBackOrder
-        fields = ['lote_asignado', 'cantidad_real']
-        widgets = {
-            'lote_asignado': forms.TextInput(attrs={
-                'placeholder': 'Ej: LOTE-001',
-                'class': 'form-control'
-            }),
-            'cantidad_real': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'step': '0.01'
-            })
+class ProductoBackOrderForm(forms.Form):
+    codigo = forms.CharField(
+        label='Código',
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Código del producto'
+        }),
+        error_messages={
+            'required': 'El código del producto es obligatorio'
         }
+    )
+    
+    producto = forms.CharField(
+        label='Descripción',
+        max_length=255,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Descripción del producto'
+        }),
+        error_messages={
+            'required': 'La descripción del producto es obligatoria'
+        }
+    )
+    
+    cantidad_pendiente = forms.IntegerField(
+        label='Cantidad Pendiente',
+        min_value=1,
+        required=True,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Cantidad',
+            'min': '1'
+        }),
+        error_messages={
+            'required': 'La cantidad es obligatoria',
+            'min_value': 'La cantidad mínima es 1'
+        }
+    )

@@ -45,4 +45,4 @@ class ProductoFacturaAdmin(admin.ModelAdmin):
     
 @admin.register(BackOrder)
 class BackorderAdmin(admin.ModelAdmin):
-    list_display = ('folio_original', 'factura_relacionada')
+    list_display = ('folio_original', 'creado_por')

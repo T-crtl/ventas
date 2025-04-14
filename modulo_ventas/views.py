@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm, DocumentoForm
-from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento, Factura, ProductoFactura, ProductoBackOrder, BackOrder
+from .forms import PedidoForm, DetallePedidoForm, TicketForm, CambiarContraseniaForm, CambiarEmailForm, DocumentoForm, ProductoBackOrderForm  
+from django.forms import formset_factory
+from .models import Pedido, DetallePedido, Producto, Client, CrearTicket, Directorio, Documento, Factura, ProductoFactura, BackOrder, ProductoBackOrder
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -21,7 +22,7 @@ from django.conf import settings
 from django.db import transaction
 from django.db.models import Q, Count
 from django.views.decorators.http import require_POST
-from .forms import BuscarFacturaForm, ProductoBackOrderForm
+
 
 API_BASE_URL = 'https://f1e4-129-222-90-213.ngrok-free.app'
 
@@ -946,14 +947,16 @@ def backorders_view(request):
     2. Conexión con API externa
     3. Creación de registros en DB
     """
-    context = {}
     
+    ProductoFormSet = formset_factory(ProductoBackOrderForm, extra=1)
+    context = {'formset': ProductoFormSet()}
+    
+    # Búsqueda por folio (GET)
     if request.method == 'GET' and 'folio' in request.GET:
         folio = request.GET.get('folio')
         context['folio'] = folio
         
         try:
-            # Consultar la API
             response = requests.get(
                 f'{API_BASE_URL}/buscar_por_folio/?folio={folio}',
                 headers={'ngrok-skip-browser-warning': 'true'},
@@ -972,7 +975,7 @@ def backorders_view(request):
                 'cliente_nombre': primera_factura['Nombre_Cliente'],
                 'rfc': primera_factura['RFC'],
                 'direccion': f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}",
-                'cliente_clave': primera_factura.get('CLAVE_CLIENTE', '')  # Asumiendo que existe
+                'cliente_clave': primera_factura.get('CLAVE_CLIENTE', '')
             }
             
             request.session['factura_data'] = factura_data
@@ -982,6 +985,54 @@ def backorders_view(request):
             messages.error(request, f'Error de conexión: {str(e)}')
         except (KeyError, ValueError) as e:
             messages.error(request, f'Error en datos de API: {str(e)}')
+    
+    # Procesamiento del formulario (POST)
+    elif request.method == 'POST':
+        formset = ProductoFormSet(request.POST, prefix='productos')
+        factura_data = request.session.get('factura_data')
+        
+        if not factura_data:
+            messages.error(request, 'La sesión expiró o no hay datos de factura')
+            return redirect('backorders')
+            
+        if formset.is_valid():
+            try:
+                # Crear BackOrder
+                backorder = BackOrder.objects.create(
+                    folio_original=factura_data['folio'],
+                    cliente_nombre=factura_data['cliente_nombre'],
+                    cliente_clave=factura_data['cliente_clave'],
+                    rfc=factura_data['rfc'],
+                    direccion=factura_data['direccion'],
+                    creado_por=request.user
+                )
+                
+                # Crear productos asociados
+                productos_creados = 0
+                for form in formset:
+                    if form.cleaned_data.get('codigo'):
+                        ProductoBackOrder.objects.create(
+                            backorder=backorder,
+                            codigo=form.cleaned_data['codigo'],
+                            producto=form.cleaned_data['producto'],
+                            cantidad_pendiente=form.cleaned_data['cantidad_pendiente']
+                        )
+                        productos_creados += 1
+                
+                if productos_creados > 0:
+                    messages.success(request, f'BackOrder creado con {productos_creados} productos')
+                    del request.session['factura_data']  # Limpiar sesión
+                    return redirect('backorders')
+                else:
+                    backorder.delete()  # Eliminar backorder si no tiene productos
+                    messages.error(request, 'Debe agregar al menos un producto')
+                    
+            except Exception as e:
+                messages.error(request, f'Error al guardar: {str(e)}')
+        else:
+            messages.error(request, 'Por favor corrija los errores en el formulario')
+        
+        context['formset'] = formset
     
     return render(request, 'backorders.html', context)
 
