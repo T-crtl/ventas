@@ -1035,3 +1035,30 @@ def backorders_view(request):
         context['formset'] = formset
     
     return render(request, 'backorders.html', context)
+
+@login_required
+def guardar_backorder(request):
+    if request.method == 'POST':
+        factura_data = request.session.get('factura_data')
+        
+        if not factura_data:
+            messages.error(request, 'No hay datos de factura para procesar')
+            return redirect('backorders')
+        
+        try:
+            # Crear el BackOrder con los datos de la factura
+            backorder = BackOrder.objects.create(
+                folio_original=factura_data['folio'],
+                cliente_nombre=factura_data['cliente_nombre'],
+                cliente_clave=factura_data['cliente_clave'],
+                rfc=factura_data['rfc'],
+                direccion=factura_data['direccion']
+            )
+            
+            messages.success(request, f'BackOrder creado exitosamente (Folio: {backorder.folio_original})')
+            return redirect('backorders')
+            
+        except Exception as e:
+            messages.error(request, f'Error al crear BackOrder: {str(e)}')
+    
+    return redirect('backorders')
