@@ -981,5 +981,65 @@ def backorders_view(request):
                 
         except request.exceptions.RequestException as e:
             messages.error(request, f"Error al conectar con la API: {str(e)}")
+    #Agregar producto manualmente (POST)
+    elif request.method == 'POST' and 'agregar_producto' in request.POST:
+        folio = request.POST.get('folio')
+        producto = {
+            'codigo': request.POST.get('codigo'),
+            'descripcion': request.POST.get('descripcion'),
+            'cantidad': request.POST.get('cantidad'),
+        }
+        
+        #agregar a la lista temporal en sesion
+        productos_temp = request.session.get('productos_temporales', [])
+        productos_temp.append(producto)
+        request.session['productos_temporales'] = productos_temp
+        request.session.modified = True
+        
+        context = {
+            'folio': folio,
+            'productos_temporales': productos_temp,
+            **request.POST.dict() #mantener los datos en el formulario
+        }
+        return render(request, 'backorders.html', context)
     
+    #guardar todo en la Base de datos local
+    elif request.method == 'POST' and 'guardar_factura' in request.POST:
+        folio = request.POST.get('folio')
+        
+        try:
+            #crear backorder
+            factura = BackOrder.objects.create(
+                folio = folio,
+                cliente_nombre = request.POST.get('cliente_nombre'),
+                rfc = request.POSTget('rfc'),
+                direccion = request.POST.get('direccion'),
+                cliente_clave=request.POST.get('cliente_clave'),                
+            )
+            
+            #Agregar productos a la sesion
+            productos_temp = request.session.get('productos_temporales', [])
+            
+            for prod in productos_temp:
+                producto = ProductoBackOrder.objects.create(
+                    factura=factura,
+                    codigo = prod['codigo'],
+                    descripcion = prod['descripcion'],
+                    cantidad=prod['cantidad'],
+                )
+                
+            #guardar en db
+            factura.save()
+            
+            #limpiar sesion
+            if 'productos_temporales' in request.session:
+                del request.session['productos_temporales']
+                
+            messages.success(request, 'Backorder guardado correctamente')
+            return redirect('backorders')
+            
+        except Exception as e:
+            messages.error(request, f'Error al guardar el backorder: {str(e)}')
+            
+    return render(request, 'backorders', context)
             

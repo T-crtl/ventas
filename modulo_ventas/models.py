@@ -251,7 +251,7 @@ class BackOrder(models.Model):
         return f"BackOrder {self.folio} - {self.cliente_nombre}"
 
 class ProductoBackOrder(models.Model):
-    factura = models.ForeignKey(Factura, related_name='productos', on_delete=models.CASCADE)
+    factura = models.ForeignKey(Factura, related_name='productos_backorder', on_delete=models.CASCADE)
     codigo = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=255)
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)

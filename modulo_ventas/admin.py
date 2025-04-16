@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Directorio, Area, Documento, Factura, ProductoFactura, BackOrder, ProductoBackOrder
+from .models import Pedido, Producto, DetallePedido, Client, CrearTicket, Directorio, Area, Documento, Factura, ProductoFactura, BackOrder
 
 # Register your models here.
 @admin.register(Pedido)
@@ -45,4 +45,4 @@ class ProductoFacturaAdmin(admin.ModelAdmin):
     
 @admin.register(BackOrder)
 class BackorderAdmin(admin.ModelAdmin):
-    list_display = ('folio_original', 'creado_por')
+    list_display = ('folio', 'cliente_nombre')
