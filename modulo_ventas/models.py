@@ -240,30 +240,26 @@ class ProductoFactura(models.Model):
         return f"{self.id_articulo} - {self.nombre_articulo}"
     
 class BackOrder(models.Model):
-    folio_original = models.CharField(max_length=20)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    cliente_clave = models.CharField(max_length=30)
-    cliente_nombre = models.CharField(max_length=100)
-    rfc = models.CharField(max_length=20, blank=True, null=True)
+    folio = models.CharField(max_length=50)
+    cliente_nombre = models.CharField(max_length=255)
+    rfc = models.CharField(max_length=20)
     direccion = models.TextField()
-    creado_por = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    cliente_clave = models.CharField(max_length=50, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"BackOrder #{self.id} - {self.folio_original}"
+        return f"BackOrder {self.folio} - {self.cliente_nombre}"
 
 class ProductoBackOrder(models.Model):
-    backorder = models.ForeignKey(BackOrder, related_name='productos', on_delete=models.CASCADE)
-    codigo = models.CharField(max_length=50, null=True)
-    producto = models.CharField(max_length=255, null=True)
-    cantidad_pendiente = models.PositiveIntegerField(null=True)
-    lote_asignado = models.CharField(max_length=50, blank=True, null=True)
-    cantidad_real = models.FloatField(blank=True, null=True)
-    fecha_surtido = models.DateTimeField(blank=True, null=True)
+    factura = models.ForeignKey(Factura, related_name='productos', on_delete=models.CASCADE)
+    codigo = models.CharField(max_length=50)
+    descripcion = models.CharField(max_length=255)
+    cantidad = models.DecimalField(max_digits=10, decimal_places=2)
+    cantidad_real = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    lote = models.CharField(max_length=20, null=True)
     
     def __str__(self):
-        return f"{self.codigo} - {self.producto} ({self.cantidad_pendiente})"
-    
-    
+        return f"{self.codigo} - {self.descripcion}"
     
     
 

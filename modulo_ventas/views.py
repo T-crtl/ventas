@@ -1037,7 +1037,7 @@ def backorders_view(request):
     return render(request, 'backorders.html', context)
 
 @login_required
-def guardar_backorder(request):
+def guardar_backorder(request):        
     if request.method == 'POST':
         factura_data = request.session.get('factura_data')
         
