@@ -947,118 +947,39 @@ def backorders_view(request):
     2. Conexión con API externa
     3. Creación de registros en DB
     """
+    context = {}
     
-    ProductoFormSet = formset_factory(ProductoBackOrderForm, extra=1)
-    context = {'formset': ProductoFormSet()}
-    
-    # Búsqueda por folio (GET)
+    # Consumir la API cuando se reciba u folio por GET
     if request.method == 'GET' and 'folio' in request.GET:
         folio = request.GET.get('folio')
         context['folio'] = folio
         
         try:
-            response = requests.get(
+            response = request.get(
                 f'{API_BASE_URL}/buscar_por_folio/?folio={folio}',
                 headers={'ngrok-skip-browser-warning': 'true'},
-                timeout=10
+                timeout = 10
             )
             response.raise_for_status()
             
             datos_api = response.json().get('resultados', [])
-            if not datos_api:
-                messages.error(request, 'No se encontraron facturas con ese folio')
-                return render(request, 'backorders.html', context)
-                
-            primera_factura = datos_api[0]
-            factura_data = {
-                'folio': str(primera_factura['FOLIO']),
-                'cliente_nombre': primera_factura['Nombre_Cliente'],
-                'rfc': primera_factura['RFC'],
-                'direccion': f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}",
-                'cliente_clave': primera_factura.get('CLAVE_CLIENTE', '')
-            }
             
-            request.session['factura_data'] = factura_data
-            context['factura_data'] = factura_data
+            if datos_api:
+                primera_factura = datos_api[0]
+                context.update({
+                    'folio': str(primera_factura['FOLIO']),
+                    'cliente_nombre': primera_factura['Nombre_Cliente'],
+                    'rfc': primera_factura['RFC'],
+                    'direccion': f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}",
+                    'cliente_clave': primera_factura.get('CLIVE_CLIENTE', ''),
+                    'datos_api': datos_api
+                })
 
-        except requests.RequestException as e:
-            messages.error(request, f'Error de conexión: {str(e)}')
-        except (KeyError, ValueError) as e:
-            messages.error(request, f'Error en datos de API: {str(e)}')
-    
-    # Procesamiento del formulario (POST)
-    elif request.method == 'POST':
-        formset = ProductoFormSet(request.POST, prefix='productos')
-        factura_data = request.session.get('factura_data')
-        
-        if not factura_data:
-            messages.error(request, 'La sesión expiró o no hay datos de factura')
-            return redirect('backorders')
-            
-        if formset.is_valid():
-            try:
-                # Crear BackOrder
-                backorder = BackOrder.objects.create(
-                    folio_original=factura_data['folio'],
-                    cliente_nombre=factura_data['cliente_nombre'],
-                    cliente_clave=factura_data['cliente_clave'],
-                    rfc=factura_data['rfc'],
-                    direccion=factura_data['direccion'],
-                    creado_por=request.user
-                )
+                #Iniciar lista de productos en sesion si no existe
+                if 'productos_temporales' not in request.session:
+                    request.session['productos_temporales'] = []
                 
-                # Crear productos asociados
-                productos_creados = 0
-                for form in formset:
-                    if form.cleaned_data.get('codigo'):
-                        ProductoBackOrder.objects.create(
-                            backorder=backorder,
-                            codigo=form.cleaned_data['codigo'],
-                            producto=form.cleaned_data['producto'],
-                            cantidad_pendiente=form.cleaned_data['cantidad_pendiente']
-                        )
-                        productos_creados += 1
-                
-                if productos_creados > 0:
-                    messages.success(request, f'BackOrder creado con {productos_creados} productos')
-                    del request.session['factura_data']  # Limpiar sesión
-                    return redirect('backorders')
-                else:
-                    backorder.delete()  # Eliminar backorder si no tiene productos
-                    messages.error(request, 'Debe agregar al menos un producto')
-                    
-            except Exception as e:
-                messages.error(request, f'Error al guardar: {str(e)}')
-        else:
-            messages.error(request, 'Por favor corrija los errores en el formulario')
-        
-        context['formset'] = formset
+        except request.exceptions.RequestException as e:
+            messages.error(request, f"Error al conectar con la API: {str(e)}")
     
-    return render(request, 'backorders.html', context)
-
-@login_required
-def guardar_backorder(request):        
-    if request.method == 'POST':
-        factura_data = request.session.get('factura_data')
-        
-        if not factura_data:
-            messages.error(request, 'No hay datos de factura para procesar')
-            return redirect('backorders')
-        
-        try:
-            # Crear el BackOrder con los datos de la factura
-            backorder = BackOrder.objects.create(
-                folio_original=factura_data['folio'],
-                cliente_nombre=factura_data['cliente_nombre'],
-                cliente_clave=factura_data['cliente_clave'],
-                rfc=factura_data['rfc'],
-                direccion=factura_data['direccion']
-            )
             
-            messages.success(request, f'BackOrder creado exitosamente (Folio: {backorder.folio_original})')
-            return redirect('backorders')
-            
-        except Exception as e:
-            messages.error(request, f'Error al crear BackOrder: {str(e)}')
-    
-    return redirect('backorders')
