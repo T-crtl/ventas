@@ -1004,6 +1004,21 @@ def backorders_view(request):
         # Mantener los datos de cliente desde sesión
         context.update(request.session.get('datos_cliente', {}))
         context['productos_temporales'] = productos_temp
+    
+    # Eliminar producto (POST)
+    elif request.method == 'POST' and 'eliminar_producto' in request.POST:
+        index = int(request.POST.get('eliminar_producto'))
+        productos_temp = request.session.get('productos_temporales', [])
+        if 0 <= index < len(productos_temp):
+            productos_temp.pop(index)
+            request.session['productos_temporales'] = productos_temp
+            request.session.modified = True
+
+        context.update({
+            'folio': request.POST.get('folio'),
+            'productos_temporales': productos_temp
+        })
+        return render(request, 'backorders.html', context)
 
     # Guardar todo en la base de datos local
     elif request.method == 'POST' and 'guardar_factura' in request.POST:
