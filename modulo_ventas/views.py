@@ -22,6 +22,7 @@ from django.conf import settings
 from django.db import transaction
 from django.db.models import Q, Count
 from django.views.decorators.http import require_POST
+from django.core import exceptions
 
 
 API_BASE_URL = 'https://f1e4-129-222-90-213.ngrok-free.app'
@@ -948,98 +949,103 @@ def backorders_view(request):
     3. Creación de registros en DB
     """
     context = {}
-    
-    # Consumir la API cuando se reciba u folio por GET
+
+    # Consumir API cuando se reciba un folio por GET
     if request.method == 'GET' and 'folio' in request.GET:
         folio = request.GET.get('folio')
-        context['folio'] = folio
-        
+
         try:
-            response = request.get(
+            response = requests.get(
                 f'{API_BASE_URL}/buscar_por_folio/?folio={folio}',
                 headers={'ngrok-skip-browser-warning': 'true'},
-                timeout = 10
+                timeout=10
             )
             response.raise_for_status()
-            
+
             datos_api = response.json().get('resultados', [])
-            
+
             if datos_api:
                 primera_factura = datos_api[0]
-                context.update({
+
+                datos_cliente = {
                     'folio': str(primera_factura['FOLIO']),
                     'cliente_nombre': primera_factura['Nombre_Cliente'],
                     'rfc': primera_factura['RFC'],
                     'direccion': f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}",
-                    'cliente_clave': primera_factura.get('CLIVE_CLIENTE', ''),
-                    'datos_api': datos_api
-                })
+                    'cliente_clave': primera_factura.get('CLIVE_CLIENTE', '')
+                }
 
-                #Iniciar lista de productos en sesion si no existe
+                # Guardar cliente en sesión
+                request.session['datos_cliente'] = datos_cliente
+
+                # Iniciar lista de productos en sesión si no existe
                 if 'productos_temporales' not in request.session:
                     request.session['productos_temporales'] = []
-                
-        except request.exceptions.RequestException as e:
+
+                context.update(datos_cliente)
+                context['datos_api'] = datos_api
+
+        except requests.exceptions.RequestException as e:
             messages.error(request, f"Error al conectar con la API: {str(e)}")
-    #Agregar producto manualmente (POST)
+
+    # Agregar producto manualmente (POST)
     elif request.method == 'POST' and 'agregar_producto' in request.POST:
-        folio = request.POST.get('folio')
         producto = {
             'codigo': request.POST.get('codigo'),
             'descripcion': request.POST.get('descripcion'),
             'cantidad': request.POST.get('cantidad'),
         }
-        
-        #agregar a la lista temporal en sesion
+
         productos_temp = request.session.get('productos_temporales', [])
         productos_temp.append(producto)
         request.session['productos_temporales'] = productos_temp
         request.session.modified = True
-        
-        context = {
-            'folio': folio,
-            'productos_temporales': productos_temp,
-            **request.POST.dict() #mantener los datos en el formulario
-        }
-        return render(request, 'backorders.html', context)
-    
-    #guardar todo en la Base de datos local
+
+        # Mantener los datos de cliente desde sesión
+        context.update(request.session.get('datos_cliente', {}))
+        context['productos_temporales'] = productos_temp
+
+    # Guardar todo en la base de datos local
     elif request.method == 'POST' and 'guardar_factura' in request.POST:
-        folio = request.POST.get('folio')
-        
         try:
-            #crear backorder
+            datos_cliente = request.session.get('datos_cliente', {})
+            if not datos_cliente:
+                raise ValueError("Datos de cliente no disponibles")
+
+            # Crear backorder
             factura = BackOrder.objects.create(
-                folio = folio,
-                cliente_nombre = request.POST.get('cliente_nombre'),
-                rfc = request.POSTget('rfc'),
-                direccion = request.POST.get('direccion'),
-                cliente_clave=request.POST.get('cliente_clave'),                
+                folio=datos_cliente['folio'],
+                cliente_nombre=datos_cliente['cliente_nombre'],
+                rfc=datos_cliente['rfc'],
+                direccion=datos_cliente['direccion'],
+                cliente_clave=datos_cliente['cliente_clave']
             )
-            
-            #Agregar productos a la sesion
+
+            # Agregar productos
             productos_temp = request.session.get('productos_temporales', [])
-            
             for prod in productos_temp:
-                producto = ProductoBackOrder.objects.create(
+                ProductoBackOrder.objects.create(
                     factura=factura,
-                    codigo = prod['codigo'],
-                    descripcion = prod['descripcion'],
-                    cantidad=prod['cantidad'],
+                    codigo=prod['codigo'],
+                    descripcion=prod['descripcion'],
+                    cantidad=prod['cantidad']
                 )
-                
-            #guardar en db
-            factura.save()
-            
-            #limpiar sesion
+
+            # Limpiar sesión
             if 'productos_temporales' in request.session:
                 del request.session['productos_temporales']
-                
+            if 'datos_cliente' in request.session:
+                del request.session['datos_cliente']
+
             messages.success(request, 'Backorder guardado correctamente')
             return redirect('backorders')
-            
+
         except Exception as e:
             messages.error(request, f'Error al guardar el backorder: {str(e)}')
-            
-    return render(request, 'backorders', context)
-            
+
+    else:
+        # Si hay datos en sesión, cargarlos al context
+        context.update(request.session.get('datos_cliente', {}))
+        context['productos_temporales'] = request.session.get('productos_temporales', [])
+
+    return render(request, 'backorders.html', context)

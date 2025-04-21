@@ -2,187 +2,63 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-4">
-    <h2 class="mb-4">Gestión de BackOrders</h2>
-    
-    {% if messages %}
-    <div class="mb-4">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <!-- Búsqueda de Factura -->
-    {% if not factura_data %}
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Buscar Factura</h5>
-        </div>
-        <div class="card-body">
-            <form method="get" class="form-inline">
-                <div class="form-group mx-2">
-                    <input type="text" name="folio" class="form-control" placeholder="Folio de factura" required>
-                </div>
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-search"></i> Buscar
-                </button>
-            </form>
-        </div>
-    </div>
-    {% endif %}
-    
-    <!-- Datos de Factura -->
-    {% if factura_data %}
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">
-            <h5 class="mb-0">Datos de Factura</h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Folio:</strong> {{ factura_data.folio }}</p>
-                    <p><strong>Cliente:</strong> {{ factura_data.cliente_nombre }}</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Clave:</strong> {{ factura_data.cliente_clave }}</p>
-                    <p><strong>Dirección:</strong> {{ factura_data.direccion }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    
-    <!-- Formulario de Productos -->
-    {% if factura_data %}
-    <form method="post" id="backorder-form">
+<h1>Crear Backorder</h1>
+
+<!-- Mostrar mensajes -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<!-- Formulario para buscar folio -->
+<form method="get">
+    <label for="folio">Buscar folio:</label>
+    <input type="text" name="folio" id="folio" required>
+    <button type="submit">Buscar</button>
+</form>
+
+<!-- Mostrar datos del cliente si existen -->
+{% if folio %}
+    <h2>Datos del cliente</h2>
+    <p><strong>Folio:</strong> {{ folio }}</p>
+    <p><strong>Cliente:</strong> {{ cliente_nombre }}</p>
+    <p><strong>RFC:</strong> {{ rfc }}</p>
+    <p><strong>Dirección:</strong> {{ direccion }}</p>
+    <p><strong>Clave:</strong> {{ cliente_clave }}</p>
+
+    <hr>
+
+    <!-- Formulario para agregar productos -->
+    <h3>Agregar producto</h3>
+    <form method="post">
         {% csrf_token %}
-        <div class="card mb-4">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="mb-0">Productos del BackOrder</h5>
-            </div>
-            <div class="card-body">
-                {{ formset.management_form }}
-                
-                <table class="table table-hover" id="productos-table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th width="20%">Código</th>
-                            <th width="50%">Descripción</th>
-                            <th width="20%">Cantidad</th>
-                            <th width="10%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for form in formset %}
-                        <tr class="producto-row">
-                            <td>
-                                {{ form.codigo }}
-                                {% if form.codigo.errors %}
-                                <div class="text-danger small">{{ form.codigo.errors }}</div>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{ form.producto }}
-                                {% if form.producto.errors %}
-                                <div class="text-danger small">{{ form.producto.errors }}</div>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{ form.cantidad_pendiente }}
-                                {% if form.cantidad_pendiente.errors %}
-                                <div class="text-danger small">{{ form.cantidad_pendiente.errors }}</div>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-danger remove-row">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                
-                <div class="text-right mt-3">
-                    <button type="button" id="add-row" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Agregar Producto
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-group text-right">
-            <a href="{% url 'backorders' %}" class="btn btn-outline-secondary mr-2">
-                <i class="fas fa-times"></i> Cancelar
-            </a>
-            <button type="submit" class="btn btn-success">
-                <i class="fas fa-save"></i> Guardar BackOrder
-            </button>
-        </div>
+        <label>Código:</label>
+        <input type="text" name="codigo" required>
+        <label>Descripción:</label>
+        <input type="text" name="descripcion" required>
+        <label>Cantidad:</label>
+        <input type="number" name="cantidad" required>
+        <button type="submit" name="agregar_producto">Agregar producto</button>
     </form>
+
+    <!-- Mostrar productos agregados -->
+    {% if productos_temporales %}
+        <h3>Productos agregados</h3>
+        <ul>
+            {% for p in productos_temporales %}
+                <li>{{ p.codigo }} - {{ p.descripcion }} ({{ p.cantidad }})</li>
+            {% endfor %}
+        </ul>
     {% endif %}
-</div>
-{% endblock %}
 
-{% block javascript %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    // Función para agregar nueva fila
-    function addNewRow() {
-        const formCount = parseInt($('#id_productos-TOTAL_FORMS').val());
-        const newForm = $('.producto-row').first().clone();
-        
-        // Actualizar atributos name/id
-        newForm.find(':input').each(function() {
-            const name = $(this).attr('name').replace(/-\d+-/, '-' + formCount + '-');
-            const id = $(this).attr('id').replace(/-\d+-/, '-' + formCount + '-');
-            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        });
-        
-        // Limpiar errores
-        newForm.find('.errorlist').remove();
-        newForm.find('.is-invalid').removeClass('is-invalid');
-        
-        $('#productos-table tbody').append(newForm);
-        $('#id_productos-TOTAL_FORMS').val(formCount + 1);
-    }
+    <hr>
 
-    // Agregar fila al hacer clic
-    $('#add-row').click(addNewRow);
-    
-    // Eliminar fila
-    $(document).on('click', '.remove-row', function() {
-        const rowCount = $('.producto-row').length;
-        if (rowCount > 1) {
-            $(this).closest('tr').remove();
-            updateFormIndices();
-        } else {
-            // Limpiar la única fila en lugar de eliminarla
-            $(this).closest('tr').find('input').val('');
-        }
-    });
-    
-    // Actualizar índices
-    function updateFormIndices() {
-        $('.producto-row').each(function(index) {
-            $(this).find(':input').each(function() {
-                const name = $(this).attr('name').replace(/-\d+-/, '-' + index + '-');
-                const id = $(this).attr('id').replace(/-\d+-/, '-' + index + '-');
-                $(this).attr({'name': name, 'id': id});
-            });
-        });
-        $('#id_productos-TOTAL_FORMS').val($('.producto-row').length);
-    }
-    
-    // Agregar primera fila adicional si es necesario
-    if ($('.producto-row').length < 1) {
-        addNewRow();
-    }
-});
-</script>
+    <!-- Botón para guardar backorder -->
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="guardar_factura">Guardar Backorder</button>
+    </form>
+{% endif %}
+
 {% endblock %}
