@@ -694,5 +694,84 @@ body {
       background-image: url('/static/images/404.png');
     }
   }
+
+  /* Estilos backorders */
+  /* Estilos base para el contenedor */
+.backorder-container {
+    max-width: 1200px;
+    padding: 20px;
+}
+
+/* Estilos para el encabezado */
+.backorder-header {
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 1rem;
+}
+
+.backorder-title {
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.backorder-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+/* Estilos para las tarjetas */
+.backorder-search,
+.backorder-client,
+.backorder-add-product,
+.backorder-products {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Estilos para la información del cliente */
+.backorder-client-info {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.backorder-client-info strong {
+    color: #495057;
+    min-width: 80px;
+    display: inline-block;
+}
+
+/* Estilos para la tabla de productos */
+.backorder-products table {
+    margin-bottom: 0;
+}
+
+.backorder-products th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+/* Efectos hover para mejor interactividad */
+.btn-actions {
+    transition: all 0.2s ease;
+}
+
+.btn-actions:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .backorder-client-info {
+        font-size: 0.85rem;
+    }
+    
+    .backorder-add-product .col-md-2,
+    .backorder-add-product .col-md-3,
+    .backorder-add-product .col-md-5 {
+        margin-bottom: 1rem;
+    }
+}
     
 

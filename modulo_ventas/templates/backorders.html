@@ -2,63 +2,154 @@
 {% load static %}
 
 {% block content %}
-<h1>Crear Backorder</h1>
+<div class="backorder-container container-lg my-4">
+    <div class="backorder-header text-center mb-4">
+        <h1 class="backorder-title display-4 fw-bold text-primary">Crear Backorder</h1>
+        <p class="backorder-subtitle text-muted">Complete la información del pedido pendiente</p>
+    </div>
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert {{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-{% endif %}
-
-<!-- Formulario para buscar folio -->
-<form method="get">
-    <label for="folio">Buscar folio:</label>
-    <input type="text" name="folio" id="folio" required>
-    <button type="submit">Buscar</button>
-</form>
-
-{% if folio %}
-    <h2>Folio: {{ folio }}</h2>
-    <p>Cliente: {{ cliente_nombre }}</p>
-    <p>RFC: {{ rfc }}</p>
-    <p>Dirección: {{ direccion }}</p>
-    <p>Clave: {{ cliente_clave }}</p>
-
-    <!-- Formulario para agregar productos -->
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="folio" value="{{ folio }}">
-        <label>Código:</label>
-        <input type="text" name="codigo" required>
-        <label>Descripción:</label>
-        <input type="text" name="descripcion" required>
-        <label>Cantidad:</label>
-        <input type="number" name="cantidad" required>
-        <button type="submit" name="agregar_producto">Agregar producto</button>
-    </form>
-
-    <!-- Productos agregados -->
-    {% if productos_temporales %}
-        <h3>Productos agregados:</h3>
-        <ul>
-            {% for p in productos_temporales %}
-                <li>{{ p.codigo }} - {{ p.descripcion }} ({{ p.cantidad }}) 
-                    <!-- Botón para eliminar producto -->
-                    <form method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="folio" value="{{ folio }}">
-                        <button type="submit" name="eliminar_producto" value="{{ forloop.counter0 }}">Eliminar</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
+    <!-- Mensajes de alerta -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show {% if message.tags %}{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
     {% endif %}
 
-    <!-- Botón para guardar factura -->
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="guardar_factura">Guardar Backorder</button>
-    </form>
-{% endif %}
+    <!-- Formulario de búsqueda -->
+    <div class="backorder-search card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label for="folio" class="form-label fw-bold">Buscar folio:</label>
+                    <input type="text" name="folio" id="folio" class="form-control form-control-lg" required>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-search me-2"></i>Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    {% if folio %}
+    <!-- Información del cliente -->
+    <div class="backorder-client card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">Información del Cliente</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="backorder-client-info"><strong>Folio:</strong> <span class="text-primary">{{ folio }}</span></p>
+                    <p class="backorder-client-info"><strong>Cliente:</strong> {{ cliente_nombre }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="backorder-client-info"><strong>RFC:</strong> {{ rfc }}</p>
+                    <p class="backorder-client-info"><strong>Dirección:</strong> {{ direccion }}</p>
+                    <p class="backorder-client-info"><strong>Clave:</strong> {{ cliente_clave }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario para agregar productos -->
+    <div class="backorder-add-product card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="h5 mb-0">Agregar Producto</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" class="row g-3">
+                {% csrf_token %}
+                <input type="hidden" name="folio" value="{{ folio }}">
+                
+                <div class="col-md-3">
+                    <label for="codigo" class="form-label">Código</label>
+                    <input type="text" name="codigo" class="form-control" required>
+                </div>
+                
+                <div class="col-md-5">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <input type="text" name="descripcion" class="form-control" required>
+                </div>
+                
+                <div class="col-md-2">
+                    <label for="cantidad" class="form-label">Cantidad</label>
+                    <input type="number" name="cantidad" class="form-control" required min="1">
+                </div>
+                
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" name="agregar_producto" class="btn btn-success w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Agregar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de productos agregados -->
+    {% if productos_temporales %}
+    <div class="backorder-products card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="h5 mb-0">Productos Agregados</h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in productos_temporales %}
+                        <tr>
+                            <td>{{ p.codigo }}</td>
+                            <td>{{ p.descripcion }}</td>
+                            <td>{{ p.cantidad }}</td>
+                            <td>
+                                <form method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="folio" value="{{ folio }}">
+                                    <button type="submit" name="eliminar_producto" value="{{ forloop.counter0 }}" 
+                                            class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Botón para guardar -->
+    <div class="backorder-actions text-center">
+        <form method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" name="guardar_factura" class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-save me-2"></i>Guardar Backorder
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/backorders.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 {% endblock %}
