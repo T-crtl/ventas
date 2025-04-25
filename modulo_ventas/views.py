@@ -948,6 +948,20 @@ def backorders_view(request):
     2. Conexión con API externa
     3. Creación de registros en DB
     """
+    if request.method == 'GET' and not 'folio' in request.GET:
+        # Borra solo las variables de backorder, no toda la sesión
+        session_keys_to_delete = [
+            'productos_temporales',
+            'folio',
+            'cliente_nombre',
+            'rfc',
+            'direccion',
+            'cliente_clave'
+        ]
+        for key in session_keys_to_delete:
+            if key in request.session:
+                del request.session[key]
+    
     context = {}
     
     # Consumir la API cuando se reciba un folio por GET
@@ -991,9 +1005,6 @@ def backorders_view(request):
                     'cliente_clave': cliente_clave,
                     'datos_api': datos_api
                 })
-            else:
-            # Limpiamos completamente la sesión si no hay búsqueda
-                request.session.flush()
                 
         except requests.exceptions.RequestException as e:
             messages.error(request, f"Error al conectar con la API: {str(e)}")
