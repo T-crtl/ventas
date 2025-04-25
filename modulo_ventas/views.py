@@ -991,6 +991,9 @@ def backorders_view(request):
                     'cliente_clave': cliente_clave,
                     'datos_api': datos_api
                 })
+            else:
+            # Limpiamos completamente la sesión si no hay búsqueda
+                request.session.flush()
                 
         except requests.exceptions.RequestException as e:
             messages.error(request, f"Error al conectar con la API: {str(e)}")
