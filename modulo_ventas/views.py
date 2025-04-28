@@ -675,7 +675,8 @@ def buscar_por_folio(request):
                                                 primera_factura['COLONIA'].strip(),
                                                 primera_factura['MUNICIPIO'].strip(),
                                                 primera_factura['ESTADO'].strip(),
-                                                f"C.P. {primera_factura['CP'].strip()}" if primera_factura.get('CP', '').strip() else None
+                                                f"C.P. {primera_factura['CP'].strip()}" if primera_factura.get('CP', '').strip() else None,
+                                                f"Cruzamientos entre calles {primera_factura['CRUZAMIENTOS']} y {primera_factura['CRUZAMIENTOS2']}"
                                                 ])).replace(" ,", ",")  
                         
                         # Preparar datos para mostrar (sin guardar aún)
@@ -994,9 +995,10 @@ def backorders_view(request):
                     primera_factura['COLONIA'].strip(),
                     primera_factura['MUNICIPIO'].strip(),
                     primera_factura['ESTADO'].strip(),
-                    f"C.P. {primera_factura['CP'].strip()}" if primera_factura.get('CP', '').strip() else None
+                    f"C.P. {primera_factura['CP'].strip()}" if primera_factura.get('CP', '').strip() else None,
+                    f"Cruzamientos entre calles {primera_factura['CRUZAMIENTOS']} y {primera_factura['CRUZAMIENTOS2']}"
                 ])).replace(" ,", ",")                
-                cliente_clave = primera_factura.get('CLIVE_CLIENTE', '')
+                cliente_clave = primera_factura.get('Clave_Cliente', '')
 
                 # Guardar datos en sesión
                 request.session['folio'] = folio
