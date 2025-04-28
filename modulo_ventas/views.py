@@ -668,12 +668,15 @@ def buscar_por_folio(request):
                         primera_factura = facturas_api[0]
                         
                         # Crear dirección completa
-                        direccion_completa = (
-                            f"{primera_factura['CALLE']} {primera_factura['NUMEXT']} "
-                            f"{'Int. ' + primera_factura['NUMINT'] if primera_factura['NUMINT'] else ''}, "
-                            f"{primera_factura['COLONIA']}, {primera_factura['CP']}, "
-                            f"{primera_factura['MUNICIPIO']}, {primera_factura['ESTADO']}"
-                        )
+                        direccion_completa =' '.join(filter(None, [
+                                                primera_factura['CALLE'].strip(),
+                                                f"#{primera_factura['NUMEXT'].strip()}" if primera_factura.get('NUMEXT', '').strip() else None,
+                                                f"Int. {primera_factura['NUMINT'].strip()}" if primera_factura.get('NUMINT', '').strip() else None,
+                                                primera_factura['COLONIA'].strip(),
+                                                primera_factura['MUNICIPIO'].strip(),
+                                                primera_factura['ESTADO'].strip(),
+                                                f"C.P. {primera_factura['CP'].strip()}" if primera_factura.get('CP', '').strip() else None
+                                                ])).replace(" ,", ",")  
                         
                         # Preparar datos para mostrar (sin guardar aún)
                         factura_data = {
@@ -980,10 +983,19 @@ def backorders_view(request):
             datos_api = response.json().get('resultados', [])
             
             if datos_api:
+                print(datos_api)
                 primera_factura = datos_api[0]
                 cliente_nombre = primera_factura['Nombre_Cliente']
                 rfc = primera_factura['RFC']
-                direccion = f"{primera_factura['CALLE']} {primera_factura['NUMEXT']}"
+                direccion = ' '.join(filter(None, [
+                    primera_factura['CALLE'].strip(),
+                    f"#{primera_factura['NUMEXT'].strip()}" if primera_factura.get('NUMEXT', '').strip() else None,
+                    f"Int. {primera_factura['NUMINT'].strip()}" if primera_factura.get('NUMINT', '').strip() else None,
+                    primera_factura['COLONIA'].strip(),
+                    primera_factura['MUNICIPIO'].strip(),
+                    primera_factura['ESTADO'].strip(),
+                    f"C.P. {primera_factura['CP'].strip()}" if primera_factura.get('CP', '').strip() else None
+                ])).replace(" ,", ",")                
                 cliente_clave = primera_factura.get('CLIVE_CLIENTE', '')
 
                 # Guardar datos en sesión
