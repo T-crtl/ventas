@@ -1124,5 +1124,3 @@ def backorders_view(request):
     })
     
     return render(request, 'backorders.html', context)
-
-# test
