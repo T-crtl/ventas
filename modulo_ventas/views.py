@@ -1123,4 +1123,4 @@ def backorders_view(request):
         'productos_temporales': request.session.get('productos_temporales', [])
     })
     
-    return render(request, 'backorders.html', context)
+    # return render(request, 'backorders.html', context)
