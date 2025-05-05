@@ -25,7 +25,7 @@ from django.views.decorators.http import require_POST
 from django.core import exceptions
 
 
-API_BASE_URL = 'https://db03-129-222-90-213.ngrok-free.app'
+API_BASE_URL = 'https://481c-186-96-24-219.ngrok-free.app'
 
 # Create your views here.
 def index(request):
