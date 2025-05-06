@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+Lista de Backorders
+{% endblock %}
+
+{% block content %}
+<h1>Lista de Backorders</h1>
+
+<!-- Aquí puedes iterar sobre los datos que envíe la vista -->
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for backorder in backorders %}
+        <tr>
+            <td>{{ backorder.id }}</td>
+            <td>{{ backorder.folio }}</td>
+            <td>{{ backorder.cliente_nombre }}</td>
+            <td>{{ backorder.fecha_creacion }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

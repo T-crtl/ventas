@@ -1127,6 +1127,10 @@ def backorders_view(request):
 
 @login_required
 def lista_backorders(request):
-    backorders = BackOrder.objects.all().order_by('-fecha_creacion')
     # Filtros de búsqueda 
+    backorders = BackOrder.objects.filter(
+        productos_backorder__cantidad_real__isnull=True, 
+        productos_backorder__lote__isnull=True
+    ).distinct().order_by('-fecha_creacion')
+    
     return render(request, 'lista_backorders.html', {'backorders': backorders})
