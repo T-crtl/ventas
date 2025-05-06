@@ -43,5 +43,7 @@ urlpatterns = [
     path('almacen/facturacion_estatus/<int:factura_id>/', views.detalle_factura_Final, name='detalle_factura_final'),
     path('almacen/facturacion_estatus/', views.facturacion_final, name='facturacion_final'),
     path('backorders/', views.backorders_view, name='backorders'),
+    path('backorders_detalle/', views.backorders_view, name='backorders-detalle'),
+    path('backorders/<int:backorder_id>/', views.lista_backorders, name='detalle_backorder'),
     # path('backorders/guardar/', views.guardar_backorder, name='guardar_backorder'),
 ]

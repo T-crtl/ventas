@@ -1127,5 +1127,6 @@ def backorders_view(request):
 
 @login_required
 def lista_backorders(request):
-    backorders = BackOrder.objects.all()
+    backorders = BackOrder.objects.all().order_by('-fecha_creacion')
+    # Filtros de búsqueda 
     return render(request, 'lista_backorders.html', {'backorders': backorders})
