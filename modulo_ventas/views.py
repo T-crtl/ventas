@@ -1124,3 +1124,8 @@ def backorders_view(request):
     })
     
     return render(request, 'backorders.html', context)
+
+@login_required
+def lista_backorders(request):
+    backorders = BackOrder.objects.all()
+    return render(request, 'lista_backorders.html', {'backorders': backorders})
