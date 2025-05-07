@@ -671,7 +671,7 @@ def buscar_por_folio(request):
                         direccion_completa =' '.join(filter(None, [
                                                 primera_factura['CALLE'].strip(),
                                                 f"#{primera_factura['NUMEXT'].strip()}" if primera_factura.get('NUMEXT', '').strip() else None,
-                                                f"Int. {primera_factura['NUMINT'].strip()}" if primera_factura.get('NUMINT', '').strip() else None,
+                                                f"Int. {primera_factura['NUMINT'].strip()}" if primera_factura.get('NUMINT') and primera_factura['NUMINT'].strip() else None,
                                                 primera_factura['COLONIA'].strip(),
                                                 primera_factura['MUNICIPIO'].strip(),
                                                 primera_factura['ESTADO'].strip(),
