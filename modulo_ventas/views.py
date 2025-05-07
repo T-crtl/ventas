@@ -947,6 +947,24 @@ def facturacion_final(request):
 @login_required
 def backorders_view(request):
     """
+    Handles the backorders view, allowing users to interact with backorders through various actions:
+    - **GET Request without 'folio'**: Clears specific session variables related to backorders.
+    - **GET Request with 'folio'**: Fetches data from an external API using the provided folio, processes the response, 
+      and stores relevant information in the session.
+    - **POST Request to Add Product**: Adds a product to the temporary product list stored in the session.
+    - **POST Request to Remove Product**: Removes a product from the temporary product list stored in the session.
+    - **POST Request to Save Backorder**: Saves the backorder and its associated products to the database, 
+      and clears the session variables.
+    Args:
+        request (HttpRequest): The HTTP request object containing method, GET/POST data, and session.
+    Returns:
+        HttpResponse: Renders the 'backorders.html' template with the appropriate context or redirects 
+        to the backorders page after saving.
+    Notes:
+        - The view integrates with an external API to fetch client and product data.
+        - Temporary product data is stored in the session for user convenience.
+        - Error handling is implemented for API requests and database operations.
+    
     Vista para crear backorders, integrando:
     1. Formulario Django para búsqueda
     2. Conexión con API externa
@@ -1092,6 +1110,7 @@ def backorders_view(request):
             # Agregar productos a la base de datos
             productos_temp = request.session.get('productos_temporales', [])
             for prod in productos_temp:
+                
                 ProductoBackOrder.objects.create(
                     factura=factura,
                     codigo=prod['codigo'],
