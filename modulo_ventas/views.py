@@ -1146,10 +1146,50 @@ def backorders_view(request):
 
 @login_required
 def lista_backorders(request):
-    # Filtros de búsqueda 
-    backorders = BackOrder.objects.filter(
-        productos_backorder__cantidad_real__isnull=True, 
-        productos_backorder__lote__isnull=True
-    ).distinct().order_by('-fecha_creacion')
+    # Facturas con productos incompletos (sin lote o sin cantidad_real)
+    facturas = BackOrder.objects.annotate(
+        productos_incompletos=Count(
+            'productos_backorder',
+            filter=Q(productos_backorder__lote__isnull=True) | 
+                   Q(productos_backorder__cantidad_real__isnull=True)
+        )
+    ).filter(productos_incompletos__gt=0).order_by('-fecha_creacion')
     
-    return render(request, 'lista_backorders.html', {'backorders': backorders})
+    # Filtros
+    query = request.GET.get('q')
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    
+    if query:
+        facturas = facturas.filter(
+            Q(folio__icontains=query) |
+            Q(cliente_nombre__icontains=query)
+        )
+
+    if fecha_inicio:
+        try:
+            fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+            facturas = facturas.filter(fecha_creacion__gte=fecha_inicio)
+        except ValueError:
+            pass
+    
+    if fecha_fin:
+        try:
+            fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+            facturas = facturas.filter(fecha_creacion__lte=fecha_fin)
+        except ValueError:
+            pass
+    
+    return render(request, 'almacen_factura.html', {
+        'facturas': facturas,
+        'search_query': query or '',
+        'fecha_inicio': fecha_inicio or '',
+        'fecha_fin': fecha_fin or ''
+    })
+    
+    # backorders = BackOrder.objects.filter(
+    #     productos_backorder__cantidad_real__isnull=True, 
+    #     productos_backorder__lote__isnull=True
+    # ).distinct().order_by('-fecha_creacion')
+    
+    # return render(request, 'lista_backorders.html', {'backorders': backorders})
