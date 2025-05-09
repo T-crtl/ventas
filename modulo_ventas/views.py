@@ -1180,7 +1180,7 @@ def lista_backorders(request):
         except ValueError:
             pass
     
-    return render(request, 'almacen_factura.html', {
+    return render(request, 'lista_backorders.html', {
         'facturas': facturas,
         'search_query': query or '',
         'fecha_inicio': fecha_inicio or '',
