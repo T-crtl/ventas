@@ -1187,9 +1187,9 @@ def lista_backorders(request):
         'fecha_fin': fecha_fin or ''
     })
     
-    backorders = BackOrder.objects.filter(
-        productos_backorder__cantidad_real__isnull=True, 
-        productos_backorder__lote__isnull=True
-    ).distinct().order_by('-fecha_creacion')
+    # backorders = BackOrder.objects.filter(
+    #     productos_backorder__cantidad_real__isnull=True, 
+    #     productos_backorder__lote__isnull=True
+    # ).distinct().order_by('-fecha_creacion')
     
-    return render(request, 'lista_backorders.html', {'backorders': backorders})
+    # return render(request, 'lista_backorders.html', {'backorders': backorders})
