@@ -1187,13 +1187,6 @@ def lista_backorders(request):
         'fecha_fin': fecha_fin or ''
     })
     
-    #  return render(request, 'lista_backorders.html', {
-    #     'facturas': facturas,
-    #     'search_query': query or '',
-    #     'fecha_inicio': fecha_inicio or '',
-    #     'fecha_fin': fecha_fin or ''
-    # })
-    
     # backorders = BackOrder.objects.filter(
     #     productos_backorder__cantidad_real__isnull=True, 
     #     productos_backorder__lote__isnull=True
