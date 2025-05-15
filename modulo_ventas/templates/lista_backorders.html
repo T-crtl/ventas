@@ -31,10 +31,7 @@
                 <small>{{ backorder.fecha_creacion|date:"d/m/Y" }}</small>
             </div>
             <p class="mb-1">{{ backorder.cliente_nombre }}</p>
-            <small>
-                {{ backorder.productos_backorder.count|default:0|add:"-backorder.productos_incompletos" }} de 
-                {{ backorder.productos_backorder.count }} productos completados
-            </small>
+            
         </a>
         {% empty %}
         <div class="alert alert-info">No se encontraron BackOrders</div>
