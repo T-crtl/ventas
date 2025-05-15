@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Factura: {{ factura.factura }} (Folio: {{ factura.folio }})</h2>
+        <h2>BackOrder: {{ backorder.folio }}</h2>
         <a href="{% url 'backorders_detalle' %}" class="btn btn-secondary">Volver</a>
     </div>
     
@@ -12,10 +12,10 @@
             <h5>Información del Cliente</h5>
         </div>
         <div class="card-body">
-            <p><strong>Nombre:</strong> {{ factura.cliente_nombre }}</p>
-            <p><strong>RFC:</strong> {{ factura.rfc }}</p>
-            <p><strong>Dirección:</strong> {{ factura.direccion }}</p>
-            <p><strong>Fecha:</strong> {{ factura.fecha_creacion|date:"d/m/Y" }}</p>
+            <p><strong>Nombre:</strong> {{ backorder.cliente_nombre }}</p>
+            <p><strong>RFC:</strong> {{ backorder.rfc }}</p>
+            <p><strong>Dirección:</strong> {{ backorder.direccion }}</p>
+            <p><strong>Fecha:</strong> {{ backorder.fecha_creacion|date:"d/m/Y" }}</p>
         </div>
     </div>
     
@@ -44,15 +44,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for producto in factura.productos.all %}
-                <tr class="{% if not producto.lote_asignado or not producto.cantidad_real %}table-warning{% endif %}">
-                    <td>{{ producto.id_articulo }}</td>
-                    <td>{{ producto.nombre_articulo }}</td>
-                    <td>{{ producto.cantidad_solicitada }}</td>
+                {% for producto in backorder.productos_backorder.all %}
+                <tr class="{% if not producto.lote or not producto.cantidad_real %}table-warning{% endif %}">
+                    <td>{{ producto.codigo }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.cantidad }}</td>
                     <td>
                         <input type="text" 
                                name="lote_{{ producto.id }}" 
-                               value="{{ producto.lote_asignado|default_if_none:'' }}" 
+                               value="{{ producto.lote|default_if_none:'' }}" 
                                class="form-control form-control-sm"
                                required>
                     </td>
@@ -73,6 +73,7 @@
         </div>
     </form>
 </div>
+
 <style>
     .alert-container {
         max-height: 200px;

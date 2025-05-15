@@ -1196,35 +1196,34 @@ def lista_backorders(request):
     
 @login_required
 def detalle_backorders(request, backorder_id):
-    factura = get_object_or_404(BackOrder, pk=backorder_id)
+    backorder = get_object_or_404(BackOrder, pk=backorder_id)
     
     if request.method == 'POST':
         errores = []
         
-        for producto in factura.productos.all():
+        for producto in backorder.productos_backorder.all():
             lote_key = f'lote_{producto.id}'
             cantidad_key = f'cantidad_{producto.id}'
             
             lote = request.POST.get(lote_key, '').strip()
             cantidad_str = request.POST.get(cantidad_key, '').strip()
             
-            # Validación de campos
             if not lote or not cantidad_str:
-                errores.append(f"El producto {producto.nombre_articulo} requiere lote y cantidad")
+                errores.append(f"El producto {producto.descripcion} requiere lote y cantidad")
                 continue
                 
             try:
                 cantidad = float(cantidad_str)
                 if cantidad <= 0:
-                    errores.append(f"Cantidad inválida para {producto.nombre_articulo}")
+                    errores.append(f"Cantidad inválida para {producto.descripcion}")
                     continue
                     
-                producto.lote_asignado = lote
+                producto.lote = lote
                 producto.cantidad_real = cantidad
                 producto.save()
                 
             except ValueError:
-                errores.append(f"Cantidad no válida para {producto.nombre_articulo}")
+                errores.append(f"Cantidad no válida para {producto.descripcion}")
                 continue
         
         if errores:
@@ -1233,9 +1232,9 @@ def detalle_backorders(request, backorder_id):
                 messages.error(request, error)
         else:
             messages.success(request, "¡Datos guardados correctamente!")
-            return redirect('detalle_factura', factura_id=factura.id)
-    print(factura)
-    return render(request, 'detalle_factura.html', {
-        'factura': factura,
+            return redirect('detalle_backorder', backorder_id=backorder.id)
+
+    return render(request, 'detalle_backorder.html', {
+        'backorder': backorder,
         'messages': messages.get_messages(request)
     })
