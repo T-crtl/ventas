@@ -36,7 +36,8 @@
                 <li><a href="{% url 'pedidos_almacen'%}">Consultar Factura</a></li>
                 <li><a href="{% url 'facturacion_final'%}">Revisar Facturas</a></li>
                 <li><a href="{% url 'backorders'%}">Backorders</a></li>
-                <li><a href="{% url 'backorders_detalle'%}">backorders detalle</a></li>
+                <li><a href="{% url 'backorders_detalle'%}">Backorders detalle</a></li>
+                <li><a href="{% url 'guardar_backorder'%}">Final backorders</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post" class="logout-form">
                         {% csrf_token %}

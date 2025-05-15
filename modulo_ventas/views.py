@@ -884,7 +884,7 @@ def detalle_factura(request, factura_id):
     })
     
 @login_required
-def detalle_factura_Final(request, factura_id):
+def detalle_factura_final(request, factura_id):
     factura = get_object_or_404(Factura, pk=factura_id)
     
     if request.method == 'POST':
@@ -1195,7 +1195,7 @@ def lista_backorders(request):
     # return render(request, 'lista_backorders.html', {'backorders': backorders})
     
 @login_required
-def detalle_backorders(request, backorder_id):
+def detalle_backorders_almacen(request, backorder_id):
     backorder = get_object_or_404(BackOrder, pk=backorder_id)
     
     if request.method == 'POST':
@@ -1232,9 +1232,24 @@ def detalle_backorders(request, backorder_id):
                 messages.error(request, error)
         else:
             messages.success(request, "¡Datos guardados correctamente!")
-            return redirect('detalle_backorder', backorder_id=backorder.id)
+            return redirect('detalle_backorder_almacen', backorder_id=backorder.id)
 
     return render(request, 'detalle_backorder.html', {
         'backorder': backorder,
         'messages': messages.get_messages(request)
+    })
+
+@login_required
+def backorders_final(request):
+    # Facturas donde todos los productos tienen lote y cantidad asignados
+    facturas_completas = BackOrder.objects.annotate(
+        productos_pendientes=Count(
+            'productos_backorder',
+            filter=Q(productos_backorder__lote__isnull=True) | 
+            Q(productos_backorder__cantidad_real__isnull=True)
+        )
+    ).filter(productos_pendientes=0).order_by('-fecha_creacion')
+    
+    return render(request, 'backorders_final.html', {
+        'facturas': facturas_completas
     })
