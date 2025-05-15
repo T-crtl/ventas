@@ -75,7 +75,7 @@ def realizar_pedido(request):
         # Formularios de pedido y detalle
         form_pedido = PedidoForm(request.POST)
         form_detalle = DetallePedidoForm(request.POST, linea=linea_producto)
-        print(request.POST) 
+        #print(request.POST) 
         if form_pedido.is_valid() and form_detalle.is_valid():
             # Guardar el pedido
             pedido = form_pedido.save(commit=False)  # Guardamos el pedido sin confirmar aún
@@ -1002,7 +1002,7 @@ def backorders_view(request):
             datos_api = response.json().get('resultados', [])
             
             if datos_api:
-                print(datos_api)
+                # print(datos_api)
                 primera_factura = datos_api[0]
                 cliente_nombre = primera_factura['Nombre_Cliente']
                 rfc = primera_factura['RFC']
