@@ -25,7 +25,7 @@
     <!-- Listado de BackOrders -->
     <div class="list-group">
         {% for backorder in facturas %}
-        <a href="{% url 'detalle_factura' backorder.id %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'detalle_backorder' backorder.id %}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">{{ backorder.folio }}</h5>
                 <small>{{ backorder.fecha_creacion|date:"d/m/Y" }}</small>
