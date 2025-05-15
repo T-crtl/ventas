@@ -32,12 +32,12 @@
                 <li><a href="{% url 'perfil_empleado' %}">Perfil</a></li>
                 <li><a href="{% url 'profile' %}">Inicio</a></li>
                 <li><a href="{% url 'directorios' %}">Directorios</a></li>
-                <li><a href="{% url 'buscar_por_folio' %}">Registrar Factura</a></li>
-                <li><a href="{% url 'pedidos_almacen'%}">Consultar Factura</a></li>
-                <li><a href="{% url 'facturacion_final'%}">Revisar Facturas</a></li>
-                <li><a href="{% url 'backorders'%}">Backorders</a></li>
-                <li><a href="{% url 'backorders_detalle'%}">Backorders detalle</a></li>
-                <li><a href="{% url 'guardar_backorder'%}">Final backorders</a></li>
+                <li><a href="{% url 'buscar_por_folio' %}">Registrar Pedido</a></li>
+                <li><a href="{% url 'pedidos_almacen'%}">Pedidos Pendientes</a></li>
+                <li><a href="{% url 'facturacion_final'%}">Pedidos Enviados</a></li>
+                <li><a href="{% url 'backorders'%}">Crear Backorders</a></li>
+                <li><a href="{% url 'backorders_detalle'%}">Backorders Pendientes</a></li>
+                <li><a href="{% url 'guardar_backorder'%}">Backorders Enviados</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post" class="logout-form">
                         {% csrf_token %}
