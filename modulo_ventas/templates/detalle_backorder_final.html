@@ -1,0 +1,95 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>BackOrder: {{ backorder.folio }}</h2>
+        <a href="{% url 'guardar_backorder' %}" class="btn btn-secondary">Volver</a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Información del Cliente</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> {{ backorder.cliente_nombre }}</p>
+            <p><strong>RFC:</strong> {{ backorder.rfc }}</p>
+            <p><strong>Dirección:</strong> {{ backorder.direccion }}</p>
+            <p><strong>Fecha:</strong> {{ backorder.fecha_creacion|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Mensajes de error -->
+        {% if messages %}
+        <div class="alert-container mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Cant. Solicitada</th>
+                    <th>Lote Asignado</th>
+                    <th>Cant. Real</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in backorder.productos_backorder.all %}
+                <tr class="{% if not producto.lote or not producto.cantidad_real %}table-warning{% endif %}">
+                    <td>{{ producto.codigo }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.cantidad }}</td>
+                    <td>
+                        <input type="text" 
+                               name="lote_{{ producto.id }}" 
+                               value="{{ producto.lote|default_if_none:'' }}" 
+                               class="form-control form-control-sm"
+                               required>
+                    </td>
+                    <td>
+                        <input type="number" step="0.01" min="0.01"
+                               name="cantidad_{{ producto.id }}" 
+                               value="{{ producto.cantidad_real|default_if_none:'' }}" 
+                               class="form-control form-control-sm"
+                               required>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .alert-container {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .table-warning td {
+        background-color: #fff3cd !important;
+    }
+    
+    input:invalid {
+        border-color: #dc3545;
+    }
+    
+    input:valid {
+        border-color: #28a745;
+    }
+</style>
+{% endblock %}

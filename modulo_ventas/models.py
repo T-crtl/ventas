@@ -246,6 +246,7 @@ class BackOrder(models.Model):
     direccion = models.TextField()
     cliente_clave = models.CharField(max_length=50, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    check_status = models.BooleanField(default=False)
     
     def __str__(self):
         return f"BackOrder {self.folio} - {self.cliente_nombre}"
@@ -257,6 +258,7 @@ class ProductoBackOrder(models.Model):
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad_real = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     lote = models.CharField(max_length=20, null=True)
+    
     
     def __str__(self):
         return f"{self.codigo} - {self.descripcion}"

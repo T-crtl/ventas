@@ -1248,7 +1248,10 @@ def backorders_final(request):
             filter=Q(productos_backorder__lote__isnull=True) | 
             Q(productos_backorder__cantidad_real__isnull=True)
         )
-    ).filter(productos_pendientes=0).order_by('-fecha_creacion')
+    ).filter(
+    productos_pendientes=0,
+    check_status=False  # 👈 Excluir los que ya están validados
+    ).order_by('-fecha_creacion')
     
     return render(request, 'backorders_final.html', {
         'facturas': facturas_completas
