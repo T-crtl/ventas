@@ -33,11 +33,10 @@
 
             <!-- Menú Principal -->
             <ul class="nav-menu">
-                <li><a href="#home" class="smoothScroll">Inicio</a></li>
-                <li><a href="#Nosotros" class="smoothScroll">Nosotros</a></li>
-                <li><a href="#Productos" class="smoothScroll">Productos</a></li>
-                <li><a href="#Nuestras_Marcas" class="smoothScroll">Nuestras Marcas</a></li>
-                <li><a href="#Contactanos" class="smoothScroll">Contáctanos</a></li>
+                <li><a href="{% url 'index' %}" class="smoothScroll">Inicio</a></li>
+                <li><a href="{% url 'index' %}" class="smoothScroll">Nosotros</a></li>
+                <li><a href="{% url 'index' %}" class="smoothScroll">Productos</a></li>
+                <li><a href="{% url 'index' %}" class="smoothScroll">Nuestras Marcas</a></li>
                 <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
                 <li><a href="{% url 'nosotros' %}">Contacto</a></li>
             </ul>
