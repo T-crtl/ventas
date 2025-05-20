@@ -795,6 +795,24 @@ def lista_documentos(request):
 
 @login_required
 def pedidos_almacen(request):
+    """
+    Vista para mostrar las facturas que tienen productos incompletos en el almacén.
+    Esta vista filtra las facturas que contienen productos sin lote asignado o sin cantidad real registrada.
+    Permite aplicar filtros de búsqueda por folio, número de factura o nombre del cliente, así como por rango de fechas
+    de creación de la factura.
+    Parámetros:
+        request (HttpRequest): Objeto de solicitud HTTP que puede contener los siguientes parámetros GET:
+            - 'q': Cadena de búsqueda para filtrar por folio, factura o nombre del cliente.
+            - 'fecha_inicio': Fecha de inicio (formato 'YYYY-MM-DD') para filtrar facturas creadas a partir de esta fecha.
+            - 'fecha_fin': Fecha de fin (formato 'YYYY-MM-DD') para filtrar facturas creadas hasta esta fecha.
+    Retorna:
+        HttpResponse: Renderiza la plantilla 'almacen_factura.html' con el contexto:
+            - 'facturas': QuerySet de facturas filtradas con productos incompletos.
+            - 'search_query': Valor de búsqueda utilizado (o cadena vacía).
+            - 'fecha_inicio': Fecha de inicio utilizada en el filtro (o cadena vacía).
+            - 'fecha_fin': Fecha de fin utilizada en el filtro (o cadena vacía).
+    """
+    
     # Facturas que tienen productos incompletos (sin lote o sin cantidad)
     facturas = Factura.objects.annotate(
         productos_incompletos=Count(
@@ -839,6 +857,25 @@ def pedidos_almacen(request):
 
 @login_required
 def detalle_factura(request, factura_id):
+    """
+    Vista para mostrar y procesar el detalle de una factura específica.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        factura_id (int): El identificador primario de la factura a consultar.
+    Funcionalidad:
+        - Obtiene la factura correspondiente al `factura_id` o retorna 404 si no existe.
+        - Si la solicitud es POST, procesa los datos enviados para cada producto asociado a la factura:
+            - Valida que se haya ingresado lote y cantidad para cada producto.
+            - Verifica que la cantidad sea un número válido y mayor a cero.
+            - Asigna el lote y la cantidad real al producto y guarda los cambios.
+            - Acumula errores de validación si existen problemas en los datos ingresados.
+        - Si hay errores, los muestra al usuario mediante mensajes.
+        - Si no hay errores, guarda los datos y redirige a la misma vista mostrando un mensaje de éxito.
+        - Si la solicitud es GET, muestra el detalle de la factura y los mensajes correspondientes.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'detalle_factura.html' con el contexto de la factura y los mensajes.
+    """
+    
     factura = get_object_or_404(Factura, pk=factura_id)
     
     if request.method == 'POST':
@@ -885,6 +922,25 @@ def detalle_factura(request, factura_id):
     
 @login_required
 def detalle_factura_final(request, factura_id):
+    """
+    Vista para mostrar y procesar el detalle final de una factura.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        factura_id (int): El identificador primario de la factura a consultar.
+    Funcionalidad:
+        - Obtiene la factura correspondiente al `factura_id` o retorna 404 si no existe.
+        - Si la solicitud es POST, procesa los datos enviados para cada producto asociado a la factura:
+            - Valida que se haya ingresado el lote y la cantidad para cada producto.
+            - Verifica que la cantidad sea un número válido y mayor a cero.
+            - Asigna el lote y la cantidad real al producto y guarda los cambios.
+            - Acumula errores de validación para mostrarlos al usuario.
+        - Si hay errores, los muestra mediante mensajes de error.
+        - Si no hay errores, muestra un mensaje de éxito y redirige a la misma vista.
+        - Si la solicitud no es POST, muestra el detalle de la factura y los mensajes existentes.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'detalle_factura_final.html' con la información de la factura y los mensajes.
+    """
+    
     factura = get_object_or_404(Factura, pk=factura_id)
     
     if request.method == 'POST':
@@ -931,6 +987,17 @@ def detalle_factura_final(request, factura_id):
     
 @login_required
 def facturacion_final(request):
+    """
+    Vista que muestra las facturas que tienen todos sus productos con lote y cantidad asignados.
+    Esta función consulta las facturas en las que todos los productos asociados tienen asignado un lote y una cantidad real.
+    Utiliza anotaciones para contar los productos pendientes (sin lote o cantidad real asignada) y filtra aquellas facturas
+    donde no hay productos pendientes. Finalmente, renderiza la plantilla 'facturacion_final.html' pasando las facturas completas.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+    Returns:
+        HttpResponse: Respuesta HTTP con la plantilla renderizada y el contexto de facturas completas.
+    """
+    
     # Facturas donde todos los productos tienen lote y cantidad asignados
     facturas_completas = Factura.objects.annotate(
         productos_pendientes=Count(
@@ -1146,6 +1213,24 @@ def backorders_view(request):
 
 @login_required
 def lista_backorders(request):
+    """
+    Vista para listar facturas (BackOrders) que contienen productos incompletos, es decir,
+    productos que no tienen asignado un lote o una cantidad real.
+    Permite filtrar los resultados por búsqueda de texto (folio o nombre del cliente) y por
+    rango de fechas de creación.
+    Parámetros:
+        request (HttpRequest): La solicitud HTTP que puede contener los siguientes parámetros GET:
+            - 'q': Cadena de búsqueda para filtrar por folio o nombre del cliente.
+            - 'fecha_inicio': Fecha de inicio (formato 'YYYY-MM-DD') para filtrar facturas creadas desde esta fecha.
+            - 'fecha_fin': Fecha de fin (formato 'YYYY-MM-DD') para filtrar facturas creadas hasta esta fecha.
+    Retorna:
+        HttpResponse: Renderiza la plantilla 'lista_backorders.html' con el contexto:
+            - 'facturas': QuerySet de facturas con productos incompletos y aplicando los filtros seleccionados.
+            - 'search_query': Valor actual del filtro de búsqueda.
+            - 'fecha_inicio': Valor actual del filtro de fecha de inicio.
+            - 'fecha_fin': Valor actual del filtro de fecha de fin.
+    """
+    
     # Facturas con productos incompletos (sin lote o sin cantidad_real)
     facturas = BackOrder.objects.annotate(
         productos_incompletos=Count(
