@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('NOSOTROS/', views.nosotros, name='nosotros'),
     path('accounts/profile/', views.profile, name='profile'),  # Ruta para el perfil
     path('realizar_pedido/', views.realizar_pedido, name='realizar_pedido'),
     path('ver_estatus_pedido/', views.ver_estatus_pedido, name='ver_estatus_pedido'),

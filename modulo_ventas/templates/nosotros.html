@@ -1,0 +1,246 @@
+{% load static %}
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contáctanos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body id="top">
+  <main>
+
+    <!-- CONTACT -->
+    <section class="contact-section" id="Contactanos">
+      <div class="contact-container">
+        <div class="contact-content">
+          <!-- Left: Title and Info -->
+          <div class="contact-text">
+            <h2 class="contact-title">CONTÁCTANOS</h2>
+            <p class="contact-description">
+              Con más de 15 años en el desarrollo de nuevos productos nos enorgullece con un equipo apasionado y talentoso para crear productos en el cuidado que brinden la más alta calidad.. 
+            </p>
+            <ul class="contact-list">
+              <li><strong>Dirección:</strong><br>Av. Del Carmen, 45618 San Pedro Tlaquepaque, Jal.</li>
+              <li><strong>Email:</strong><br><a href="mailto:ventas@blb.mx" class="contact-link">ventas@blb.mx</a></li>
+            </ul>
+            <div class="contact-buttons">
+              <a href="https://wa.me/3311189154" class="btn-black" target="_blank">
+                <i class="fa fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="{% url 'index' %}" class="btn-outline">Volver al inicio</a>
+            </div>
+          </div>
+
+          <!-- Right: Image -->
+          <div class="contact-image">
+            <img src="{% static 'images/contactanos.png' %}" alt="Contáctanos" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-social">
+        <a href="https://www.inbellezza.com.mx" target="_blank">Inbellezza</a>
+        <a href="https://www.platinumgdl.com/" target="_blank">Platinum</a>
+        <a href="https://www.barbermexico.com" target="_blank">Barber</a>
+      </div>
+      <p class="footer-copy">
+        © 2025 blb. Todos los derechos reservados.<br>
+        Desarrollado por Cesar Abraham Duran Cuevas
+      </p>
+    </div>
+  </footer>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: #111;
+      scroll-behavior: smooth;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background-color: #f8f8f8;
+      padding: 5rem 1.5rem;
+    }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .contact-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .contact-text {
+      flex: 1 1 400px;
+    }
+
+    .contact-title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .contact-description {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+    }
+
+    .contact-list {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+
+    .contact-list li {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .contact-link {
+      color: #000;
+      font-weight: 500;
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-black {
+      background-color: #111;
+      color: #fff;
+      padding: 0.8rem 1.6rem;
+      border-radius: 30px;
+      transition: background-color 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-black:hover {
+      background-color: #000;
+    }
+
+    .btn-outline {
+      border: 2px solid #111;
+      padding: 0.8rem 1.6rem;
+      border-radius: 30px;
+      font-weight: 500;
+      color: #111;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background-color: #111;
+      color: #fff;
+    }
+
+    .contact-image {
+      flex: 1 1 400px;
+      text-align: center;
+    }
+
+    .contact-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #111;
+      color: #fff;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .footer-social {
+      margin-bottom: 1rem;
+    }
+
+    .footer-social a {
+      margin: 0 1rem;
+      color: #fff;
+      font-weight: 500;
+      transition: opacity 0.3s;
+    }
+
+    .footer-social a:hover {
+      opacity: 0.8;
+    }
+
+    .footer-copy {
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .contact-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .contact-text, .contact-image {
+        flex: 1 1 100%;
+      }
+
+      .contact-title {
+        font-size: 2rem;
+      }
+
+      .contact-description {
+        font-size: 1rem;
+      }
+
+      .btn-black, .btn-outline {
+        width: 100%;
+        text-align: center;
+      }
+
+      .contact-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</body>
+</html>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

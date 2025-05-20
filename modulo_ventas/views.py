@@ -1301,3 +1301,6 @@ def backorders_final(request):
     return render(request, 'backorders_final.html', {
         'facturas': facturas_completas
     })
+    
+def nosotros(request):
+    return render(request, 'nosotros.html')
