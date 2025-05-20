@@ -45,5 +45,6 @@ urlpatterns = [
     path('backorders/', views.backorders_view, name='backorders'),
     path('backorders_detalle/', views.lista_backorders, name='backorders_detalle'),
     path('backorders/<int:backorder_id>/', views.detalle_backorders_almacen, name='detalle_backorder_almacen'),
+    path('backorders/estatus/<int:backorder_id>/', views.detalle_backorders_facturacion, name='detalle_backorder_facturacion'),
     path('backorders/enviados/', views.backorders_final, name='guardar_backorder'),
 ]

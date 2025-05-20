@@ -1234,6 +1234,51 @@ def detalle_backorders_almacen(request, backorder_id):
             messages.success(request, "¡Datos guardados correctamente!")
             return redirect('detalle_backorder_almacen', backorder_id=backorder.id)
 
+    return render(request, 'detalle_backorder.html', {
+        'backorder': backorder,
+        'messages': messages.get_messages(request)
+    })
+
+@login_required
+def detalle_backorders_facturacion(request, backorder_id):
+    backorder = get_object_or_404(BackOrder, pk=backorder_id)
+    
+    if request.method == 'POST':
+        errores = []
+        
+        for producto in backorder.productos_backorder.all():
+            lote_key = f'lote_{producto.id}'
+            cantidad_key = f'cantidad_{producto.id}'
+            
+            lote = request.POST.get(lote_key, '').strip()
+            cantidad_str = request.POST.get(cantidad_key, '').strip()
+            
+            if not lote or not cantidad_str:
+                errores.append(f"El producto {producto.descripcion} requiere lote y cantidad")
+                continue
+                
+            try:
+                cantidad = float(cantidad_str)
+                if cantidad <= 0:
+                    errores.append(f"Cantidad inválida para {producto.descripcion}")
+                    continue
+                    
+                producto.lote = lote
+                producto.cantidad_real = cantidad
+                producto.save()
+                
+            except ValueError:
+                errores.append(f"Cantidad no válida para {producto.descripcion}")
+                continue
+        
+        if errores:
+            messages.error(request, "Corrige los siguientes errores:")
+            for error in errores:
+                messages.error(request, error)
+        else:
+            messages.success(request, "¡Datos guardados correctamente!")
+            return redirect('detalle_backorder_almacen', backorder_id=backorder.id)
+
     return render(request, 'detalle_backorder_final.html', {
         'backorder': backorder,
         'messages': messages.get_messages(request)

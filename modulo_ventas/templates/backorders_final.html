@@ -34,7 +34,7 @@
                             <td>{{ factura.fecha_creacion|date:"d/m/Y" }}</td>
                             <td>{{ factura.productos.count }}</td>
                             <td>
-                                <a href="{% url 'detalle_backorder_almacen' factura.id %}" 
+                                <a href="{% url 'detalle_backorder_facturacion' factura.id %}" 
                                    class="btn btn-sm btn-outline-primary">
                                    <i class="fas fa-eye"></i> Ver
                                 </a>
