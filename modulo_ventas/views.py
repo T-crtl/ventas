@@ -1196,6 +1196,23 @@ def lista_backorders(request):
     
 @login_required
 def detalle_backorders_almacen(request, backorder_id):
+    """
+    Vista para mostrar y procesar el detalle de los productos de un backorder en el almacén.
+    Permite al usuario ingresar o actualizar el lote y la cantidad real de cada producto asociado
+    a un backorder específico. Si la solicitud es POST, valida los datos ingresados para cada producto:
+    - Verifica que se haya proporcionado lote y cantidad.
+    - Asegura que la cantidad sea un número válido y mayor a cero.
+    - Guarda los datos en el modelo correspondiente si no hay errores.
+    Si existen errores de validación, los muestra al usuario mediante mensajes.
+    Si los datos son válidos, guarda los cambios y redirige a la misma vista mostrando un mensaje de éxito.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        backorder_id (int): El identificador primario del backorder a procesar.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'detalle_backorder.html' con el contexto adecuado,
+        o redirige a la misma vista tras guardar los datos correctamente.
+    """
+    
     backorder = get_object_or_404(BackOrder, pk=backorder_id)
     
     if request.method == 'POST':
@@ -1241,6 +1258,20 @@ def detalle_backorders_almacen(request, backorder_id):
 
 @login_required
 def detalle_backorders_facturacion(request, backorder_id):
+    """
+    Vista para gestionar el detalle de facturación de un backorder.
+    Recupera un objeto BackOrder por su ID y permite al usuario ingresar o actualizar
+    los lotes y cantidades reales de los productos asociados al backorder mediante un formulario POST.
+    Valida que los campos de lote y cantidad sean proporcionados y que la cantidad sea un número válido y positivo.
+    Si hay errores de validación, los muestra al usuario; si no, guarda los datos y redirige a la vista de detalle de almacén.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        backorder_id (int): El identificador primario del BackOrder a procesar.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'detalle_backorder_final.html' con el contexto adecuado,
+        o redirige a la vista 'detalle_backorder_almacen' si los datos se guardan correctamente.
+    """
+    
     backorder = get_object_or_404(BackOrder, pk=backorder_id)
     
     if request.method == 'POST':
@@ -1286,6 +1317,19 @@ def detalle_backorders_facturacion(request, backorder_id):
 
 @login_required
 def backorders_final(request):
+    """
+Vista protegida que muestra las facturas (BackOrders) que están completas, es decir,
+aquellas en las que todos los productos asociados tienen lote y cantidad real asignados.
+Se excluyen las facturas que ya han sido validadas (check_status=True).
+Parámetros:
+    request (HttpRequest): La solicitud HTTP recibida.
+Retorna:
+    HttpResponse: Renderiza la plantilla 'backorders_final.html' con el contexto de las facturas completas.
+Detalles de implementación:
+    - Se utiliza una anotación para contar los productos pendientes (sin lote o cantidad real).
+    - Solo se incluyen las facturas donde productos_pendientes es 0 y check_status es False.
+    - El resultado se ordena por fecha de creación descendente.
+"""
     # Facturas donde todos los productos tienen lote y cantidad asignados
     facturas_completas = BackOrder.objects.annotate(
         productos_pendientes=Count(
@@ -1303,4 +1347,17 @@ def backorders_final(request):
     })
     
 def nosotros(request):
+    """
+    Vista para la página 'nosotros'.
+
+    Esta función maneja las solicitudes HTTP para la página de contacto o información sobre la empresa.
+    Recibe un objeto request y retorna una respuesta renderizando la plantilla 'nosotros.html'.
+
+    Parámetros:
+        request (HttpRequest): Objeto que contiene información sobre la solicitud HTTP.
+
+    Retorna:
+        HttpResponse: Respuesta con la plantilla 'nosotros.html' renderizada.
+    """
+    #PAGINA DE CONTACTO
     return render(request, 'nosotros.html')
