@@ -1234,7 +1234,7 @@ def detalle_backorders_almacen(request, backorder_id):
             messages.success(request, "¡Datos guardados correctamente!")
             return redirect('detalle_backorder_almacen', backorder_id=backorder.id)
 
-    return render(request, 'detalle_backorder.html', {
+    return render(request, 'detalle_backorder_final.html', {
         'backorder': backorder,
         'messages': messages.get_messages(request)
     })
