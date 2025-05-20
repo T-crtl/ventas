@@ -33,6 +33,19 @@ def index(request):
 
 @login_required
 def profile(request):
+    """
+    Vista para mostrar la página de perfil del usuario.
+    Verifica si el usuario actual pertenece a los grupos "Vendedores" o "ADMIN" y pasa esta información,
+    junto con el objeto usuario, a la plantilla 'profile.html' para su renderizado.
+    Parámetros:
+        request (HttpRequest): La solicitud HTTP recibida.
+    Retorna:
+        HttpResponse: La página de perfil renderizada con las variables de contexto:
+            - 'user': El objeto del usuario actual.
+            - 'es_vendedor': Booleano que indica si el usuario pertenece al grupo "Vendedores".
+            - 'it': Booleano que indica si el usuario pertenece al grupo "ADMIN".
+    """
+    
     # Verificar si el usuario pertenece al grupo "Vendedores"
     es_vendedor = request.user.groups.filter(name='Vendedores').exists()
     admin_it = request.user.groups.filter(name='ADMIN').exists()
@@ -46,6 +59,28 @@ def profile(request):
 
 @login_required
 def realizar_pedido(request):
+    """
+    Vista para gestionar la realización de un pedido en la aplicación de ventas.
+    Esta función permite al usuario seleccionar una línea de productos, filtrar productos por línea,
+    manejar solicitudes AJAX para actualizar dinámicamente los productos y cantidades seleccionadas,
+    y procesar el formulario de pedido junto con los detalles del pedido.
+    Parámetros:
+        request (HttpRequest): La solicitud HTTP recibida, que puede ser GET, POST o AJAX.
+    Flujo principal:
+        - Si se recibe una solicitud AJAX, retorna un fragmento HTML con los productos filtrados y las cantidades seleccionadas.
+        - Si la solicitud es POST, valida y guarda el formulario de pedido y los detalles del pedido, asociando el cliente y el vendedor.
+        - Si la solicitud es GET, carga los formularios vacíos o con datos previos y muestra la página para realizar el pedido.
+    Contexto enviado al template:
+        - form_pedido: Formulario para los datos generales del pedido y del cliente.
+        - linea_producto: Línea de producto seleccionada (si existe).
+        - ids_productos: Lista de IDs de los productos filtrados.
+        - productos: QuerySet de productos filtrados por línea o todos los productos.
+    Retorna:
+        HttpResponse: Renderiza la plantilla 'realizar_pedido.html' con el contexto adecuado,
+        o JsonResponse en caso de solicitud AJAX.
+    """
+    
+    
      # Obtener la línea de producto seleccionada del GET
     linea_producto = request.GET.get('linea_producto', None)
 
@@ -129,6 +164,22 @@ def realizar_pedido(request):
     
 @login_required
 def ver_estatus_pedido(request):
+    """
+    Vista para consultar el estatus de los pedidos de un vendedor.
+    Permite filtrar los pedidos por número de cliente, fecha de creación y estatus.
+    Los resultados se muestran paginados.
+    Parámetros de consulta (GET):
+        - numero_cliente: (str, opcional) Número de cliente para filtrar los pedidos.
+        - fecha_creacion: (str, opcional) Fecha de creación en formato 'YYYY-MM-DD' para filtrar los pedidos.
+        - estatus: (str, opcional) Estatus del pedido para filtrar los resultados.
+        - page: (int, opcional) Número de página para la paginación.
+    Args:
+        request (HttpRequest): Objeto de solicitud HTTP.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'ver_estatus_pedido.html' con los pedidos filtrados y paginados,
+        así como el contador total de resultados encontrados.
+    """
+    
     # Lógica para ver estatus de pedido
     pedidos = Pedido.objects.filter(vendedor=request.user).order_by('-fecha_creacion')  # Solo pedidos del vendedor actual
     
