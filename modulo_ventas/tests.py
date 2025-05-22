@@ -176,6 +176,15 @@ class DetallePedidoModelTest(TestCase):
         self.assertEqual(self.detalle.calcular_subtotal(), 200.0)
     
 class CrearTicketModelTest(TestCase):
+    """
+    TestCase para el modelo CrearTicket.
+    Esta clase contiene pruebas unitarias para verificar la correcta creación de instancias del modelo CrearTicket.
+    Incluye la configuración de datos de prueba y un método de prueba para asegurar que los atributos del ticket
+    se asignan correctamente al momento de su creación.
+    Métodos:
+        setUp(): Configura un usuario y un ticket de prueba antes de cada test.
+        test_ticket_creation(): Verifica que los campos del ticket se establecen correctamente.
+    """
 
     def setUp(self):
         # Configura datos de prueba
@@ -198,6 +207,17 @@ class CrearTicketModelTest(TestCase):
         self.assertEqual(self.ticket.nivel_prioridad, "alta")
         
 class DirectorioModelTest(TestCase):
+    """
+    TestCase para el modelo Directorio.
+    Esta clase contiene pruebas unitarias para verificar la correcta creación y atributos
+    de instancias del modelo Directorio. Utiliza datos de prueba definidos en el método setUp
+    y valida que los campos del modelo se asignen correctamente al crear un nuevo documento.
+    Métodos:
+        setUp():
+            Configura una instancia de Directorio con datos de prueba antes de cada prueba.
+        test_directorio_creation():
+            Verifica que los atributos del documento creado coincidan con los valores esperados.
+    """
 
     def setUp(self):
         # Configura datos de prueba
