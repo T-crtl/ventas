@@ -7,6 +7,15 @@ from .models import Client, Pedido, Directorio, DetallePedido, CrearTicket, Prod
 class ClientModelTest(TestCase):
 
     def setUp(self):
+        """
+        Configura el entorno de prueba creando una instancia de un cliente con datos ficticios.
+        Este método se ejecuta antes de cada prueba para asegurar que exista un objeto Client
+        con información de ejemplo, permitiendo realizar pruebas sobre funcionalidades que
+        dependan de la existencia de clientes en la base de datos.
+        Atributos creados:
+            self.client (Client): Instancia del modelo Client con datos de prueba.
+        """
+        
         # Configura datos de prueba
         self.client = Client.objects.create(
             clave_cliente=123456,
@@ -27,16 +36,39 @@ class ClientModelTest(TestCase):
         )
 
     def test_client_creation(self):
+        """
+        Testea la creación correcta de un cliente.
+        Este test verifica que los atributos 'nombre_cliente', 'rfc' y 'clasificacion'
+        del objeto 'client' sean asignados correctamente al crear un nuevo cliente.
+        Asserts:
+            - El nombre del cliente es "Juan Pérez".
+            - El RFC del cliente es "PERJ123456ABC".
+            - La clasificación del cliente es "LOCAL".
+        """        
         """Prueba que un cliente se crea correctamente."""
         self.assertEqual(self.client.nombre_cliente, "Juan Pérez")
         self.assertEqual(self.client.rfc, "PERJ123456ABC")
         self.assertEqual(self.client.clasificacion, "LOCAL")
 
     def test_client_str_representation(self):
+        """
+        Prueba que la representación en cadena (__str__) del modelo Client
+        retorne el nombre completo del cliente correctamente.
+        Este test verifica que al convertir una instancia de Client a cadena,
+        el resultado sea igual a "Juan Pérez".
+        """
+        
         """Prueba la representación en cadena del modelo."""
         self.assertEqual(str(self.client), "Juan Pérez")
 
     def test_client_verbose_name(self):
+        """
+        Prueba que los atributos 'verbose_name' y 'verbose_name_plural' del modelo Client
+        sean los valores esperados ('Cliente' y 'Clientes', respectivamente).
+        Esto asegura que los nombres legibles definidos en el modelo sean correctos
+        para su uso en la interfaz de administración y otros contextos de Django.
+        """
+        
         """Prueba los nombres legibles (verbose_name) del modelo."""
         self.assertEqual(Client._meta.verbose_name, 'Cliente')
         self.assertEqual(Client._meta.verbose_name_plural, 'Clientes')
