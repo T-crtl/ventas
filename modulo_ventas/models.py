@@ -162,6 +162,20 @@ class CrearTicket(models.Model):
     )
     
 class Directorio(models.Model):
+    """
+    Modelo Directorio para gestionar documentos en la aplicación de ventas.
+    Atributos:
+        TIPO_DOCUMENTO_CHOICES (list): Opciones para el tipo de documento (PDF, Word, Excel, Otro).
+        AREA_CHOICES (list): Opciones para el área responsable del documento.
+        nombre_documento (CharField): Nombre del documento. Puede ser nulo o estar en blanco.
+        area (CharField): Área a la que pertenece el documento. Debe ser una de las opciones definidas en AREA_CHOICES.
+        link_documento (URLField): Enlace al documento. Puede ser nulo o estar en blanco.
+        tipo_documento (CharField): Tipo de documento. Debe ser una de las opciones definidas en TIPO_DOCUMENTO_CHOICES.
+        publico (BooleanField): Indica si el documento es público o no.
+    Métodos:
+        __str__(): Devuelve el nombre del documento como representación en cadena del objeto.
+    """
+    
     TIPO_DOCUMENTO_CHOICES = [
         ('PDF', 'PDF'),
         ('WORD', 'Word'),
@@ -199,6 +213,16 @@ class Area(models.Model):
     pass
 
 class Documento(models.Model):
+    """
+    Modelo que representa un documento subido al sistema.
+    Atributos:
+        nombre (CharField): Nombre descriptivo del documento.
+        archivo (FileField): Archivo asociado al documento, almacenado en la carpeta 'documentos/'.
+        fecha_subida (DateField): Fecha en la que se subió el documento (asignada automáticamente al crear el registro).
+    Métodos:
+        __str__(): Devuelve el nombre del documento como representación en cadena.
+    """
+    
     nombre = models.CharField(max_length=100)
     archivo = models.FileField(upload_to='documentos/')
     fecha_subida = models.DateField(auto_now_add=True)
@@ -207,6 +231,23 @@ class Documento(models.Model):
         return self.nombre
     
 class Factura(models.Model):
+    """
+    Modelo que representa una factura en el sistema de ventas.
+    Atributos:
+        cve_doc (CharField): Clave única del documento de la factura.
+        doc_sig (CharField): Documento siguiente relacionado, puede ser nulo o estar en blanco.
+        folio (CharField): Folio de la factura.
+        factura (CharField): Número o identificador de la factura.
+        cliente_clave (CharField): Clave única del cliente asociado a la factura.
+        cliente_nombre (CharField): Nombre del cliente.
+        rfc (CharField): RFC del cliente, puede ser nulo o estar en blanco.
+        fecha_creacion (DateField): Fecha de creación de la factura, asignada automáticamente.
+        direccion (TextField): Dirección del cliente.
+    Métodos:
+        __str__(): Retorna una representación legible de la factura.
+        productos_completos (property): Devuelve la cantidad de productos asociados a la factura que tienen lote asignado y cantidad real definida.
+    """
+    
     cve_doc = models.CharField(max_length=20, unique=True)
     doc_sig = models.CharField(max_length=20, blank=True, null=True)
     folio = models.CharField(max_length=20)
@@ -228,6 +269,20 @@ class Factura(models.Model):
         ).count()
 
 class ProductoFactura(models.Model):
+    """
+    Modelo que representa un producto incluido en una factura.
+    Atributos:
+        folio (ForeignKey): Referencia a la factura a la que pertenece el producto.
+        id_articulo (CharField): Identificador único del artículo.
+        nombre_articulo (CharField): Nombre descriptivo del artículo.
+        cantidad_solicitada (FloatField): Cantidad solicitada del artículo en la factura.
+        lote_asignado (CharField): Lote asignado al artículo (opcional).
+        cantidad_real (FloatField): Cantidad real entregada del artículo (opcional).
+        comentaros (TextField): Comentarios adicionales sobre el producto (opcional).
+    Métodos:
+        __str__(): Retorna una representación legible del producto en la factura.
+    """
+
     folio = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='productos')
     id_articulo = models.CharField(max_length=20)
     nombre_articulo = models.CharField(max_length=100)
@@ -240,6 +295,20 @@ class ProductoFactura(models.Model):
         return f"{self.id_articulo} - {self.nombre_articulo}"
     
 class BackOrder(models.Model):
+    """
+    Modelo BackOrder representa un pedido pendiente en el sistema de ventas.
+    Atributos:
+        folio (CharField): Identificador único del backorder.
+        cliente_nombre (CharField): Nombre del cliente asociado al backorder.
+        rfc (CharField): Registro Federal de Contribuyentes del cliente.
+        direccion (TextField): Dirección del cliente.
+        cliente_clave (CharField): Clave interna del cliente (opcional).
+        fecha_creacion (DateTimeField): Fecha y hora de creación del backorder.
+        check_status (BooleanField): Indica si el backorder ha sido revisado o no.
+    Métodos:
+        __str__(): Devuelve una representación legible del backorder, mostrando el folio y el nombre del cliente.
+    """
+    
     folio = models.CharField(max_length=50)
     cliente_nombre = models.CharField(max_length=255)
     rfc = models.CharField(max_length=20)
@@ -252,6 +321,19 @@ class BackOrder(models.Model):
         return f"BackOrder {self.folio} - {self.cliente_nombre}"
 
 class ProductoBackOrder(models.Model):
+    """
+    Modelo que representa un producto incluido en un BackOrder.
+    Atributos:
+        factura (ForeignKey): Referencia al BackOrder al que pertenece el producto.
+        codigo (CharField): Código identificador del producto.
+        descripcion (CharField): Descripción detallada del producto.
+        cantidad (DecimalField): Cantidad solicitada del producto.
+        cantidad_real (DecimalField, opcional): Cantidad real entregada del producto (puede ser nula).
+        lote (CharField, opcional): Lote al que pertenece el producto (puede ser nulo).
+    Métodos:
+        __str__(): Retorna una representación legible del producto, mostrando su código y descripción.
+    """
+    
     factura = models.ForeignKey(BackOrder, related_name='productos_backorder', on_delete=models.CASCADE)
     codigo = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=255)

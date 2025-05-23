@@ -74,6 +74,17 @@ class ClientModelTest(TestCase):
         self.assertEqual(Client._meta.verbose_name_plural, 'Clientes')
         
 class PedidoModelTest(TestCase):
+    """
+    TestCase para el modelo Pedido.
+    Esta clase contiene pruebas unitarias para verificar la correcta creación y representación
+    en cadena de los objetos del modelo Pedido. Utiliza datos de prueba para instancias de
+    Cliente y User, y valida que los atributos del pedido se asignen correctamente y que la
+    representación en cadena (__str__) del modelo sea la esperada.
+    Métodos:
+        setUp(): Configura los datos de prueba necesarios para cada test.
+        test_pedido_creation(): Verifica que un pedido se cree con los valores correctos.
+        test_pedido_str_representation(): Verifica la representación en cadena del pedido.
+    """
 
     def setUp(self):
         # Configura datos de prueba
