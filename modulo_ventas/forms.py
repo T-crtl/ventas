@@ -5,6 +5,15 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 class TicketForm(forms.ModelForm):
+    """
+    TicketForm es un formulario basado en ModelForm para la creación y edición de instancias del modelo CrearTicket.
+    Campos:
+        - categoria: Campo de selección para la categoría del ticket, renderizado con un widget Select y clase CSS 'form-control'.
+        - nivel_prioridad: Campo de selección para el nivel de prioridad del ticket, renderizado con un widget Select y clase CSS 'form-control'.
+        - descripcion: Campo de texto para la descripción del ticket, renderizado con un widget Textarea de 4 filas y 40 columnas.
+    Este formulario personaliza los widgets de los campos para mejorar la experiencia de usuario en la interfaz.
+    """
+    
     class Meta:
         model = CrearTicket
         fields = [
@@ -21,6 +30,30 @@ class TicketForm(forms.ModelForm):
         
 
 class PedidoForm(forms.ModelForm):
+    """
+    Formulario de Django para la creación y edición de instancias del modelo Pedido.
+    Este formulario utiliza un ModelForm basado en el modelo Pedido, permitiendo la gestión de los siguientes campos:
+    - nombre_cliente
+    - numero_cliente
+    - nombre_contacto
+    - calle
+    - colonia
+    - municipio
+    - estado
+    - codigo_postal
+    - telefono
+    - lista_items
+    - estatus
+    Algunos campos de dirección y teléfono se configuran como solo lectura mediante widgets personalizados.
+    El campo 'estatus' utiliza un widget Select con una clase CSS personalizada y se inicializa con el valor predeterminado 'pendiente'.
+    Además, se incluye un campo adicional 'cliente', que es un ModelChoiceField requerido para seleccionar una instancia de Client.
+    Atributos:
+        Meta (class): Define el modelo y los campos asociados al formulario, así como los widgets personalizados.
+        cliente (ModelChoiceField): Campo para seleccionar un cliente existente.
+    Métodos:
+        __init__(*args, **kwargs): Inicializa el formulario y establece el valor inicial del campo 'estatus'.
+    """
+    
     class Meta:
         model = Pedido
         fields = ['nombre_cliente', 'numero_cliente', 'nombre_contacto', 'calle', 'colonia', 'municipio', 'estado', 'codigo_postal', 'telefono', 'lista_items', 'estatus']
@@ -102,6 +135,19 @@ class DetallePedidoForm(forms.Form):
         return {'productos': productos_seleccionados, 'cantidades': cantidades}
     
 class CambiarContraseniaForm(forms.Form):
+    """
+    Formulario para cambiar la contraseña de un usuario.
+    Campos:
+        old_password (CharField): Contraseña actual del usuario.
+        new_password1 (CharField): Nueva contraseña que el usuario desea establecer.
+        new_password2 (CharField): Confirmación de la nueva contraseña.
+    Validaciones:
+        - Verifica que los campos 'new_password1' y 'new_password2' coincidan.
+        - Lanza un ValidationError si las nuevas contraseñas no coinciden.
+    Uso:
+        Este formulario se utiliza para solicitar al usuario su contraseña actual y la nueva contraseña (dos veces para confirmación) al momento de realizar un cambio de contraseña.
+    """
+    
     old_password = forms.CharField(
         label="Contraseña Actual",
         widget=forms.PasswordInput,
@@ -127,6 +173,12 @@ class CambiarContraseniaForm(forms.Form):
             raise ValidationError("Las nuevas contraseñas no coinciden.")
 
 class CambiarEmailForm(forms.Form):
+    """
+    Formulario para cambiar la dirección de correo electrónico de un usuario.
+    Campos:
+        new_email (EmailField): Campo requerido para ingresar el nuevo correo electrónico.
+    """
+    
     new_email = forms.EmailField(
         label="Nuevo Correo Electrónico",
         required=True
@@ -138,6 +190,15 @@ class DocumentoForm(forms.ModelForm):
         fields = ['nombre', 'archivo']  # Campos del formulario
         
 class BuscarFacturaForm(forms.Form):
+    """
+    Formulario para buscar una factura por su número de folio.
+    Campos:
+        folio (CharField): Campo de texto para ingresar el número de folio de la factura a buscar.
+            - Etiqueta: 'Número de Folio'
+            - Longitud máxima: 20 caracteres
+            - Widget: TextInput con placeholder 'Ej: FOL-12345' y clase CSS 'form-control'
+    """
+    
     folio = forms.CharField(
         label='Número de Folio',
         max_length=20,
@@ -148,6 +209,16 @@ class BuscarFacturaForm(forms.Form):
     )
 
 class ProductoBackOrderForm(forms.Form):
+    """
+    Formulario para gestionar productos en backorder.
+    Este formulario recopila la información necesaria para registrar un producto pendiente de entrega (backorder) en el sistema de ventas. Incluye los siguientes campos:
+    Atributos:
+        codigo (CharField): Código identificador del producto. Obligatorio, máximo 50 caracteres.
+        producto (CharField): Descripción del producto. Obligatorio, máximo 255 caracteres.
+        cantidad_pendiente (IntegerField): Cantidad pendiente del producto. Obligatorio, valor mínimo de 1.
+    Cada campo incluye validaciones y mensajes de error personalizados para mejorar la experiencia del usuario.
+    """
+    
     codigo = forms.CharField(
         label='Código',
         max_length=50,
