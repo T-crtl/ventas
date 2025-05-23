@@ -41,6 +41,26 @@ class Client(models.Model):
         ordering = ['nombre_cliente']
 
 class Pedido(models.Model):
+    """
+    Modelo Pedido representa una orden de venta realizada por un vendedor.
+    Atributos:
+        nombre_cliente (ForeignKey): Referencia al cliente que realiza el pedido (modelo Client).
+        numero_cliente (IntegerField): Número identificador del cliente (opcional).
+        nombre_contacto (CharField): Nombre de la persona de contacto para el pedido (opcional).
+        fecha_creacion (DateTimeField): Fecha y hora en que se creó el pedido (asignado automáticamente).
+        calle (CharField): Calle de la dirección de entrega (opcional).
+        colonia (CharField): Colonia de la dirección de entrega (opcional).
+        municipio (CharField): Municipio de la dirección de entrega (opcional).
+        estado (CharField): Estado de la dirección de entrega (opcional).
+        codigo_postal (CharField): Código postal de la dirección de entrega (opcional).
+        telefono (CharField): Teléfono de contacto para el pedido (opcional).
+        lista_items (IntegerField): Número de listas de items en el pedido (valores posibles: 1, 2, 3).
+        estatus (CharField): Estado actual del pedido ('pendiente', 'en_proceso', 'enviado').
+        vendedor (ForeignKey): Usuario vendedor asociado al pedido (opcional).
+    Métodos:
+        __str__(): Retorna una representación legible del pedido, mostrando el cliente y el estatus.
+    """
+    
     ESTATUS_CHOICES = [
         ('pendiente', 'Pendiente'),
         ('en_proceso', 'En Proceso'),
@@ -69,6 +89,20 @@ class Pedido(models.Model):
         return f"Pedido {self.nombre_cliente} - {self.estatus}"
     
 class Producto(models.Model):
+    """
+    Modelo Producto que representa un producto en el sistema de ventas.
+    Atributos:
+        nombre_producto (CharField): Nombre del producto.
+        qty_caja (IntegerField): Cantidad de unidades por caja. Valor por defecto: 0.
+        linea (CharField): Línea a la que pertenece el producto. Opciones: 'inbelleza', 'barber', 'platinum', 'none'. Valor por defecto: 'none'.
+        precio_1 (FloatField): Primer precio del producto. Valor por defecto: 0.
+        precio_2 (FloatField): Segundo precio del producto. Valor por defecto: 0.
+        precio_3 (FloatField): Tercer precio del producto. Valor por defecto: 0.
+        imagen (CharField): Ruta o nombre de la imagen asociada al producto. Puede ser nulo o estar en blanco.
+    Métodos:
+        __str__(): Retorna el nombre del producto como representación en cadena del objeto.
+    """
+    
     LINEA_CHOICES = [
         ('inbelleza', 'Inbelleza'),
         ('barber', 'Barber'),
@@ -92,6 +126,20 @@ class Producto(models.Model):
         return self.nombre_producto
     
 class DetallePedido(models.Model):
+    """
+    Modelo que representa el detalle de un pedido, enlazando un producto específico a un pedido y especificando la cantidad solicitada.
+    Atributos:
+        pedido (ForeignKey): Referencia al pedido al que pertenece este detalle.
+        producto (ForeignKey): Referencia al producto incluido en el detalle.
+        cantidad (PositiveIntegerField): Cantidad del producto solicitada en el pedido.
+    Métodos:
+        calcular_subtotal():
+            Calcula el subtotal del detalle del pedido, seleccionando el precio del producto según la lista de precios asociada al pedido.
+            Retorna el resultado de multiplicar la cantidad por el precio correspondiente.
+        __str__():
+            Retorna una representación legible del detalle, mostrando el nombre del producto y la cantidad solicitada.
+    """
+    
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
@@ -112,6 +160,24 @@ class DetallePedido(models.Model):
         return f"{self.producto.nombre_producto} x {self.cantidad}" 
     
 class CrearTicket(models.Model):
+    """
+    Modelo CrearTicket para la gestión de tickets de soporte en el sistema de ventas.
+    Campos:
+        numero_ticket (UUIDField): Identificador único del ticket, generado automáticamente.
+        fecha_creacion (DateTimeField): Fecha y hora de creación del ticket.
+        nombre_usuario (ForeignKey): Referencia al usuario que crea el ticket. Puede ser nulo o estar en blanco.
+        estado (CharField): Estado actual del ticket. Opciones: 'abierto', 'en progreso', 'pendiente', 'resuelto', 'cerrado'.
+        categoria (CharField): Categoría del ticket. Opciones incluyen hardware, software, wifi, servidor, redes, seguridad, correo electrónico, base de datos, aplicaciones específicas, impresión, telefonía/VOIP, soporte a usuarios, backup/recuperación.
+        descripcion (TextField): Descripción detallada del problema o solicitud.
+        nivel_prioridad (CharField): Nivel de prioridad del ticket. Opciones: 'critica', 'alta', 'media', 'baja'.
+    Constantes de clase:
+        TICKET: Lista de tuplas con las categorías disponibles para los tickets.
+        ESTADO: Lista de tuplas con los estados posibles del ticket.
+        PRIORIDAD: Lista de tuplas con los niveles de prioridad disponibles.
+    Uso:
+        Este modelo permite registrar y gestionar tickets de soporte, clasificándolos por categoría, estado y prioridad, y asociándolos a un usuario específico.
+    """
+    
     TICKET = [
     ('hardware', 'HARDWARE'),
     ('software', 'SOFTWARE'),
