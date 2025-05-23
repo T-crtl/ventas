@@ -134,7 +134,19 @@ class ProductoModelTest(TestCase):
         self.assertEqual(str(self.producto), "Producto Test")
         
 class DetallePedidoModelTest(TestCase):
-
+    """
+    TestCase para el modelo DetallePedido.
+    Esta clase contiene pruebas unitarias para verificar la correcta creación de instancias
+    del modelo DetallePedido y el cálculo de su subtotal. Utiliza datos de prueba para los
+    modelos relacionados como Cliente, User, Pedido y Producto.
+    Métodos:
+        setUp(): Configura los datos de prueba necesarios para cada test.
+        test_detalle_pedido_creation(): Verifica que el detalle del pedido se crea correctamente
+            y que los campos relacionados contienen los valores esperados.
+        test_calcular_subtotal(): Prueba que el método calcular_subtotal del modelo DetallePedido
+            retorna el valor correcto basado en la cantidad y el precio del producto.
+    """
+    
     def setUp(self):
         # Configura datos de prueba
         self.client = Client.objects.create(
@@ -220,6 +232,15 @@ class DirectorioModelTest(TestCase):
     """
 
     def setUp(self):
+        """
+        Configura el entorno de prueba creando una instancia de Directorio con datos de ejemplo.
+        Este método se ejecuta antes de cada prueba para asegurar que exista un objeto Directorio
+        con valores predefinidos, permitiendo así realizar pruebas sobre funcionalidades que
+        dependen de este modelo.
+        Atributos creados:
+            self.documento (Directorio): Instancia de Directorio creada para pruebas.
+        """
+        
         # Configura datos de prueba
         self.documento = Directorio.objects.create(
             nombre_documento="Documento Test",
