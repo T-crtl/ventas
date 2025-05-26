@@ -5,6 +5,32 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Client(models.Model):
+    """
+    Modelo Client
+    Representa la información de un cliente en el sistema de ventas.
+    Atributos:
+        clave_cliente (BigIntegerField): Clave única del cliente.
+        nombre_cliente (CharField): Nombre del cliente.
+        rfc (CharField): RFC del cliente.
+        calle (CharField): Calle de la dirección del cliente.
+        numint (CharField): Número interior de la dirección.
+        numext (CharField): Número exterior de la dirección.
+        colonia (CharField): Colonia de la dirección.
+        codigo (CharField): Código postal.
+        municipio (CharField): Municipio de la dirección.
+        estado (CharField): Estado de la dirección.
+        pais (CharField): País de la dirección.
+        telefono (CharField): Número de teléfono del cliente.
+        clasificacion (CharField): Clasificación del cliente (FORANEO o LOCAL).
+        curp (CharField): CURP del cliente.
+        email (EmailField): Correo electrónico del cliente.
+    Métodos:
+        __str__(): Retorna el nombre del cliente como representación en texto.
+    Meta:
+        verbose_name: Nombre singular para el modelo en el admin de Django.
+        verbose_name_plural: Nombre plural para el modelo en el admin de Django.
+        ordering: Ordena los clientes por nombre_cliente.
+    """
     
     CLASIF_CHOICES = [
         ('FORANEO', 'FORANEO'),
@@ -145,6 +171,17 @@ class DetallePedido(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
 
     def calcular_subtotal(self):
+        """
+        Calcula el subtotal de un ítem en el pedido según la lista de precios seleccionada.
+        El método determina el precio del producto basado en el valor de 'lista_items' del pedido:
+            - Si 'lista_items' es 1, usa 'precio_1' del producto.
+            - Si 'lista_items' es 2, usa 'precio_2' del producto.
+            - Si 'lista_items' es 3, usa 'precio_3' del producto.
+            - Para cualquier otro valor, el precio es 0.
+        Retorna:
+            float: El subtotal calculado como la cantidad del producto multiplicada por el precio seleccionado.
+        """
+                
         # Obtener el precio basado en la selección del pedido
         if self.pedido.lista_items == 1:
             precio = self.producto.precio_1
