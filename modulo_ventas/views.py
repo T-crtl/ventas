@@ -432,6 +432,17 @@ def admin_it(request):
 
 @login_required
 def detalle_ticket_it(request, ticket_id):
+    """
+    Muestra el detalle de un ticket específico solo si el usuario pertenece al grupo 'ADMIN'.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        ticket_id (int): El identificador único del ticket a mostrar.
+    Raises:
+        PermissionDenied: Si el usuario no pertenece al grupo 'ADMIN'.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'ver_ticket_detalle.html' con el contexto del ticket y el estado de administrador IT.
+    """
+    
     ticket = get_object_or_404(CrearTicket, id=ticket_id)
     admin_it = request.user.groups.filter(name='ADMIN').exists()
     # Verifica si el usuario es parte del equipo de IT
@@ -464,6 +475,18 @@ def cambiar_estado_ticket(request, ticket_id):
 
 @login_required
 def directorio(request):
+    """
+    Vista que filtra y muestra los directorios permitidos según los grupos a los que pertenece el usuario.
+    Esta función obtiene los grupos del usuario autenticado y determina a qué directorios tiene acceso
+    según un diccionario de mapeo entre grupos y directorios. Luego, filtra la lista de todos los directorios
+    disponibles para mostrar solo aquellos permitidos al usuario y los pasa al contexto de la plantilla.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida, que contiene la información del usuario autenticado.
+    Returns:
+        HttpResponse: Renderiza la plantilla 'directorios.html' con el contexto de los directorios permitidos
+        y una variable booleana 'is_sistemas' que indica si el usuario pertenece al grupo 'ADMIN'.
+    """
+    
     # Diccionario que mapea grupos a directorios permitidos
     grupos_directorios = {
         'Administracion': ['administracion_dir', 'cobranza_dir', 'compras_dir'],
