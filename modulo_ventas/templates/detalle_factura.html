@@ -57,7 +57,7 @@
                                required>
                     </td>
                     <td>
-                        <input type="number" step="0.01" min="0.01"
+                        <input type="number" step="1" min="0"
                                name="cantidad_{{ producto.id }}" 
                                value="{{ producto.cantidad_real|default_if_none:'' }}" 
                                class="form-control form-control-sm"

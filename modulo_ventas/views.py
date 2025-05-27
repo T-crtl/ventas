@@ -969,7 +969,7 @@ def detalle_factura(request, factura_id):
                 
             try:
                 cantidad = float(cantidad_str)
-                if cantidad <= 0:
+                if cantidad < 0:
                     errores.append(f"Cantidad inválida para {producto.nombre_articulo}")
                     continue
                     
@@ -987,7 +987,7 @@ def detalle_factura(request, factura_id):
                 messages.error(request, error)
         else:
             messages.success(request, "¡Datos guardados correctamente!")
-            return redirect('detalle_factura', factura_id=factura.id)
+            return redirect('pedidos_almacen')
     
     return render(request, 'detalle_factura.html', {
         'factura': factura,
@@ -1034,7 +1034,7 @@ def detalle_factura_final(request, factura_id):
                 
             try:
                 cantidad = float(cantidad_str)
-                if cantidad <= 0:
+                if cantidad < 0:
                     errores.append(f"Cantidad inválida para {producto.nombre_articulo}")
                     continue
                     
@@ -1052,7 +1052,7 @@ def detalle_factura_final(request, factura_id):
                 messages.error(request, error)
         else:
             messages.success(request, "¡Datos guardados correctamente!")
-            return redirect('detalle_factura_final', factura_id=factura.id)
+            return redirect('facturacion_final')
     
     return render(request, 'detalle_factura_final.html', {
         'factura': factura,
@@ -1408,7 +1408,7 @@ def detalle_backorders_almacen(request, backorder_id):
                 messages.error(request, error)
         else:
             messages.success(request, "¡Datos guardados correctamente!")
-            return redirect('detalle_backorder_almacen', backorder_id=backorder.id)
+            return redirect('backorders_detalle')
 
     return render(request, 'detalle_backorder.html', {
         'backorder': backorder,
@@ -1467,7 +1467,7 @@ def detalle_backorders_facturacion(request, backorder_id):
                 messages.error(request, error)
         else:
             messages.success(request, "¡Datos guardados correctamente!")
-            return redirect('detalle_backorder_almacen', backorder_id=backorder.id)
+            return redirect('guardar_backorder')
 
     return render(request, 'detalle_backorder_final.html', {
         'backorder': backorder,
