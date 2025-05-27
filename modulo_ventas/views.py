@@ -1069,17 +1069,12 @@ def facturacion_final(request):
     Args:
         request (HttpRequest): La solicitud HTTP recibida.
     Returns:
-        HttpResponse: Respuesta HTTP con la plantilla renderizada y el contexto de facturas completas.
+        HttpResponse: Respuesta HTTP con la plantilla facturacion_final.html renderizada y el contexto de facturas completas.
     """
     
     # Facturas donde todos los productos tienen lote y cantidad asignados
-    facturas_completas = Factura.objects.annotate(
-        productos_pendientes=Count(
-            'productos',
-            filter=Q(productos__lote_asignado__isnull=True) | 
-            Q(productos__cantidad_real__isnull=True)
-        )
-    ).filter(productos_pendientes=0).order_by('-fecha_creacion')
+    facturas_completas = Factura.objects.filter(
+        check_status=False).order_by('-fecha_creacion')
     
     return render(request, 'facturacion_final.html', {
         'facturas': facturas_completas

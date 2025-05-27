@@ -41,7 +41,7 @@ class FacturaAdmin(admin.ModelAdmin):
     
 @admin.register(ProductoFactura)
 class ProductoFacturaAdmin(admin.ModelAdmin):
-    list_display = ('folio', 'id_articulo')
+    list_display = ('folio', 'id_articulo', 'cantidad_solicitada')
     
 @admin.register(BackOrder)
 class BackorderAdmin(admin.ModelAdmin):
