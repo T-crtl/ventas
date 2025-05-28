@@ -268,7 +268,18 @@ class DirectorioModelTest(TestCase):
         self.assertTrue(self.documento.publico)
 
 class FacturaModelTest(TestCase):
-    
+    """
+    FacturaModelTest es una clase de pruebas unitarias para el modelo Factura y su relación con ProductoFactura.
+    Métodos:
+        setUp():
+            Configura los datos de prueba creando una instancia de Factura y dos instancias relacionadas de ProductoFactura.
+        test_factura_str():
+            Verifica que la representación en cadena (__str__) de la factura sea la esperada.
+        test_productos_completos_count():
+            Comprueba que la propiedad productos_completos de la factura retorne el número correcto de productos completos asociados.
+        test_relacion_porductos_factura():
+            Valida que la relación entre Factura y ProductoFactura funcione correctamente, asegurando que la factura tenga dos productos asociados.
+    """
     def setUp(self):
         # Configura datos de prueba
         self.factura = Factura.objects.create(
@@ -306,3 +317,47 @@ class FacturaModelTest(TestCase):
     
     def test_relacion_porductos_factura(self):
         self.assertEqual(self.factura.productos.count(), 2)
+
+class BackOrderModelTest(TestCase):
+    """
+    Pruebas unitarias para el modelo BackOrder y su relación con ProductoBackOrder.
+    Esta clase de pruebas verifica la correcta creación de instancias de BackOrder y ProductoBackOrder,
+    así como el funcionamiento del método __str__ del modelo BackOrder.
+    Métodos:
+        setUp():
+            Crea una instancia de BackOrder y dos instancias relacionadas de ProductoBackOrder
+            para ser utilizadas en las pruebas.
+        test_factura_str():
+            Verifica que la representación en cadena (__str__) de un objeto BackOrder
+            sea la esperada, combinando el folio y el nombre del cliente.
+    """
+    
+    def setUp(self):
+        self.backorder = BackOrder.objects.create(
+            folio = '1234',
+            cliente_nombre = 'Juan Pérez',
+            rfc = 'JPE123456789',
+            direccion = 'Calle Falsa 123',
+            cliente_clave = 'CLI-001',
+        )
+        
+        ProductoBackOrder.objects.create(
+            factura = self.backorder,
+            codigo = 'ART-001',
+            descripcion = 'Producto Test',
+            cantidad = 10,
+            lote = 'L001',
+            cantidad_real = 10,
+        )
+        
+        ProductoBackOrder.objects.create(
+            factura = self.backorder,
+            codigo = 'ART-002',
+            descripcion = 'Producto Test 2',
+            cantidad = 5,
+            lote = 'L002',
+            cantidad_real = 5,
+        )
+    
+    def test_factura_str(self):
+        self.assertEqual(str(self.backorder), "BackOrder 1234 - Juan Pérez")
