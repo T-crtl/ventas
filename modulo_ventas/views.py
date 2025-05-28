@@ -15,7 +15,6 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
 from django.contrib import messages
-import requests
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
@@ -24,6 +23,7 @@ from django.db.models import Q, Count
 from django.views.decorators.http import require_POST
 from django.core import exceptions
 
+import requests
 
 API_BASE_URL = ' https://9792-186-96-24-125.ngrok-free.app' # Cambia esto a la URL de tu API FastAPI
 
