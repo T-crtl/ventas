@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Client, Pedido, Directorio, DetallePedido, CrearTicket, Producto
+from .models import Client, Pedido, Directorio, DetallePedido, CrearTicket, Producto, Factura, ProductoFactura, BackOrder, ProductoBackOrder
 
 # Create your tests here.
 class ClientModelTest(TestCase):
@@ -266,4 +266,43 @@ class DirectorioModelTest(TestCase):
         self.assertEqual(self.documento.nombre_documento, "Documento Test")
         self.assertEqual(self.documento.area, "Administracion")
         self.assertTrue(self.documento.publico)
+
+class FacturaModelTest(TestCase):
+    
+    def setUp(self):
+        # Configura datos de prueba
+        self.factura = Factura.objects.create(
+            cve_doc="FAC-001",
+            folio='1234',
+            factura = 'F001',
+            cliente_clave='CLI-001',
+            cliente_nombre='Juan Pérez',
+            rfc = 'JPE123456789',
+            direccion = 'Calle Falsa 123',
+        )
         
+        ProductoFactura.objects.create(
+            folio=self.factura,
+            id_articulo='ART-001',
+            nombre_articulo='Producto Test',
+            cantidad_solicitada=10,
+            lote_asignado='L001',
+            cantidad_real= 10,
+        )
+        ProductoFactura.objects.create(
+            folio=self.factura,
+            id_articulo='ART-002',
+            nombre_articulo='Producto Test 2',
+            cantidad_solicitada=5,
+            lote_asignado='L002',
+            cantidad_real= 5,
+        )
+
+    def test_factura_str(self):
+        self.assertEqual(str(self.factura), "Factura F001 (Folio: 1234) ")
+
+    def test_productos_completos_count(self):
+        self.assertEqual(self.factura.productos_completos, 2)
+    
+    def test_relacion_porductos_factura(self):
+        self.assertEqual(self.factura.productos.count(), 2)
