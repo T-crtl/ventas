@@ -1515,5 +1515,3 @@ def nosotros(request):
     """
     #PAGINA DE CONTACTO
     return render(request, 'nosotros.html')
-
-# test
