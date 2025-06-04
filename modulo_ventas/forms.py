@@ -74,6 +74,21 @@ class PedidoForm(forms.ModelForm):
     cliente = forms.ModelChoiceField(queryset=Client.objects.all(), required=True)
     
 class DetallePedidoForm(forms.Form):
+    """
+    Formulario dinámico para la selección de productos y cantidades en un pedido.
+    Este formulario genera campos de cantidad para cada producto disponible, permitiendo al usuario seleccionar la cantidad deseada de cada uno. Los productos pueden ser filtrados por línea si se proporciona el argumento 'linea' al inicializar el formulario.
+    Atributos:
+        - Los campos de cantidad se crean dinámicamente para cada producto, mostrando información relevante como imagen, nombre, precios y cantidad por caja.
+    Métodos:
+        __init__(*args, **kwargs):
+            Inicializa el formulario, generando los campos de cantidad para cada producto. Si se proporciona una línea de producto, solo se muestran los productos de esa línea.
+        clean():
+            Valida que al menos un producto tenga una cantidad mayor a cero. Devuelve un diccionario con los IDs de los productos seleccionados y sus cantidades correspondientes.
+    Excepciones:
+        - forms.ValidationError: Se lanza si no se selecciona ningún producto con cantidad mayor a cero.
+    
+    """
+    
     # Creamos dinámicamente los campos de cantidades
     def __init__(self, *args, **kwargs):
         #Se obtiene linea del producto desde los argumentos
