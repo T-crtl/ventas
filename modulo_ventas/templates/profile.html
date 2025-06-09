@@ -30,6 +30,7 @@
                 
             </ul>
         </div>
+
         {% if es_facturacion or es_almacen or it %}
         <div class="card">
             <h3>Pedidos</h3>
@@ -38,12 +39,13 @@
                 <li><a href="{% url 'buscar_por_folio' %}" class="action-link">Registrar Pedido</a></li>
                 <li><a href="{% url 'facturacion_final' %}" class="action-link">Pedidos Completos</a></li> 
                 {% elif it or es_almacen or it %}
-                <li><a href="{% url 'pedidos_almacen'%}">Pedidos Pendientes</a></li>
+                <li><a href="{% url 'pedidos_almacen'%}" class="action-link">Pedidos Pendientes</a></li>
                 {% endif %}
             </ul>
         </div>
         {% endif %}
     </div>
+
     {% if it or es_facturacion or es_almacen %}
     <div class="cards">
         <div class="card">
@@ -53,11 +55,27 @@
                 <li><a href="{% url 'backorders' %}" class="action-link">Registrar Backorder</a></li>
                 <li><a href="{% url 'guardar_backorder' %}" class="action-link">Backorders Completos</a></li> 
                 {% elif it or es_almacen%}
-                <li><a href="{% url 'backorders_detalle'%}">Backorders Pendientes</a></li>
+                <li><a href="{% url 'backorders_detalle'%}" class="action-link">Backorders Pendientes</a></li>
                 {% endif %}
             </ul>
         </div>
-        
+    </div>
+    {% endif %}
+
+    {% if it %}
+    <div class="cards">
+        <div class="card">
+            <h3>INFO TEST</h3>
+            <ul class="options-list">
+                <li><a href="{% url 'backorders' %}" class="action-link">Registrar Backorder</a></li>
+                <li><a href="{% url 'guardar_backorder' %}" class="action-link">Backorders Completos</a></li> 
+                <li><a href="{% url 'backorders_detalle'%}" class="action-link">Backorders Pendientes</a></li>
+                <li><a href="{% url 'buscar_por_folio' %}" class="action-link">Registrar Pedido</a></li>
+                <li><a href="{% url 'facturacion_final' %}" class="action-link">Pedidos Completos</a></li> 
+                <li><a href="{% url 'pedidos_almacen'%}" class="action-link">Pedidos Pendientes</a></li>
+            </ul>
+
+        </div>
     </div>
     {% endif %}
 
