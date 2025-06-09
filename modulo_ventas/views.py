@@ -49,11 +49,15 @@ def profile(request):
     # Verificar si el usuario pertenece al grupo "Vendedores"
     es_vendedor = request.user.groups.filter(name='Vendedores').exists()
     admin_it = request.user.groups.filter(name='ADMIN').exists()
+    es_facturacion = request.user.groups.filter(name='Facturacion').exists()
+    es_almacen = request.user.groups.filter(name='Almacen').exists()
     
     # Renderizar la plantilla con el contexto adicional
     return render(request, 'profile.html', {
         'user': request.user,
         'es_vendedor': es_vendedor,
+        'es_facturacion': es_facturacion,
+        'es_almacen': es_almacen,
         'it': admin_it,
     })
 

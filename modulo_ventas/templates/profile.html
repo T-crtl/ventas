@@ -4,6 +4,7 @@
 {% block content %}
 <h1 class="title-section">Bienvenido al Dashboard</h1>
 <h3 class="name-section">Nombre: {{ user.get_full_name }}</h3>
+<h3 class="name-section">Correo: {{ user.email }}</h3>
 <div class="profile-actions">
 
     <div class="cards">
@@ -29,12 +30,37 @@
                 
             </ul>
         </div>
+        {% if es_facturacion or es_almacen or it %}
         <div class="card">
-            <!-- Email de usuario -->
-            <h3>Email</h3>
-            <p>{{ user.email }}</p>
+            <h3>Pedidos</h3>
+            <ul class="options-list">
+                {% if it or es_facturacion or es_ADMIN%}
+                <li><a href="{% url 'buscar_por_folio' %}" class="action-link">Registrar Pedido</a></li>
+                <li><a href="{% url 'facturacion_final' %}" class="action-link">Pedidos Completos</a></li> 
+                {% elif it or es_almacen or it %}
+                <li><a href="{% url 'pedidos_almacen'%}">Pedidos Pendientes</a></li>
+                {% endif %}
+            </ul>
         </div>
+        {% endif %}
     </div>
+    {% if it or es_facturacion or es_almacen %}
+    <div class="cards">
+        <div class="card">
+            <h3>Backorders</h3>
+            <ul class="options-list">
+                {% if it or es_facturacion %}
+                <li><a href="{% url 'backorders' %}" class="action-link">Registrar Backorder</a></li>
+                <li><a href="{% url 'guardar_backorder' %}" class="action-link">Backorders Completos</a></li> 
+                {% elif it or es_almacen%}
+                <li><a href="{% url 'backorders_detalle'%}">Backorders Pendientes</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        
+    </div>
+    {% endif %}
+
 
 </div>
 {% endblock %}
