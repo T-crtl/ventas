@@ -19,6 +19,7 @@ Description
 - ✅ Invoice registration with batches  
 - ✅ Intelligent search by folio/client  
 - ✅ Integration API (FastAPI) 
+- ✅ SQL consult
 
 This project is a custom system designed to meet the specific requirements of the company DISTRIBUIDORA BLB. It is tailored to their needs and includes the following features:
 
