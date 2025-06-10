@@ -60,7 +60,7 @@
 
     {% if it %}
     <section class="dashboard-module">
-        <h3 class="module-title">Info Test</h3>
+        <h3 class="module-title">Admin</h3>
         <ul class="options-list">
             <li><a href="{% url 'backorders' %}" class="action-link">Registrar Backorder</a></li>
             <li><a href="{% url 'guardar_backorder' %}" class="action-link">Backorders Completos</a></li> 
@@ -68,6 +68,8 @@
             <li><a href="{% url 'buscar_por_folio' %}" class="action-link">Registrar Pedido</a></li>
             <li><a href="{% url 'facturacion_final' %}" class="action-link">Pedidos Completos</a></li> 
             <li><a href="{% url 'pedidos_almacen'%}" class="action-link">Pedidos Pendientes</a></li>
+            <li><a href="{% url 'realizar_pedido' %}" class="action-link">Realizar pedido</a></li>
+            <li><a href="{% url 'ver_estatus_pedido' %}" class="action-link">Ver estatus de pedido</a></li>
         </ul>
     </section>
     {% endif %}
