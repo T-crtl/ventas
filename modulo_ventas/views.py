@@ -31,6 +31,8 @@ API_BASE_URL = 'https://ab86-186-96-24-125.ngrok-free.app' # Cambia esto a la UR
 def index(request):
     return render(request, 'index.html')
 
+# test
+
 @login_required
 def profile(request):
     """
