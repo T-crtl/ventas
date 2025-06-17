@@ -43,9 +43,11 @@ urlpatterns = [
     path('almacen/facturas/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
     path('almacen/facturacion_estatus/<int:factura_id>/', views.detalle_factura_final, name='detalle_factura_final'),
     path('almacen/facturacion_estatus/', views.facturacion_final, name='facturacion_final'),
+    path('almacen/todas_las_facturas_/', views.todas_facturas, name='todas_facturas'),
     path('backorders/', views.backorders_view, name='backorders'),
     path('backorders_detalle/', views.lista_backorders, name='backorders_detalle'),
     path('backorders/<int:backorder_id>/', views.detalle_backorders_almacen, name='detalle_backorder_almacen'),
     path('backorders/estatus/<int:backorder_id>/', views.detalle_backorders_facturacion, name='detalle_backorder_facturacion'),
     path('backorders/enviados/', views.backorders_final, name='guardar_backorder'),
+    path('backorders/todos_los_backorders/', views.todos_backorders, name='todos_backorders'),
 ]

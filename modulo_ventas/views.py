@@ -1055,6 +1055,10 @@ def detalle_factura_final(request, factura_id):
             for error in errores:
                 messages.error(request, error)
         else:
+            # Si el checkbox fue marcado, actualizamos el estado de la factura
+            if request.POST.get("check_status") == "on":
+                factura.check_status = True
+                factura.save()
             messages.success(request, "¡Datos guardados correctamente!")
             return redirect('facturacion_final')
     
@@ -1077,10 +1081,40 @@ def facturacion_final(request):
     """
     
     # Facturas donde todos los productos tienen lote y cantidad asignados
-    facturas_completas = Factura.objects.filter(
-        check_status=False).order_by('-fecha_creacion')
+    facturas_completas = Factura.objects.annotate(
+        productos_incompletos=Count(
+            'productos',
+            filter=Q(productos__lote_asignado__isnull=True) | 
+                   Q(productos__lote_asignado='') | 
+                   Q(productos__cantidad_real__isnull=True)
+        )
+    ).filter(
+        productos_incompletos=0,
+        check_status=False
+    ).order_by('-fecha_creacion')
     
     return render(request, 'facturacion_final.html', {
+        'facturas': facturas_completas
+    })
+    
+@login_required
+def todas_facturas(request):
+    """
+    Vista que muestra las facturas que tienen todos sus productos con lote y cantidad asignados.
+    Esta función consulta las facturas en las que todos los productos asociados tienen asignado un lote y una cantidad real.
+    Utiliza anotaciones para contar los productos pendientes (sin lote o cantidad real asignada) y filtra aquellas facturas
+    donde no hay productos pendientes. Finalmente, renderiza la plantilla 'facturacion_final.html' pasando las facturas completas.
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+    Returns:
+        HttpResponse: Respuesta HTTP con la plantilla facturacion_final.html renderizada y el contexto de facturas completas.
+    """
+    
+    # Facturas donde todos los productos tienen lote y cantidad asignados
+    facturas_completas = Factura.objects.filter(
+        check_status=True).order_by('-fecha_creacion')
+    
+    return render(request, 'todas_facturas.html', {
         'facturas': facturas_completas
     })
     
@@ -1465,6 +1499,9 @@ def detalle_backorders_facturacion(request, backorder_id):
             for error in errores:
                 messages.error(request, error)
         else:
+            if request.POST.get("check_status") == "on":
+                backorder.check_status = True
+                backorder.save()
             messages.success(request, "¡Datos guardados correctamente!")
             return redirect('guardar_backorder')
 
@@ -1472,6 +1509,8 @@ def detalle_backorders_facturacion(request, backorder_id):
         'backorder': backorder,
         'messages': messages.get_messages(request)
     })
+
+
 
 @login_required
 def backorders_final(request):
@@ -1501,6 +1540,30 @@ Detalles de implementación:
     ).order_by('-fecha_creacion')
     
     return render(request, 'backorders_final.html', {
+        'facturas': facturas_completas
+    })
+    
+@login_required
+def todos_backorders(request):
+    """
+Vista protegida que muestra las facturas (BackOrders) que están completas, es decir,
+aquellas en las que todos los productos asociados tienen lote y cantidad real asignados.
+Se excluyen las facturas que ya han sido validadas (check_status=True).
+Parámetros:
+    request (HttpRequest): La solicitud HTTP recibida.
+Retorna:
+    HttpResponse: Renderiza la plantilla 'backorders_final.html' con el contexto de las facturas completas.
+Detalles de implementación:
+    - Se utiliza una anotación para contar los productos pendientes (sin lote o cantidad real).
+    - Solo se incluyen las facturas donde productos_pendientes es 0 y check_status es False.
+    - El resultado se ordena por fecha de creación descendente.
+"""
+    # Facturas donde todos los productos tienen lote y cantidad asignados
+    facturas_completas = BackOrder.objects.filter(
+    check_status=True  # 👈 Excluir los que ya están validados
+    ).order_by('-fecha_creacion')
+    
+    return render(request, 'todos_backorders.html', {
         'facturas': facturas_completas
     })
     
