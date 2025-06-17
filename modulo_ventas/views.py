@@ -25,7 +25,7 @@ from django.core import exceptions
 
 import requests
 
-API_BASE_URL = 'https://ab86-186-96-24-125.ngrok-free.app' # Cambia esto a la URL de tu API FastAPI
+API_BASE_URL = 'https://b755-186-96-24-125.ngrok-free.app' # Cambia esto a la URL de tu API FastAPI
 
 # Create your views here.
 def index(request):
