@@ -733,7 +733,8 @@ def buscar_por_folio(request):
 
         if folio:
             try:
-                api_url = f'{API_BASE_URL}/buscar_por_folio/?folio={folio}'
+                folio_int = int(folio)
+                api_url = f'{API_BASE_URL}/buscar-por-folio/?folio={folio_int}'
                 headers = {'ngrok-skip-browser-warning': 'true'}
                 response = requests.get(api_url, headers=headers)
 
@@ -759,10 +760,10 @@ def buscar_por_folio(request):
                         
                         # Preparar datos para mostrar (sin guardar aún)
                         factura_data = {
-                            'cve_doc': primera_factura['CVE_DOC'].strip(),
-                            'doc_sig': primera_factura['DOC_SIG'],
+                            #'cve_doc': primera_factura['CVE_DOC'].strip(),
+                            #'doc_sig': primera_factura['DOC_SIG'],
                             'folio': str(primera_factura['FOLIO']),
-                            'factura': primera_factura['FACTURA'],
+                            #'factura': primera_factura['FACTURA'],
                             'cliente_clave': primera_factura['Clave_Cliente'].strip(),
                             'cliente_nombre': primera_factura['Nombre_Cliente'],
                             'rfc': primera_factura['RFC'],
@@ -784,7 +785,7 @@ def buscar_por_folio(request):
                             'folio': folio,
                             'factura_data': factura_data,
                             'error': error,
-                            'existe_en_bd': Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists()
+                            'existe_en_bd': Factura.objects.filter(folio=factura_data['folio']).exists()
                         })
                     else:
                         error = 'No se encontraron facturas con ese folio'
@@ -812,7 +813,7 @@ def buscar_por_folio(request):
             return redirect('buscar_por_folio')  # Ajusta esto al nombre de tu URL
         
         # Verificar si la factura ya existe
-        if Factura.objects.filter(cve_doc=factura_data['cve_doc']).exists():
+        if Factura.objects.filter(folio=factura_data['folio']).exists():
             messages.warning(request, 'Esta factura ya existe en la base de datos')
             return render(request, 'resultado_factura.html', {
                 'factura_data': factura_data,
@@ -822,10 +823,10 @@ def buscar_por_folio(request):
         # Crear la factura y los productos
         try:
             factura = Factura.objects.create(
-                cve_doc=factura_data['cve_doc'],
-                doc_sig=factura_data['doc_sig'],
+                #cve_doc=factura_data['cve_doc'],
+                #doc_sig=factura_data['doc_sig'],
                 folio=factura_data['folio'],
-                factura=factura_data['factura'],
+                #factura=factura_data['factura'],
                 cliente_clave=factura_data['cliente_clave'],
                 cliente_nombre=factura_data['cliente_nombre'],
                 rfc=factura_data['rfc'],
@@ -1167,7 +1168,7 @@ def backorders_view(request):
         
         try:
             response = requests.get(
-                f'{API_BASE_URL}/buscar_por_folio/?folio={folio}',
+                f'{API_BASE_URL}/buscar-por-folio/?folio={folio}',
                 headers={'ngrok-skip-browser-warning': 'true'},
                 timeout=10
             )
