@@ -351,16 +351,15 @@ class Factura(models.Model):
         productos_completos (property): Devuelve la cantidad de productos asociados a la factura que tienen lote asignado y cantidad real definida.
     """
     
-    cve_doc = models.CharField(max_length=20, unique=True)
-    doc_sig = models.CharField(max_length=20, blank=True, null=True)
-    folio = models.CharField(max_length=20)
-    factura = models.CharField(max_length=20)
+    folio = models.CharField(max_length=20, unique=True)
+    factura = models.CharField(max_length=20, null=True, blank=True)
     cliente_clave = models.CharField(max_length=30)
     cliente_nombre = models.CharField(max_length=100)
     rfc = models.CharField(max_length=20, blank=True, null=True)
     fecha_creacion = models.DateField(auto_now_add=True)
     direccion = models.TextField()
     check_status = models.BooleanField(default=False)
+    comentarios = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return f"Factura {self.factura} (Folio: {self.folio}) "
@@ -420,6 +419,7 @@ class BackOrder(models.Model):
     cliente_clave = models.CharField(max_length=50, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     check_status = models.BooleanField(default=False)
+    comentarios = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return f"BackOrder {self.folio} - {self.cliente_nombre}"

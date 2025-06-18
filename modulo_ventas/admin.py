@@ -37,7 +37,7 @@ class DocumentoAdmin(admin.ModelAdmin):
     
 @admin.register(Factura)
 class FacturaAdmin(admin.ModelAdmin):
-    list_display = ('cve_doc', 'folio', 'fecha_creacion', 'cliente_nombre')
+    list_display = ('folio', 'fecha_creacion', 'cliente_nombre')
     
 @admin.register(ProductoFactura)
 class ProductoFacturaAdmin(admin.ModelAdmin):

@@ -807,6 +807,8 @@ def buscar_por_folio(request):
         })
     
     elif request.method == 'POST':
+        comentarios = request.POST.get('comentarios', '').strip()
+        factura.comentarios = comentarios
         factura_data = request.session.get('factura_temp')
         if not factura_data:
             messages.error(request, 'No hay datos de factura para guardar. Realice una búsqueda primero.')

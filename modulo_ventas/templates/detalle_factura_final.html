@@ -64,10 +64,16 @@
             </tbody>
         </table>
 
+        <div class="mb-3">
+            <label for="comentarios" class="form-label"><strong>Comentarios:</strong></label>
+            <textarea name="comentarios" id="comentarios" class="form-control"
+                rows="3">{{ factura.comentarios }}</textarea>
+        </div>
+
         <div class="form-check mt-3">
             <input class="form-check-input" type="checkbox" name="check_status" id="check_status">
             <label class="form-check-label" for="check_status">
-                Marcar esta factura como atendida
+                Marcar este Pedido como atendida
             </label>
         </div>
 
