@@ -183,23 +183,18 @@
                     </table>
                 </div>
                 
-                <!-- Columna de Documentos -->
-                <div class="factura-col">
+                <!-- Columna de Comentarios Generales -->
+                <!-- <div class="factura-col">
                     <h3 class="factura-section-title">
-                        <i class="fas fa-file-alt"></i> Documentos
+                        <i class="fas fa-comment-dots"></i> Comentarios
                     </h3>
-                    <table class="factura-docs-table">
-                        <tr class="factura-table-row">
-                            <th class="factura-table-header">Clave Documento:</th>
-                            <td class="factura-table-data">{{ factura_data.cve_doc }}</td>
-                        </tr>
-                        <tr class="factura-table-row">
-                            <th class="factura-table-header">Documento Siguiente:</th>
-                            <td class="factura-table-data">{{ factura_data.doc_sig|default:"-" }}</td>
-                        </tr>
-                    </table>
+                    <div class="form-group">
+                        <textarea name="comentarios_factura" class="form-control" rows="4" placeholder="Agrega comentarios del pedido aquí...">
+                            {{ factura_local.factura.comentarios|default_if_none:'' }}
+                        </textarea>
+                    </div>
                 </div>
-            </div>
+            </div> -->
             
             <!-- Sección de Productos -->
             <div class="factura-products-section">
@@ -233,6 +228,16 @@
             <div class="factura-actions">
                 <form method="post">
                     {% csrf_token %}
+                     <!-- Columna de Comentarios Generales -->
+<div class="factura-col">
+    <h3 class="factura-section-title">
+        <i class="fas fa-comment-dots"></i> Comentarios
+    </h3>
+    <div class="factura-comment-wrapper">
+        <label class="factura-comment-label" for="comentarios">Comentarios:</label>
+        <textarea name="comentarios" id="comentarios" class="form-control" placeholder="Agrega comentarios del pedido aquí...">{{ factura_data.comentarios|default_if_none:'' }}</textarea>
+    </div>
+</div>
                     <button type="submit" class="factura-save-button">
                         <i class="fas fa-save"></i> Guardar Factura
                     </button>
@@ -247,11 +252,40 @@
 <!-- Estilos CSS Específicos -->
 <style>
     /* Estructura Principal */
+    textarea.form-control {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #2c3e50;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    textarea.form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+        outline: none;
+    }
     .factura-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    @media (max-width: 576px) {
+    textarea.form-control {
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .factura-comment-label {
+        font-size: 14px;
+    }
     }
 
     /* Títulos */

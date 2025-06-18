@@ -807,8 +807,8 @@ def buscar_por_folio(request):
         })
     
     elif request.method == 'POST':
-        comentarios = request.POST.get('comentarios', '').strip()
-        factura.comentarios = comentarios
+        
+        
         factura_data = request.session.get('factura_temp')
         if not factura_data:
             messages.error(request, 'No hay datos de factura para guardar. Realice una búsqueda primero.')
@@ -824,6 +824,7 @@ def buscar_por_folio(request):
         
         # Crear la factura y los productos
         try:
+            comentarios = request.POST.get('comentarios', '').strip()
             factura = Factura.objects.create(
                 #cve_doc=factura_data['cve_doc'],
                 #doc_sig=factura_data['doc_sig'],
@@ -832,9 +833,11 @@ def buscar_por_folio(request):
                 cliente_clave=factura_data['cliente_clave'],
                 cliente_nombre=factura_data['cliente_nombre'],
                 rfc=factura_data['rfc'],
-                direccion=factura_data['direccion']
+                direccion=factura_data['direccion'],
+                comentarios=comentarios
             )
-            
+            factura.comentarios = comentarios
+            factura.save()
             for producto in factura_data['productos']:
                 ProductoFactura.objects.create(
                     folio=factura,
