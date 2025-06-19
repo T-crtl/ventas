@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Facturas Registradas</h2>
+    <h2 class="mb-4">Pedidos Pendientes</h2>
 
     <!-- Formulario de Búsqueda -->
     <form method="get" class="mb-4">
@@ -27,7 +27,7 @@
         {% for factura in facturas %}
         <a href="{% url 'detalle_factura' factura.id %}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ factura.factura }} - {{ factura.folio }}</h5>
+                <h5 class="mb-1">pedido con Folio {{ factura.folio }}</h5>
                 <small>{{ factura.fecha_creacion|date:"d/m/Y" }}</small>
             </div>
             <p class="mb-1">{{ factura.cliente_nombre }}</p>

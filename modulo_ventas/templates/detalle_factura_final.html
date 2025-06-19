@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Factura: {{ factura.factura }} (Folio: {{ factura.folio }})</h2>
+        <h2>Pedido con Folio {{ factura.folio }}</h2>
         <a href="{% url 'facturacion_final' %}" class="btn btn-secondary">Volver</a>
     </div>
 
@@ -16,6 +16,7 @@
             <p><strong>RFC:</strong> {{ factura.rfc }}</p>
             <p><strong>Dirección:</strong> {{ factura.direccion }}</p>
             <p><strong>Fecha:</strong> {{ factura.fecha_creacion|date:"d/m/Y" }}</p>
+            <p><strong>Comentario:</strong> {{ factura.comentarios }}</p>
         </div>
     </div>
 
