@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">
         <i class="fas fa-check-circle text-success me-2"></i>
-        Facturas Completadas
+        Pedidos Completados
     </h2>
     
     <div class="card">
@@ -15,7 +15,6 @@
                     <thead class="table-light">
                         <tr>
                             <th>Folio</th>
-                            <th>Factura</th>
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Productos</th>
@@ -26,7 +25,7 @@
                         {% for factura in facturas %}
                         <tr>
                             <td>{{ factura.folio }}</td>
-                            <td>{{ factura.factura }}</td>
+                            
                             <td>
                                 <div class="fw-bold">{{ factura.cliente_nombre }}</div>
                                 <small class="text-muted">{{ factura.rfc }}</small>
@@ -50,8 +49,8 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
-                <h5 class="text-muted">No hay facturas completadas</h5>
-                <p class="text-muted">Las facturas aparecerán aquí cuando todos sus productos tengan lote y cantidad asignados</p>
+                <h5 class="text-muted">No hay Pedidos Completos</h5>
+                <p class="text-muted">Los Pedidos aparecerán aquí cuando todos sus productos tengan lote y cantidad asignados por almacen</p>
             </div>
             {% endif %}
         </div>

@@ -31,7 +31,7 @@
             <input type="text" 
                    name="folio" 
                    class="factura-search-input" 
-                   placeholder="Ingrese número de folio" 
+                   placeholder="Ingrese número de Pedido" 
                    value="{{ folio|default:'' }}">
             <button type="submit" class="factura-search-button">
                 <i class="fas fa-search"></i> Buscar
@@ -146,8 +146,8 @@
     <div class="factura-preview-card">
         <div class="factura-card-header">
             <h2 class="factura-card-title">
-                Factura: {{ factura_data.factura }}
-                <span class="factura-card-folio">| Folio: {{ factura_data.folio }}</span>
+                Pedido:
+                <span class="factura-card-folio"> {{ factura_data.folio }}</span>
             </h2>
             {% if existe_en_bd %}
             <span class="factura-badge factura-badge-warning">
