@@ -1516,8 +1516,6 @@ def detalle_backorders_facturacion(request, backorder_id):
         'messages': messages.get_messages(request)
     })
 
-
-
 @login_required
 def backorders_final(request):
     """
