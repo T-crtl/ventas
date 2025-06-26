@@ -700,6 +700,19 @@ def cambiar_contrasenia(request):
 
 @login_required
 def cambiar_email(request):
+    """
+    Maneja el proceso de cambio de dirección de correo electrónico del usuario.
+    Si el método de la solicitud es POST, valida el formulario enviado (CambiarEmailForm).
+    Si es válido, actualiza la dirección de correo electrónico del usuario actual, guarda el objeto usuario,
+    muestra un mensaje de éxito y redirige a la página 'perfil_empleado'.
+    Si el método de la solicitud no es POST, muestra un formulario CambiarEmailForm vacío.
+    Parámetros:
+    request (HttpRequest): El objeto de solicitud HTTP.
+    Retorna:
+    HttpResponse: Renderiza la plantilla 'cambiar_email.html' con el formulario,
+    o redirige a 'perfil_empleado' si el cambio de correo fue exitoso.
+    """
+    
     if request.method == 'POST':
         form = CambiarEmailForm(request.POST)
         if form.is_valid():
