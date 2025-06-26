@@ -313,6 +313,7 @@ class Directorio(models.Model):
         return self.nombre_documento
     
 class Area(models.Model):
+    test = models.CharField(max_length=100, default='test')
     pass
 
 class Documento(models.Model):
