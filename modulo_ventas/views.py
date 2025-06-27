@@ -549,6 +549,17 @@ def directorio(request):
 
 @login_required    
 def sistemas_dir(request):
+    """
+    Vista que obtiene y muestra los directorios pertenecientes al área de 'Sistemas'.
+    Esta función recupera todos los objetos de la clase Directorio cuyo campo 'area' es igual a 'Sistemas'
+    y los pasa al template 'template_dir.html' para su visualización.
+    Parámetros:
+        request (HttpRequest): La solicitud HTTP recibida.
+    Retorna:
+        HttpResponse: Respuesta HTTP con el template renderizado y el contexto de directorios filtrados.
+    """
+    
+    
     directorios = Directorio.objects.filter(area= 'Sistemas')
 
     return render(request, 'template_dir.html', {
