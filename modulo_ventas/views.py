@@ -568,6 +568,14 @@ def sistemas_dir(request):
     
 @login_required    
 def administracion_dir(request):
+    """
+    Vista que obtiene y muestra los directorios pertenecientes al área de Administración.
+    Parámetros:
+        request (HttpRequest): La solicitud HTTP recibida.
+    Retorna:
+        HttpResponse: Respuesta HTTP que renderiza la plantilla 'template_dir.html' con el contexto de los directorios filtrados por el área 'Administracion'.
+    """
+    
     directorios = Directorio.objects.filter(area= 'Administracion')
 
     return render(request, 'template_dir.html', {
@@ -576,6 +584,14 @@ def administracion_dir(request):
     
 @login_required
 def cobranza_dir(request):
+    """
+    Vista que obtiene y muestra los registros del modelo Directorio filtrados por el área 'Cobranza'.
+    Parámetros:
+        request (HttpRequest): La solicitud HTTP recibida.
+    Retorna:
+        HttpResponse: Respuesta HTTP que renderiza la plantilla 'template_dir.html' con el contexto de los directorios filtrados.
+    """
+    
     directorios = Directorio.objects.filter(area= 'Cobranza')
     return render(request, 'template_dir.html', {
         'directorios' : directorios,
